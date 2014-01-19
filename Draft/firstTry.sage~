@@ -1,0 +1,23 @@
+e=10
+q=2^e
+n=q
+k=700
+t=38
+
+
+F.<a> = GF(q, modulus='minimal_weight')
+
+
+def randelt():
+    return F.random_element()
+
+alpha = MatrixSpace(F, n, 1)
+
+matrices2x3 = MatrixSpace(F, k, n)
+m=matrices2x3(0)
+for i in range(k):
+    for j in range(n):
+        m[i,j] = randelt()
+
+
+
