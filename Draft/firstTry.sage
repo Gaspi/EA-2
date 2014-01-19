@@ -15,6 +15,7 @@ def randelt():
 
 FVectors = MatrixSpace(F, k)
 FMatrixkn = MatrixSpace(F, k, n)
+FMatrixkk = MatrixSpace(F, k, k)
 
 y = [ 0 for i in range(n) ]
 for i in range(n):
@@ -31,10 +32,23 @@ for i in range(n):
     alpha.append(aux)
 
 
-m = FMatrixkn()
+G = FMatrixkn()
 for i in range(k):
     for j in range(n):
-        m[i,j] = y[j] * ( alpha[j] ^  i)
+        G[i,j] = y[j] * ( alpha[j] ^  i)
+
+H = FMatrixkk()
+# Fill H here ...
+
+# The public key:
+M=H*G
 
 
 
+
+# Ideas to keep on :
+#
+# from sage.matrix.strassen import *
+# Matrice échelon :
+# M._echelon_strassen(1)
+# ...
