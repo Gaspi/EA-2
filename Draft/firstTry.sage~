@@ -1,6 +1,5 @@
 e=10
-q=2^e
-""" q=1024 """
+q=2^e # q=1024
 n=1000
 k=700
 t=38
@@ -12,17 +11,18 @@ F.<a> = GF(q, modulus='minimal_weight')
 def randelt():
     return F.random_element()
 
+def nonzerorandelt():
+    res = F.random_element()
+    while res ==0:
+        res = F.random_element()
+    return res
+
 
 FVectors = MatrixSpace(F, k)
 FMatrixkn = MatrixSpace(F, k, n)
 FMatrixkk = MatrixSpace(F, k, k)
 
-y = [ 0 for i in range(n) ]
-for i in range(n):
-    aux = randelt()
-    while aux == 0:
-        aux = randelt()
-    y[i] = aux
+y = [ nonzerorandelt() for i in range(n) ]
 
 alpha = []
 for i in range(n):
@@ -37,17 +37,32 @@ for i in range(k):
     for j in range(n):
         G[i,j] = y[j] * ( alpha[j] ^  i)
 
+
 H = FMatrixkk()
 # Fill H here ...
+
+for i in range(k):
+    for j in range(k):
+        if i == j:
+            H[i,j] = nonzerorandelt()
+        else:
+            H[i,j] = 0
+
+# Here, H is only a diagonal random matrix
+# -> guarantees it is invertible
+# -> fast to generate, to invert and to multiply
+
+
 
 # The public key:
 M=H*G
 
+Me = M.echelon_form()
+
+# Try here to reconstruct the alpha vector
 
 
 
-# Ideas to keep on :
-# from sage.matrix.strassen import *
-# Matrice échelon :
-# M._echelon_strassen(1)
-# ...
+Mp = M[0:k,0:k+1]
+
+
