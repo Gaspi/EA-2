@@ -1,8 +1,16 @@
-e=10
+#e=10
+#q=2^e # q=1024
+#n=1000
+#k=700
+#t=38
+
+
+e=5
 q=2^e # q=1024
-n=1000
-k=700
-t=38
+n=30
+k=10
+t=5
+
 
 
 F.<a> = GF(q, modulus='minimal_weight')
@@ -64,5 +72,5 @@ Me = M.echelon_form()
 
 
 Mp = M[0:k,0:k+1]
-
+Mpp= M[0:k,0:k]
 
