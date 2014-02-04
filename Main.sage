@@ -22,7 +22,7 @@ else:
 Verb("Generating code and public key...")
 
 rsc = RSCryptosystem(e, n, k)
-rsc.init_random()
+rsc.init_random_debug()
 
 q = rsc.q  # q = 1024
 Field.<a> = rsc.F # define the working field GF(q)
@@ -43,54 +43,58 @@ Verb("Done.")
 Verb("Computing alpha...")
 # here we try to guess the ratio cb1/cb2
 # this ratio should not be equal to any b1j/b2j
-ratio = a^(-1)
+generator = Field.gen()
+ratio = 1
 keepOn = True
-
 count = 0
+
 while keepOn:
-    ratio *= a
+    
     count += 1
     keepOn = False
     print str(count) + "-th try. Ratio  = " + str(ratio)
     
-    
-    alpha = [0 for i in range(n)]
-    alpha[1] = 1
     j = k
     while j < n:
-        if (b[1,j] != 0) & (ratio == b[0,j] / b[1,j]):
+        if ratio == b[0,j] / b[1,j] :
             j = k
-            ratio *= a
+            ratio *= generator
         else:
             j += 1
     
+    
+    alpha = [0 for i in range(n)]
+    alpha[1] = 1
     alpha[k:n] = [ -ratio / ( (b[0,j] / b[1,j]) - ratio) for j in range(k,n) ]
     
     
     for i in range(2,k):
         l = k+1
-        aux = 0
-        while (aux == 0) & (l < n):
-            rk = b[0,k] / b[i,k]
-            rl = b[0,l] / b[i,l]
-            aux = (rk * alpha[k] - rl * alpha[l]) / (alpha[k] - alpha[l])
-            l += 1
-        if (l == n) & (aux == 0):
+        rk = b[0,k  ] / b[i,k  ]
+        rl = b[0,k+1] / b[i,k+1]
+        aux = (rk * alpha[k] - rl * alpha[l]) / (alpha[k] - alpha[l])
+        if aux == 0:
             print "Fail : " + str(i)
             keepOn = True
             break
         else:
             alpha[i] = alpha[k] - rl * alpha[l] / aux
+    
+    ratio *= generator
+
+
+ratio /= generator
 
 Verb("Possible alpha computed. Ratio chosen " + str(ratio))
 
+# alpha = rsc.alpha
 
 Verb("Generating matrix Gp...")
 
 Mpp = M[0:k,0:k]
 sol1 = Mpp.solve_right(M[0:k,k])
-c = [sol1[i,0] for i in range(k)] + [1]
- 
+c = [sol1[i,0] for i in range(k)] + [-1]
+
 Gp = rsc.kkMatSpace()
 for i in range(k):
     for j in range(k):
@@ -109,7 +113,7 @@ Verb("Done.")
 
 
 Verb("Computing x...")
-x = [sol[i,0] for i in range(k)] + [0 for i in range(k+1,n)] + [1]
+x = [sol[i,0] for i in range(k)] + [1] + [0 for i in range(k+1,n)]
 Verb("Done.")
 
 
@@ -124,7 +128,7 @@ Verb("Computing solution...")
 H = Mpp * Gpp^(-1)
 G = H^(-1) * M # = H^(-1) * E(M)
 
-for i in range(k,n):
+for i in range(k+1,n):
     x[i] = G[0,i]
 Verb("Done.")
 

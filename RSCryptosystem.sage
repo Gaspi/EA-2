@@ -40,6 +40,24 @@ class RSCryptosystem(GRSCode):
         
         self.M = self.H * self.G # The public key
     
+    # Generate a random Reed-Solomon code
+    def init_random_debug(self, seed=0):
+        GRSCode.init_random_debug(self, seed)
+        self.H    = self.kkMatSpace()
+        self.Hinv = self.kkMatSpace()
+        # Fill H and Hinv here ...
+        for i in range(self.k):
+            for j in range(self.k):
+                if i == j:
+                    e = self.nonzerorandelt()
+                    self.H[i,j] = 1
+                    self.Hinv[i,j] = 1
+                else:
+                    self.H[i,j] = 0
+                    self.Hinv[i,j] = 0
+        self.M = self.G # The public key
+    
+    
     def public_key(self):
         return {"M" : self.M, "t": self.t}
     
