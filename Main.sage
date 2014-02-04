@@ -22,11 +22,11 @@ publicKey = rsc.public_key()
 M = publicKey.get("M")
 t = publicKey.get("t")
 
+print "Public key generated"
 
 b = M.echelon_form()
+print "Echelon matrix computed"
 
-
-print 1
 
 # here we try to guess the ratio cb1/cb2
 # this ratio should not be equal to any b1j/b2j
@@ -38,7 +38,7 @@ while keepOn:
     ratio *= a
     count += 1
     keepOn = False
-    print str(count) + "  : " + str(ratio)
+    print str(count) + "-th try. Ratio  = " + str(ratio)
     
     
     alpha = [0 for i in range(n)]
@@ -51,7 +51,7 @@ while keepOn:
         else:
             j += 1
     
-    alpha[k:n] = [ -ratio/( (b[0,j] / b[1,j]) - ratio) for j in range(k,n) ]
+    alpha[k:n] = [ -ratio / ( (b[0,j] / b[1,j]) - ratio) for j in range(k,n) ]
     
     
     for i in range(2,k):
@@ -69,6 +69,8 @@ while keepOn:
         else:
             alpha[i] = alpha[k] - rl * alpha[l] / aux
     
+
+print "Possible alpha computed. Ratio chosen " + str(ratio)
 
 
 Mpp = M[0:k,0:k]
