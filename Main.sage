@@ -2,14 +2,24 @@
 load "GRSCode.sage"
 load "RSCryptosystem.sage"
 
-# Main parameters
-#e=5
-#n=10
-#k=4
-e=10
-n=1000
-k=700
+verbose = True
+small_case = True
 
+def Verb(msg):
+    if verbose:
+        print msg
+
+# Main parameters
+if small_case:
+    e=5
+    n=10
+    k=4
+else:
+    e=10
+    n=1000
+    k=700
+
+Verb("Generating code and public key...")
 
 rsc = RSCryptosystem(e, n, k)
 rsc.init_random()
@@ -22,12 +32,15 @@ publicKey = rsc.public_key()
 M = publicKey.get("M")
 t = publicKey.get("t")
 
-print "Public key generated"
+Verb("Done.")
 
+
+Verb("Computing echelon matrix...")
 b = M.echelon_form()
-print "Echelon matrix computed"
+Verb("Done.")
 
 
+Verb("Computing alpha...")
 # here we try to guess the ratio cb1/cb2
 # this ratio should not be equal to any b1j/b2j
 ratio = a^(-1)
@@ -68,13 +81,13 @@ while keepOn:
             break
         else:
             alpha[i] = alpha[k] - rl * alpha[l] / aux
-    
 
-print "Possible alpha computed. Ratio chosen " + str(ratio)
+Verb("Possible alpha computed. Ratio chosen " + str(ratio))
 
+
+Verb("Generating matrix Gp...")
 
 Mpp = M[0:k,0:k]
-
 sol1 = Mpp.solve_right(M[0:k,k])
 c = [sol1[i,0] for i in range(k)] + [1]
  
@@ -82,32 +95,46 @@ Gp = rsc.kkMatSpace()
 for i in range(k):
     for j in range(k):
         Gp[i,j] = c[j] * alpha[j] ^ i
+Verb("Done.")
 
-print 3
 
+Verb("Computing Ck...")
 Ck = Mat(Field, k,1)([ -c[k] * alpha[k] ^ i for i in range(k)])
-print 3
+Verb("Done.")
+
+
+Verb("Computing sol...")
 sol = Gp.solve_right(Ck)
-print 3
+Verb("Done.")
+
+
+Verb("Computing x...")
 x = [sol[i,0] for i in range(k)] + [0 for i in range(k+1,n)] + [1]
+Verb("Done.")
 
 
+Verb("Computing Gpp...")
 Gpp = rsc.kkMatSpace()
 for i in range(k):
     for j in range(k):
         Gpp[i,j] = x[j] * alpha[j] ^ i
- 
+Verb("Done.")
+
+Verb("Computing solution...")
 H = Mpp * Gpp^(-1)
 G = H^(-1) * M # = H^(-1) * E(M)
 
-for i in range(k+1,n):
+for i in range(k,n):
     x[i] = G[0,i]
- 
- 
+Verb("Done.")
+
+
+Verb("Computing test matrix")
 Gtest = rsc.knMatSpace()
 for i in range(k):
     for j in range(n):
         Gtest[i,j] = x[j] * alpha[j] ^ i
+Verb("Done.")
 
 # Gtest est la matrce du GRS code construite
 # à partir aux valeurs de alpha et x calculées
