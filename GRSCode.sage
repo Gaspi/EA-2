@@ -27,30 +27,25 @@ class GRSCode:
         self.y = [ self.G[0,i] for i in range(self.n) ]
         self.alpha = [self.G[1,i] / self.y[i] for i in range(self.n) ]
         
-    def init_coeff(self, alpha, y):
+    def init_param(self, alpha, y):
         self.y = y
         self.alpha = alpha
-        self.G = self.knMatSpace()
-        for i in range(k):
-            for j in range():
-                pass
-    
-    # Generate a random Reed-Solomon code
-    def init_random(self, seed=0):
-        set_random_seed(seed)
-        
-        self.y = [ self.nonzerorandelt() for i in range(self.n) ]
-        self.alpha = []
-        for i in range(self.n):
-            aux = self.randelt()
-            while aux in self.alpha:
-                aux = self.randelt()
-            self.alpha.append(aux)
-            
         self.G = self.knMatSpace()
         for i in range(self.k):
             for j in range(self.n):
                 self.G[i,j] = self.y[j] * ( self.alpha[j] ^  i)
+    
+    # Generate a random Reed-Solomon code
+    def init_random(self, seed=0):
+        set_random_seed(seed)
+        y = [ self.nonzerorandelt() for i in range(self.n) ]
+        alpha = []
+        for i in range(self.n):
+            aux = self.randelt()
+            while aux in alpha:
+                aux = self.randelt()
+            alpha.append(aux)
+        GRSCode.init_param(self,alpha, y)
     
     
     # Generate a random Reed-Solomon code

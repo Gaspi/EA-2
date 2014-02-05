@@ -3,7 +3,8 @@ load "GRSCode.sage"
 load "RSCryptosystem.sage"
 
 verbose = True
-small_case = True
+small_case = False
+
 
 def Verb(msg):
     if verbose:
@@ -22,11 +23,10 @@ else:
 Verb("Generating code and public key...")
 
 rsc = RSCryptosystem(e, n, k)
-rsc.init_random_debug()
+rsc.init_random()
 
-q = rsc.q  # q = 1024
+q = rsc.q  # q = 2^e = 1024
 Field.<a> = rsc.F # define the working field GF(q)
-
 
 publicKey = rsc.public_key()
 M = publicKey.get("M")
@@ -43,24 +43,15 @@ Verb("Done.")
 Verb("Computing alpha...")
 # here we try to guess the ratio cb1/cb2
 # this ratio should not be equal to any b1j/b2j
-generator = Field.gen()
-ratio = 1
-keepOn = True
-count = 0
+generator = Field.gen() # typically : a
 
-while keepOn:
-    
-    count += 1
-    keepOn = False
+
+def tryRatio(ratio = 1,count = 1):
     print str(count) + "-th try. Ratio  = " + str(ratio)
     
-    j = k
-    while j < n:
+    for j in range(k,n):
         if ratio == b[0,j] / b[1,j] :
-            j = k
-            ratio *= generator
-        else:
-            j += 1
+            return tryRatio(ratio * generator, count+1)
     
     
     alpha = [0 for i in range(n)]
@@ -69,21 +60,18 @@ while keepOn:
     
     
     for i in range(2,k):
-        l = k+1
-        rk = b[0,k  ] / b[i,k  ]
-        rl = b[0,k+1] / b[i,k+1]
-        aux = (rk * alpha[k] - rl * alpha[l]) / (alpha[k] - alpha[l])
+        rk   = b[0,k  ] / b[i,k  ]
+        rkp1 = b[0,k+1] / b[i,k+1]
+        aux = (rk * alpha[k] - rkp1 * alpha[k+1]) / (alpha[k] - alpha[k+1])
         if aux == 0:
             print "Fail : " + str(i)
-            keepOn = True
-            break
+            return tryRatio(ratio * generator, count+1)
         else:
-            alpha[i] = alpha[k] - rl * alpha[l] / aux
+            alpha[i] = alpha[k] - rk * alpha[k] / aux
     
-    ratio *= generator
+    return (alpha, ratio)
 
-
-ratio /= generator
+(alpha, ratio) = tryRatio()
 
 Verb("Possible alpha computed. Ratio chosen " + str(ratio))
 
@@ -133,12 +121,23 @@ for i in range(k+1,n):
 Verb("Done.")
 
 
-Verb("Computing test matrix")
-Gtest = rsc.knMatSpace()
-for i in range(k):
-    for j in range(n):
-        Gtest[i,j] = x[j] * alpha[j] ^ i
+Verb("Computing test code")
+
+rsd = RSCryptosystem(e, n, k)
+rsd.init_param(alpha, x, H)
+
+# Gtest = rsc.knMatSpace()
+# for i in range(k):
+#     for j in range(n):
+#         Gtest[i,j] = x[j] * alpha[j] ^ i
 Verb("Done.")
+
+
+Verb("Testing solution...")
+if rsc.M == rsd.M:
+    Verb("  ->  Code successfully broken !")
+else:
+    Verb("  ->  Algorithm failed...")
 
 # Gtest est la matrce du GRS code construite
 # à partir aux valeurs de alpha et x calculées

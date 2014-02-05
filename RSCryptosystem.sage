@@ -19,6 +19,16 @@ class RSCryptosystem(GRSCode):
             self.Hinv = Hinv
         self.M = self.H * self.G # The public key
     
+    
+    def init_param(self, alpha, y, H, Hinv=None):
+        GRSCode.init_param(self, alpha, y)
+        self.H = H
+        if Hinv == None:
+            self.Hinv = H.inverse()
+        else:
+            self.Hinv = Hinv
+        self.M = self.H * self.G # The public key
+    
     # Generate a random Reed-Solomon code
     def init_random(self, seed=0):
         GRSCode.init_random(self, seed)
