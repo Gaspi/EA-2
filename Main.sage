@@ -2,7 +2,7 @@
 load "GRSCode.sage"
 load "RSCryptosystem.sage"
 
-verbose = True
+verbose = False
 small_case = False
 
 
@@ -20,6 +20,7 @@ else:
     n=1000
     k=700
 
+
 Verb("Generating code and public key...")
 
 rsc = RSCryptosystem(e, n, k)
@@ -27,32 +28,26 @@ rsc.init_random()
 
 q = rsc.q  # q = 2^e = 1024
 Field.<a> = rsc.F # define the working field GF(q)
+generator = Field.gen() # typically : a
 
 publicKey = rsc.public_key()
 M = publicKey.get("M")
 t = publicKey.get("t")
 
-Verb("Done.")
-
 
 Verb("Computing echelon matrix...")
 b = M.echelon_form()
-Verb("Done.")
 
 
 Verb("Computing alpha...")
-# here we try to guess the ratio cb1/cb2
-# this ratio should not be equal to any b1j/b2j
-generator = Field.gen() # typically : a
-
-
+# Here we try to guess the ratio cb1/cb2
 def tryRatio(ratio = 1,count = 1):
-    print str(count) + "-th try. Ratio  = " + str(ratio)
+    Verb( str(count) + "-th try. Ratio  = " + str(ratio) )
     
     for j in range(k,n):
         if ratio == b[0,j] / b[1,j] :
             return tryRatio(ratio * generator, count+1)
-    
+            # the ratio should not be equal to any b1j/b2j
     
     alpha = [0 for i in range(n)]
     alpha[1] = 1
@@ -64,7 +59,7 @@ def tryRatio(ratio = 1,count = 1):
         rkp1 = b[0,k+1] / b[i,k+1]
         aux = (rk * alpha[k] - rkp1 * alpha[k+1]) / (alpha[k] - alpha[k+1])
         if aux == 0:
-            print "Fail : " + str(i)
+            Verb( "Fail : " + str(i) )
             return tryRatio(ratio * generator, count+1)
         else:
             alpha[i] = alpha[k] - rk * alpha[k] / aux
@@ -73,36 +68,18 @@ def tryRatio(ratio = 1,count = 1):
 
 (alpha, ratio) = tryRatio()
 
-Verb("Possible alpha computed. Ratio chosen " + str(ratio))
-
-# alpha = rsc.alpha
-
-Verb("Generating matrix Gp...")
-
-Mpp = M[0:k,0:k]
-sol1 = Mpp.solve_right(M[0:k,k])
-c = [sol1[i,0] for i in range(k)] + [-1]
-
-Gp = rsc.kkMatSpace()
-for i in range(k):
-    for j in range(k):
-        Gp[i,j] = c[j] * alpha[j] ^ i
-Verb("Done.")
+Verb("Possible alpha vector found. Ratio chosen : " + str(ratio))
 
 
-Verb("Computing Ck...")
-Ck = Mat(Field, k,1)([ -c[k] * alpha[k] ^ i for i in range(k)])
-Verb("Done.")
+Verb("Computing x vector")
+def L(i, j):
+    res = 1
+    for l in range(k):
+        if (l != i):
+            res *= (alpha[j] - alpha[l])
+    return res
 
-
-Verb("Computing sol...")
-sol = Gp.solve_right(Ck)
-Verb("Done.")
-
-
-Verb("Computing x...")
-x = [sol[i,0] for i in range(k)] + [1] + [0 for i in range(k+1,n)]
-Verb("Done.")
+x = [ L(j, k) / L(j,j) / b[j,k] for j in range(k) ] +  [ b[0,j] / b[0,k] * L(0, k) / L(0, j)  for j in range(k,n)]
 
 
 Verb("Computing Gpp...")
@@ -110,39 +87,62 @@ Gpp = rsc.kkMatSpace()
 for i in range(k):
     for j in range(k):
         Gpp[i,j] = x[j] * alpha[j] ^ i
-Verb("Done.")
 
-Verb("Computing solution...")
-H = Mpp * Gpp^(-1)
-G = H^(-1) * M # = H^(-1) * E(M)
 
-for i in range(k+1,n):
-    x[i] = G[0,i]
-Verb("Done.")
+Verb("Computing H matrix...")
+H = M[0:k,0:k] * Gpp^(-1)
 
 
 Verb("Computing test code")
-
 rsd = RSCryptosystem(e, n, k)
 rsd.init_param(alpha, x, H)
-
-# Gtest = rsc.knMatSpace()
-# for i in range(k):
-#     for j in range(n):
-#         Gtest[i,j] = x[j] * alpha[j] ^ i
-Verb("Done.")
 
 
 Verb("Testing solution...")
 if rsc.M == rsd.M:
-    Verb("  ->  Code successfully broken !")
+    print "  ->  Code successfully broken !"
 else:
-    Verb("  ->  Algorithm failed...")
+    print "  ->  Algorithm failed..."
 
-# Gtest est la matrce du GRS code construite
-# à partir aux valeurs de alpha et x calculées
-# Htest vérifie M = H * Gtest
 
+
+
+
+
+
+#Algorithme de Wieschebrink suivi à la lettre
+
+
+# Verb("Generating matrix Gp...")
+# 
+# Mpp = M[0:k,0:k]
+# sol1 = Mpp.solve_right(M[0:k,k])
+# c = [sol1[i,0] for i in range(k)] + [-1]
+# 
+# Gp = rsc.kkMatSpace()
+# for i in range(k):
+#     for j in range(k):
+#         Gp[i,j] = c[j] * alpha[j] ^ i
+# Verb("Done.")
+# 
+# 
+# Verb("Computing Ck...")
+# Ck = Mat(Field, k,1)([ -c[k] * alpha[k] ^ i for i in range(k)])
+# Verb("Done.")
+# 
+# 
+# Verb("Computing sol...")
+# sol = Gp.solve_right(Ck)
+# Verb("Done.")
+# 
+# 
+# Verb("Computing x...")
+# x = [sol[i,0] for i in range(k)] + [1] + [0 for i in range(k+1,n)]
+# Verb("Done.")
+
+# G = H^(-1) * M # = H^(-1) * E(M)
+# for i in range(k+1,n):
+#     x[i] = G[0,i]
 
 
 
