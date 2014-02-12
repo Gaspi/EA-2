@@ -1,4 +1,5 @@
 
+load "GRSCode.sage"
 
 
 class RSCryptosystem(GRSCode):
@@ -29,57 +30,60 @@ class RSCryptosystem(GRSCode):
             self.Hinv = Hinv
         self.M = self.H * self.G # The public key
     
+    
     # Generate a random Reed-Solomon code
-    def init_random(self, seed=0):
+    def init_random(self, seed=0, algo='vandermonde'):
         GRSCode.init_random(self, seed)
-        self.H    = self.kkMatSpace()
-        self.Hinv = self.kkMatSpace()
-        # Fill H and Hinv here ...
-        for i in range(self.k):
+        if algo == 'debug':
+            self.H      = self.kkMatSpace().identity_matrix()
+            self.Hinv   = self.kkMatSpace().identity_matrix()
+        elif algo == 'diag':
+            self.H    = self.kkMatSpace()
+            self.Hinv = self.kkMatSpace()
+            # Fill H and Hinv here ...
+            for i in range(self.k):
+                for j in range(self.k):
+                    if i == j:
+                        e = self.nonzerorandelt()
+                        self.H[i,j] = e
+                        self.Hinv[i,j] = e^(-1)
+                    else:
+                        self.H[i,j] = 0
+                        self.Hinv[i,j] = 0
+                        # Here, H is only a diagonal random matrix (invertible &  fast to generate, to invert and to multiply )
+        elif algo == 'vandermonde':
+            self.H    = self.kkMatSpace()
+            aux = [ self.F.fetch_int(e) for e in random_distinct_int(1, self.q, self.k)  ]
+            perm =[ i for i in random_distinct_int(0, self.k, self.k)]
             for j in range(self.k):
-                if i == j:
-                    e = self.nonzerorandelt()
-                    self.H[i,j] = e
-                    self.Hinv[i,j] = e^(-1)
-                else:
-                    self.H[i,j] = 0
-                    self.Hinv[i,j] = 0
-        # Here, H is only a diagonal random matrix
-        # -> guarantees it is invertible
-        # -> fast to generate, to invert and to multiply
-        
+                y = self.nonzerorandelt()
+                for i in range(self.k):
+                    self.H[perm[i],j] = y * ( aux[j] ^  i)
+            self.Hinv = self.H.inverse()
+            
         self.M = self.H * self.G # The public key
-    
-    # Generate a random Reed-Solomon code
-    def init_random_debug(self, seed=0):
-        GRSCode.init_random_debug(self, seed)
-        self.H    = self.kkMatSpace()
-        self.Hinv = self.kkMatSpace()
-        # Fill H and Hinv here ...
-        for i in range(self.k):
-            for j in range(self.k):
-                if i == j:
-                    e = self.nonzerorandelt()
-                    self.H[i,j] = 1
-                    self.Hinv[i,j] = 1
-                else:
-                    self.H[i,j] = 0
-                    self.Hinv[i,j] = 0
-        self.M = self.G # The public key
-    
+     
     
     def public_key(self):
         return {"M" : self.M, "t": self.t}
     
     
-    def encode(self, message, errors = -1):
+    def cipher_vect(self, v, errors = -1):
+        return v * self.M + self.random_error(errors)
+    
+    def cipher_int(self, message, errors = -1):
         if len(message) != self.k:
             raise "word is not the right size"
-        return self.vect_from_integers(message) * self.M + self.random_error(errors)
+        return self.cipher_vect( self.vect_from_integers(message), errors)
     
-    def decode(self, codeword):
-        corrected_word = GRSCode.decode(self, codeword)
+    
+    def decipher_vect(self, codeword):
+        corrected_word = self.decode(codeword)
         return self.Hinv * corrected_word 
+    
+    def decipher_int(self, codeword):
+        v = self.decipher_vect(codeword)
+        return [ int(v[0,i].int_repr() ) for i in range(self.k) ]
     
     
     

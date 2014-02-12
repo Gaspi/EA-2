@@ -1,4 +1,35 @@
 
+from sage.misc.randstate import current_randstate
+
+randrange = current_randstate().python_random().randrange
+
+
+def random_distinct_int(start, end, number):
+    size = end - start
+    if size < 0:
+        raise "Invalid interval"
+    if number > size:
+        raise "Too small interval"
+    
+    if number <= size / 2:
+        ans = []
+        for i in range(number):
+            t = randrange(start,end)
+            while t in ans:
+                t = randrange(start,end)
+            ans.append(t)
+            yield t
+    else:
+        # We shuffle and take the first "number" elements
+        ans = [i for i in range(start, end)]
+        for i in range(0, number):
+            r = randrange(i, size)
+            ( ans[i], ans[r] ) = ( ans[r], ans[i] )
+            yield ans[i]
+    
+
+
+
 
 
 class GRSCode:
@@ -35,51 +66,34 @@ class GRSCode:
             for j in range(self.n):
                 self.G[i,j] = self.y[j] * ( self.alpha[j] ^  i)
     
+    
     # Generate a random Reed-Solomon code
-    def init_random(self, seed=0):
+    def init_random(self, generalized = True, seed=0):
         set_random_seed(seed)
-        y = [ self.nonzerorandelt() for i in range(self.n) ]
-        alpha = []
-        for i in range(self.n):
-            aux = self.randelt()
-            while aux in alpha:
-                aux = self.randelt()
-            alpha.append(aux)
+        
+        if generalized:
+            y = [ self.nonzerorandelt() for i in range(self.n) ]
+        else:
+            y = [ 1 for i in range(self.n) ]
+        
+        alpha = [ self.F.fetch_int(e) for e in random_distinct_int(0, self.q, self.n)  ]
+        
         GRSCode.init_param(self,alpha, y)
     
     
-    # Generate a random Reed-Solomon code
-    def init_random_debug(self, seed=0):
-        set_random_seed(seed)
-        
-        self.y = [ 1 for i in range(self.n) ]
-        self.alpha = [self.F.zero(), self.F.one()]
-        for i in range(2,self.n):
-            aux = self.randelt()
-            while aux in self.alpha:
-                aux = self.randelt()
-            self.alpha.append(aux)
-            
-        self.G = self.knMatSpace()
-        for i in range(self.k):
-            for j in range(self.n):
-                self.G[i,j] = self.y[j] * ( self.alpha[j] ^  i)
-        
     def randelt(self):
         return self.F.random_element()
     
     def nonzerorandelt(self):
-        res = self.F.random_element()
-        while res == 0:
-            res = self.F.random_element()
-        return res
+        return self.F.fetch_int( randrange(1,self.q) )
+    
     
     def random_error(self, weight=-1):
         if weight < 0:
             weight = self.t
         err = [0 for i in range(self.n) ]
-        for i in range(weight):
-            err[ ZZ.random_element(self.n) ] = self.randelt()
+        for i in random_distinct_int(0, self.n, weight):
+            err[ i ] = self.randelt()
         return Mat(self.F, 1, self.n)(err)
     
     
@@ -89,9 +103,9 @@ class GRSCode:
     def integers_from_vect(self, vect):
         return [ vect[0,i].int_repr() for i in range(self.k) ]
     
+    
     def encode(self, vect):
         return vect * self.G
-    
     
     def decode(self, codeword):
         # implement here the decoding algorithm of Gao
@@ -103,7 +117,6 @@ class GRSCode:
         g1 = self.PR.lagrange_polynomial( [ (self.alpha[i], codeword[0,i]) for i in range(self.n) ] )
         # Problem : How to divide polynomials ??
         return (g1, self.g0)
-    
     
     
     

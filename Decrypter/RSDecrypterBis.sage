@@ -32,10 +32,10 @@ def Decrypt( publicKey, verbose=True):
     Verb( "Ratio  = " + str(ratio) )
     alphak = -ratio / ( (b[0,k+1] / b[1,k+1]) - ratio)
     
-    alpha = [ Field.fetch_int(0), Field.fetch_int(1)]
-    alpha += [ alphak - c[i] * alphak * b[0,k+1] / c[0] / b[i,k+1]  for i in range(2,k)]
-    alpha += [Field.fetch_int(0)]
-    alpha += [ -ratio / ( (b[0,j] / b[1,j]) - ratio) for j in range(k+1,n) ]
+    alpha = [ Field.fetch_int(0), Field.fetch_int(1)] \
+          + [ alphak - c[i] * alphak * b[0,k+1] / c[0] / b[i,k+1]  for i in range(2,k)] \
+          + [Field.fetch_int(0)] \
+          + [ -ratio / ( (b[0,j] / b[1,j]) - ratio) for j in range(k+1,n) ]
     
     
     
@@ -85,13 +85,14 @@ def Decrypt( publicKey, verbose=True):
     rsd = RSCryptosystem(e, n, k)
     rsd.init_param(alpha, x, H)
     
-    
-    Verb("Testing solution...")
-    if M == rsd.M:
-        print "  ->  Code successfully broken !"
-    else:
-        print "  ->  Algorithm failed..."
+    if verbose:
+        print "Testing solution..."
+        if M == rsd.M:
+            print "  ->  Code successfully broken !"
+        else:
+            print "  ->  Algorithm failed..."
     
     return rsd
-
+    
+    
 
