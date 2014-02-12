@@ -70,7 +70,7 @@ def Decrypt( publicKey, verbose=True):
     
     
     Verb("Computing Gpp...")
-    Gpp = rsc.kkMatSpace()
+    Gpp = MatrixSpace(Field, k, k)()
     for i in range(k):
         for j in range(k):
             Gpp[i,j] = x[j] * alpha[j] ^ i
@@ -86,7 +86,7 @@ def Decrypt( publicKey, verbose=True):
     
     
     Verb("Testing solution...")
-    if rsc.M == rsd.M:
+    if M == rsd.M:
         print "  ->  Code successfully broken !"
     else:
         print "  ->  Algorithm failed..."
