@@ -47,9 +47,33 @@ In this article, we discuss about the Sidelnikov-Shestakov Attack on cryptosyste
 \label{sec:defnot}
 
 
-\subsection{Generalized Reed-Solomon codes}
+\subsection{A cryptosystem based on Reed-Solomon codes}
+
+We study here the public-key cryptosystem introduced by Niederreiter \cite{NiederH86} applied to the generalized Reed-Solomon codes. Let $\F_q$ be a finite field with $q = p^h$ elements and $\F = \F_q \cup \{ \infty \}$, where $\infty$ has natural properties ( $1/\infty = 0$, etc). We call $\A$ the following matrix:
+$$ \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n) := \left(
+\begin{array}{cccc}
+z_1 \alpha_1^0 &  z_2 \alpha_2^0 & \cdots & z_n \alpha_n^0 \\
+z_1 \alpha_1^1 &  z_2 \alpha_2^1 & \cdots & z_n \alpha_n^1 \\
+ & & \ddots & \\
+z_1 \alpha_1^{k-1} &  z_2 \alpha_2^{k-1} & \cdots & z_n \alpha_n^{k-1}
+\end{array}
+\right) \in \mathcal{M}_{\F_q}(k,n) $$
 
 
+
+\subsection{Equivalence between Reed-Solomon codes}
+
+Sidelnikov and Shestakov show \cite{SidelShes92} that for all $a \in \F_q-\{0\}$ and $b \in \F_q$, there exists $H_1, H_2, H_3 \in \mathcal{M}_{F_q}(k,k)$ invertible such that
+\begin{eqnarray*}
+H_1 \A(a\cdot\alpha_1 + b, \ ... \ , a\cdot \alpha_n + b, c_1z_1, \ ... \ , c_n z_n) &=& \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n) \\
+H_2 \A\left( \frac{1}{\alpha_1}, \ ... \ , \frac{1}{\alpha_n}, d_1z_1, \ ... \ , d_n z_n \right) &=& \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n) \\
+H_3 \A\left( \alpha_1, \ ... \ , \alpha_n, a\cdot z_1, \ ... \ , a\cdot z_n \right) &=& \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)
+\end{eqnarray*}
+This means that for any cryptosystem $M = H \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, for any birationnal transformation
+$$ \phi : x \mapsto \frac{ax+b}{cx+d} $$
+$M = H_{\phi} \A(\phi(\alpha_1), \ ... \ , \phi(\alpha_n), z'_1, \ ... \ , z'_n)$ and by using the unique transformation $\phi$ that maps $(\alpha_1, \alpha_2, \alpha_3)$ to $(0,1,\infty)$, we get that for any cryptosystem $M = H \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, $M$ can be uniquely written
+$$ M = H' \A(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, 1, z'_2, \ ... \ , z'_n) $$
+with $H'$ invertible, $z'_i \neq 0$ and $\alpha_i$ distincts elements of $\F_q-\{0, 1, \infty)$.
 
 \section{Attack of Sidelnikov-Shestakov}
 
