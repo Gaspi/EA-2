@@ -98,7 +98,7 @@ class GRSCode:
     
     
     def vect_from_integers(self, l):
-        return Mat(self.F, 1, len(l))( [ self.F.fetch_int(l[i]) for i in range(len(l)) ]  )
+        return Mat(self.F, 1, len(l))( [ self.F.fetch_int(l[i] % self.q) for i in range(len(l)) ]  )
     
     def integers_from_vect(self, vect):
         return [ vect[0,i].int_repr() for i in range(self.k) ]
@@ -107,16 +107,61 @@ class GRSCode:
     def encode(self, vect):
         return vect * self.G
     
+    def encode_int(self, list):
+        return self.encode( self.vect_from_integers(list))
+    
+    
     def decode(self, codeword):
-        # implement here the decoding algorithm of Gao
-        # http://www.math.clemson.edu/~sgao/papers/RS.pdf
-        if self.g0 is None:
-            self.g0 = 1
+        
+        c = [codeword[0,i] / self.y[i] for i in range(self.n)]
+        
+        S = Mat( self.F, self.n, 2*self.t + self.k)()
+        
+        for j in range(self.t):
             for i in range(self.n):
-                self.g0 *= (x - self.alpha[i])
-        g1 = self.PR.lagrange_polynomial( [ (self.alpha[i], codeword[0,i]) for i in range(self.n) ] )
-        # Problem : How to divide polynomials ??
-        return (g1, self.g0)
+                S[i,j] = -c[i] * self.alpha[i]^j
+        for j in range(self.t + self.k):
+            for i in range(self.n):
+                S[i, self.t + j] = self.alpha[i]^j
+        
+        v = Mat( self.F, self.n, 1)( [ c[i] * self.alpha[i] ^ self.t for i in range(self.n) ] )
+        
+        res = S.solve_right(v)
+        
+        R.<X> = (self.F)[]
+        
+        E = R( X ^ self.t)
+        for j in range(self.t):
+            E += R( res[j,0] * (X ^ j) )
+        
+        Ef = R(0)
+        for j in range(self.t + self.k):
+            Ef += R( res[self.t + j,0] * (X ^ j) )
+        
+        (f,g) = Ef.quo_rem(E)
+        
+        if g != 0:
+            raise "Error occurred in decoding"
+        
+        return Mat( self.F, 1, self.k)( f.list() )
+        
     
+    def decode_int(self, codeword):
+        return self.integers_from_vect( self.decode(codeword))
     
-    
+
+
+
+    def decode_gao(self, codeword):
+            # implement here the decoding algorithm of Gao
+            # http://www.math.clemson.edu/~sgao/papers/RS.pdf
+            if self.g0 is None:
+                self.g0 = 1
+                for i in range(self.n):
+                    self.g0 *= (x - self.alpha[i])
+            g1 = self.PR.lagrange_polynomial( [ (self.alpha[i], codeword[0,i]) for i in range(self.n) ] )
+            # Problem : How to divide polynomials ??
+            return (g1, self.g0)
+        
+
+

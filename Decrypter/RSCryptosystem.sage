@@ -79,7 +79,7 @@ class RSCryptosystem(GRSCode):
     
     def decipher_vect(self, codeword):
         corrected_word = self.decode(codeword)
-        return self.Hinv * corrected_word 
+        return  corrected_word * self.Hinv
     
     def decipher_int(self, codeword):
         v = self.decipher_vect(codeword)

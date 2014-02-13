@@ -22,9 +22,24 @@ else:
     k=700
 
 
-Verb("Generating code and public key...")
+
+Verb("Generating code and public key (original cryptosystem : rsc)")
 
 rsc = RSCryptosystem(e, n, k)
 rsc.init_random()
 
-Decrypt( rsc.public_key(), verbose )
+Verb("Attack on the public key (new cryptosystem : rsd)")
+
+rsd = Decrypt( rsc.public_key(), verbose )
+
+Verb("Encrypting list on integers")
+message = [i for i in range(k) ]
+ciphered = rsc.cipher_int( message )
+
+Verb("Decrypting using new cryptosystem")
+deciphered = rsd.decipher_int(ciphered)
+
+if deciphered == message:
+    Verb("Successfully deciphered !")
+else:
+    Verb("Error during deciphering...")
