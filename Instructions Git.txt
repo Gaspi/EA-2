@@ -1,0 +1,32 @@
+
+
+- Commandes à faire une fois pour toute :
+git config --global user.name "Sylvain Colinou"
+git config --global user.email ton.adresse@machin.truc
+git config --global push.default simple
+
+
+
+- Pour mettre à jour ta version du repo :
+
+git pull
+
+
+
+
+- Pour mettre ta version du repo en ligne
+
+git pull         (pour être sur d'avoir la bonne version)
+ --> Si il y a des conflits, corrige les fichiers concernés
+git add --all    (pour "sélectionner" les fichiers modifiés)
+git commit -m "Titre du commit"    (pour créer un commit : instance de modification)
+git push         ( pour mettre en lignes tes commits)
+
+
+
+
+- En toute circonstance, si tu es perdu :
+
+git status
+
+
