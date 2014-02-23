@@ -58,8 +58,18 @@ z_1 \alpha_1^1 &  z_2 \alpha_2^1 & \cdots & z_n \alpha_n^1 \\
 z_1 \alpha_1^{k-1} &  z_2 \alpha_2^{k-1} & \cdots & z_n \alpha_n^{k-1}
 \end{array}
 \right) \in \mathcal{M}_{\F_q}(k,n) $$
-
-
+In the considered cryptosystem, the secret key consists of
+\begin{itemize}
+\item $(\alpha_i)_{1 \leq i \leq n}$ distinct elements of $\F_q$.
+\item $(z_i)_{1 \leq i \leq n}$ elements of $\F_q - \{0\}$.
+\item a random nonsingular $k\times k$-matrix $H$ over $\F$.
+\end{itemize}
+The public key is
+\begin{itemize}
+\item the representation of the field $\F$. In particular the polynomial used to define $\F$ is public.
+\item The two integers $k$ and $n$ such that $ 0 < k < n \leq q$.
+\item $M := H \cdot \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$.
+\end{itemize}
 
 \subsection{Equivalence between Reed-Solomon codes}
 
@@ -77,14 +87,105 @@ with $H'$ invertible, $z'_i \neq 0$ and $\alpha_i$ distincts elements of $\F_q-\
 
 \section{Attack of Sidelnikov-Shestakov}
 
+The attack of Sidelnikov-Shestakov consist of the following steps.
 
+First we realize that the public key can be uniquely written as in the previous section.
+$$ M = H' \A(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, 1, z'_2, \ ... \ , z'_n) $$
+
+We compute then the echelon form of $M$.
+$$ E(M) = 
+\left(
+\begin{array}{ccccccc}
+1 & 0 & \cdots & 0 & b_{1,k+1} & \cdots & b_{1,n} \\
+0 & 1 & \cdots & 0 & b_{2,k+1} & \cdots & b_{2,n} \\
+  &   & \ddots &   & \vdots &   & \vdots \\
+0 & \cdots & 0 & 1 & b_{k,k+1} & \cdots & b_{k,n}
+\end{array}
+\right) = H'' \cdot M
+$$
+
+
+For $2 \leq k \leq n-2$, this attack works with a complexity of ...
 
 
 \section{Application to the Chor-Rivest Cryptosystem}
 
+\subsection{The Chor-Rivest Cryptosystem}
+
+Secret keys consist of
+\begin{itemize}
+\item an element $t \in \GF(q)$ with algebraic degree $h$
+\item a generator $g$ of $\GF (q)^{\ast} $
+\item an integer $d \in \Z_{q-1} $
+\item a permutation $\pi$ of $\{ 0, ... , p-1 \}$.
+\end{itemize}
+
+Public keys consist of all
+$$ c_i = d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
+
+\subsection{A First Attack using Reed-Solomon codes}
+
+We have for all $j$
+$$ g^{c_j} = g^d \cdot (t + \alpha_{\pi(j)} ) = A + \alpha_{\pi(j)} \cdot B $$
+where $\alpha_{\pi(j)} \in \GF(p)$ and $A$ and $B$ are elements of $\GF(p^h) \subset \GF(p)[X]$ and can be seen as polynomials of the variable $X$ with coefficients in $\GF(p)$.
+Then if we consider an other generator $g_0$ of $\GF(q)^{\*}$, we have $g_0 = g^u$ and
+$$ g_0 ^{c_j} = \left( A(X) + \alpha_{\pi(j)} \cdot B(X) \right)^u \mod \mu(X) $$
+where $\mu$ is the polynomial of degree $h$ defining the field $\GF(q)$.
+
+Besides we have
+$$ g_0 ^{c_j} = \sum_{i=0}^{h-1} P_i(\alpha_{\pi(j)}) X^i $$
+$P_i$ has its coefficients in $\GF(p)$ and depends on $A(X)$, $B(X)$, $u$ and obviously on $i$. However, $P_i$ does not depend on $j$.
+
+Besides, we have
+\begin{itemize}
+\item $\deg P_i \leq u$ since the coefficients of $\left( A(X) + \alpha_{\pi(j)} \cdot B(X) \right)^u$ seen in $\GF(p)[X]$ are polynomials of degree smaller than $u$ in $\alpha_{\pi(j)}$.\\
+When we compute the remain in the division of this polynomial by $\mu(X)$, these coefficients remain polynomials of degree smaller than $u$ in $\alpha_{\pi(j)}$.
+\item $\deg P_i < p$ since $\alpha_{\pi(j)}^p = \alpha_{\pi(j)}$.
+\end{itemize}
+
+We now consider the matrix
+$$ \A := \left( \alpha_{\pi(j)}^i \right)_{0 \leq i,j \leq p-1} \in \mathcal{M}_{\F_p}(p,p)$$
+We call
+\begin{itemize}
+\item $P_i[j] \in \GF(p)$ the $j$-th coefficient of the polynomial $P_i$.
+\item $H = \left( P_i[j] \right)_{i,j} \in \mathcal{M}_{\F_p}(h,p)$
+\item $M = \left( P_i(\alpha_{\pi(j)}) \right)_{i,j} \in \mathcal{M}_{\F_p}(h,p)$.
+\end{itemize}
+
+$$ H \cdot \A = M $$
+
+We suppose now that we try to guess the private generator $g$ but only find a generator $g_0$ such that $g_0 = g^u$ with $u < h$.
+
+We can compute the elements $g_0^{c_j} \in \GF(q)$, the coefficients $P_i(\alpha_{\pi(j)}) \in \GF(p)$ and eventually the matrix $M$.
+
+We consider now $H'$, the $u$ first columns of $H$ (the other columns are equal to 0) and $\A'$ the $u$ first rows of $\A$.
+We get
+$$ H' \cdot \A' = M $$
+
+We suppose now that the first $u$ rows of $M$ are linearly independent. This allow us to consider only the first $u$ lines of the matrices $H'$ and $M$ ($H''$ and $M''$) which gives us
+$$ H'' \cdot \A' = M'' $$
+with
+\begin{itemize}
+\item $H'' \in \mathcal{M}_{\F_p}(u,u)$
+\item $\A' \in \mathcal{M}_{\F_p}(u,p)$
+\item $M'' \in \mathcal{M}_{\F_p}(u,p)$
+\end{itemize}
+
+We use then the attack seen on the first section to compute $\A'$ which gives us the permutation $\pi$.
+
+Problem :
+It seems quite unlikely that $g_0 = g^u$ with a small $u$.
+Indeed, there are $\phi(p^h-1)$ generators which is comparable to $p^h$ and the order of $h$ is only (in the suggested parameters) around 24. 
+
+This could be solved if we had a way to rapidly check whether one generator is a small power of an other.
+
+
+
 
 
 \section{Conclusions}
+
+
 
 
 \bibliographystyle{abbrv}
