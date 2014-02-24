@@ -173,11 +173,17 @@ with
 
 We use then the attack seen on the first section to compute $\A'$ which gives us the permutation $\pi$.
 
-Problem :
+\subsubsection{Problem}
 It seems quite unlikely that $g_0 = g^u$ with a small $u$.
 Indeed, there are $\phi(p^h-1)$ generators which is comparable to $p^h$ and the order of $h$ is only (in the suggested parameters) around 24. 
 
 This could be solved if we had a way to rapidly check whether one generator is a small power of an other.
+
+\subsubsection{Further...}
+
+If $u$ is a small multiple of $p$, the previous arguments still apply since then $u = p u'$ with $u' < h$ and we get
+$$ g_0^{c_j} = \left( \left( A(X) + \alpha_{\pi(i)} B(X) \right)^p \right)^{u'} = \left( A^p(X) + \alpha_{\pi(i)}^p B^p(X) \right)^{u'} = \left( A'(X) + \alpha_{\pi(i)} B'(X) \right)^{u'}$$
+This only changes the polynomials $A$ and $B$ but still allow to compute the permutation $\pi(i)$ on these conditions.
 
 
 
