@@ -7,9 +7,9 @@ randrange = current_randstate().python_random().randrange
 def random_distinct_int(start, end, number):
     size = end - start
     if size < 0:
-        raise "Invalid interval"
+        raise BaseException("Invalid interval")
     if number > size:
-        raise "Too small interval"
+        raise BaseException("Too small interval")
     
     if number <= size / 2:
         ans = []
