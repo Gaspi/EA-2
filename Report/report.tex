@@ -132,9 +132,9 @@ Then if we consider an other generator $g_0$ of $\GF(q)^{\*}$, we have $g_0 = g^
 $$ g_0 ^{c_j} = \left( A(X) + \alpha_{\pi(j)} \cdot B(X) \right)^u \mod \mu(X) $$
 where $\mu$ is the polynomial of degree $h$ defining the field $\GF(q)$.
 
-Besides we have
+As an attempt to guess $g$, we can choose a random generator $g_0$ and compute the quantities
 $$ g_0 ^{c_j} = \sum_{i=0}^{h-1} P_i(\alpha_{\pi(j)}) X^i $$
-$P_i$ has its coefficients in $\GF(p)$ and depends on $A(X)$, $B(X)$, $u$ and obviously on $i$. However, $P_i$ does not depend on $j$.
+where $P_i$ is a polynomial with coefficients in $\GF(p)$. $P_i$ depends on $A(X)$, $B(X)$, $u$ and obviously on $i$. However, $P_i$ does not depend on $j$.
 
 Besides, we have
 \begin{itemize}
@@ -158,7 +158,7 @@ We suppose now that we try to guess the private generator $g$ but only find a ge
 
 We can compute the elements $g_0^{c_j} \in \GF(q)$, the coefficients $P_i(\alpha_{\pi(j)}) \in \GF(p)$ and eventually the matrix $M$.
 
-We consider now $H'$, the $u$ first columns of $H$ (the other columns are equal to 0) and $\A'$ the $u$ first rows of $\A$.
+Since $\deg P_i \leq u$, we know that only the $u$ first columns of the matrix $H$ are non zero. Therefore we consider now the matrix $H'$ build from the $u$ first columns of $H$ (the other columns being equal to 0) and $\A'$ the $u$ first rows of $\A$.
 We get
 $$ H' \cdot \A' = M $$
 
@@ -171,15 +171,26 @@ with
 \item $M'' \in \mathcal{M}_{\F_p}(u,p)$
 \end{itemize}
 
-We use then the attack seen on the first section to compute $\A'$ which gives us the permutation $\pi$.
+We use then the attack described in the first section to compute $\A'$ which yields the permutation $\pi$.
 
-Problem :
+\subsubsection{Problem}
 It seems quite unlikely that $g_0 = g^u$ with a small $u$.
 Indeed, there are $\phi(p^h-1)$ generators which is comparable to $p^h$ and the order of $h$ is only (in the suggested parameters) around 24. 
 
 This could be solved if we had a way to rapidly check whether one generator is a small power of an other.
 
+\subsubsection{Further...}
 
+If $u$ is a small multiple of $p$, the previous arguments still apply since then $u = p u'$ with $u' < h$ and we get
+$$ g_0^{c_j} = \left( \left( A(X) + \alpha_{\pi(i)} B(X) \right)^p \right)^{u'} = \left( A^p(X) + \alpha_{\pi(i)}^p B^p(X) \right)^{u'} = \left( A'(X) + \alpha_{\pi(i)} B'(X) \right)^{u'}$$
+This only changes the polynomials $A$ and $B$ but still allow to compute the permutation $\pi(i)$ on these conditions.
+
+We actually also have this conclusion if $u$ is a small multiple of $p^r$ for all $0 \leq r < h$.
+In fact a condition for the previous to work is that when $u$ is written in base $p$, the sum of its digits does not exceed $h$.
+
+Remains to see how many different $u$ this methods allows to check... Is it reasonable to try this method with several value for $g_0$ until we find $g$ ? I guess not...
+
+Besides, as explained in Sidelnikov and Shestakov's article, if the previous reasoning excludes a set of candidates $u_i$, it also excludes $p \cdot u_i$ and even $p^r \cdot u_i$ for all $0 \leq r < h$. Actually, this doesn't excludes any more candidate since the writing of $p\cdot u_i$ and $u^i$ modulo $p^h-1$ in base $p$ are just rotated.
 
 
 
