@@ -123,6 +123,32 @@ Secret keys consist of
 Public keys consist of all
 $$ c_i = d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
 
+The message consists in a bitstring $m = [m_0...m_{p-1}]$ of length $p$ such that $\sum_i m_i = h$. The ciphertext is
+$$ E(M) := \sum_{i=0}^{p-1} m_i c_i$$
+To decipher this message, we compute
+$$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{pi(i)}\right)^{c_i} $$
+
+% Explain here how to retrieve then the c_i
+
+
+
+When we attack this cryptosystem, we can consider a generator $g_0 = g^u$ with $u$ unknown and $\gcd(u, q-1) = 1$ we then have
+$$ g_0^{c_i} = \left( g^d \left( t + \alpha_{\pi(i)} \right) \right)^u = \left(A + \alpha_{\pi(i)} \cdot B\right)^u$$
+We can then consider that the secret key is
+\begin{itemize}
+\item $A \in \F_q$.
+\item $B \in \F_q$ such that $t = A\cdot B^{-1}$ has algebraic degree $h$.
+\item $0 < u < q-1$ prime with $q-1$.
+\item the permutation $\pi$ of $\{ 0, ... , p-1 \}$.
+\end{itemize}
+and public key consists in all the
+$$ d_i := \left(A + \alpha_{\pi(i)} \cdot B\right)^u \in \F_q$$
+The ciphertext becomes
+$$ E'(M) := \prod_{i=0}^{p-1} d_i^{m_i} = g^{uE(M)} = B^{uh} \left( \prod_i \left( t + \alpha_{pi(i)}\right)^{c_i} \right)^u$$
+Knowing $u$, $B$ and $h$, it is easy to compute from $E'(M)$, the following quantity
+$$ \prod_i \left( t + \alpha_{pi(i)}\right)^{c_i} $$
+which allow us to retrieve all the $c_i$.
+
 \subsection{A First Attack using Reed-Solomon codes}
 
 We have for all $j$
