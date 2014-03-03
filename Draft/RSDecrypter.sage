@@ -28,7 +28,7 @@ def Decrypt( publicKey, verbose=True):
     
     Verb("Computing alpha...")
     # Here we try to guess the ratio cb1/cb2
-    def tryRatio(ratio = 1,count = 1):
+    def tryRatio(ratio = Field(1), count = 1):
         Verb( str(count) + "-th try. Ratio  = " + str(ratio) )
         
         for j in range(k,n):

@@ -1,8 +1,8 @@
 
 from sage.misc.randstate import current_randstate
 
-randrange = current_randstate().python_random().randrange
 
+randrange = current_randstate().python_random().randrange
 
 def random_distinct_int(start, end, number):
     size = end - start
@@ -27,9 +27,6 @@ def random_distinct_int(start, end, number):
             ( ans[i], ans[r] ) = ( ans[r], ans[i] )
             yield ans[i]
     
-
-
-
 
 
 class GRSCode:
