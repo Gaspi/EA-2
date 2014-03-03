@@ -49,9 +49,11 @@ def Decrypt( publicKey, verbose=True):
     while not tab[i]:
         i+=1
     
+    !!! Error here !!!
     ar = Field(i)
-    print(str(ar))
-    print(str(alpha))
+    Field.fetch_int(i)
+    
+    
     alpha = [ 1/ (ar -  el) for el in alpha]
     alpha[k] = 0
     
