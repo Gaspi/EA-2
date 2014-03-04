@@ -92,12 +92,11 @@ H_3 \A\left( \alpha_1, \ ... \ , \alpha_n, a\cdot z_1, \ ... \ , a\cdot z_n \rig
 This means that for any cryptosystem $M = H \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, for any birationnal transformation
 $$ \phi : x \mapsto \frac{ax+b}{cx+d} $$
 $M = H_{\phi} \A(\phi(\alpha_1), \ ... \ , \phi(\alpha_n), z'_1, \ ... \ , z'_n)$ and by using the unique transformation $\phi$ that maps $(\alpha_1, \alpha_2, \alpha_3)$ to $(0,1,\infty)$, we get that for any cryptosystem $M = H \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, $M$ can be uniquely written
-$$ M = H' \A(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, z'_1, \ ... \ , z'_n) $$
+$$ M = H' \A(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, 1, z'_2, \ ... \ , z'_n) $$
 with $H'$ nonsingular, $z'_i \neq 0$ and $\alpha_i$ distincts elements of $\F_q-\{0, 1, \infty)$.
 
 So, when $M$ is given, it is impossible to compute the original matrices $\A$ and $H$ since many pairs of such matrices lead to the same public matrix $M$. However, computing an equivalent pair is sufficient
-since it will allow to decipher the messages as well as the original secret pair of matrices. So, the attack will consist of finding $H$ and $\A(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, z'_1, z'_2, \ ... \ , z'_n)$, equivalent to the original pair. 
-We can also presume that $z'_1=1$. Indeed, if we multiply all the elements $z'_i$ by a factor $a \in \F_q$ and all the elements of the matrix $H$ by $a^-^1$, the resulting matrix $M$ will be the same.
+since it will allow to decipher the messages as well as the original secret pair of matrices. So, the attack will consist of finding $H$ and $\A(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, 1, z'_2, \ ... \ , z'_n)$, equivalent to the original pair.
 
 \section{Attack of Sidelnikov-Shestakov}
 
