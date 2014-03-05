@@ -32,9 +32,9 @@ def Decrypt( publicKey, verbose=True):
     Verb( "Ratio  = " + str(ratio) )
     alphak = -ratio / ( (b[0,k+1] / b[1,k+1]) - ratio)
     
-    alpha = [ Field.fetch_int(0), Field.fetch_int(1)] \
+    alpha = [ Field(0), Field(1)] \
           + [ alphak - c[i] * alphak * b[0,k+1] / c[0] / b[i,k+1]  for i in range(2,k)] \
-          + [Field.fetch_int(0)] \
+          + [Field(0)] \
           + [ -ratio / ( (b[0,j] / b[1,j]) - ratio) for j in range(k+1,n) ]
     
     
@@ -49,7 +49,10 @@ def Decrypt( publicKey, verbose=True):
     while not tab[i]:
         i+=1
     
-    ar = Field.fetch_int(i)
+    !!! Error here !!!
+    ar = Field(i)
+    Field.fetch_int(i)
+    
     
     alpha = [ 1/ (ar -  el) for el in alpha]
     alpha[k] = 0

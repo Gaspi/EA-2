@@ -7,10 +7,6 @@
 
 \input{defines}
 
-% \newcommand{\GF}[1]{\text{GF}(#1)}
-\newcommand{\GF}[1]{\F_{#1}}
-
-
 % More definitions
 \usepackage{showkeys}
 \usepackage{mathtools}
@@ -134,9 +130,6 @@ line, we have :
 \item $\forall$  $1\leq i\neq j\leq k, f_i(\alpha_j)=0 $
 \item $\forall$  $1\leq i\leq k$ $\forall$ $k+1\leq j\leq n$, $f_i(\alpha_j)=b_{i,j} $
 \end{itemize}
-So, since all the $\alpha_i$ are different, the polynomial $f_i$ has $k-1$ simple roots. As a consequence, $b_{i,j}\neq0$ for all $1\leq i\leq k$ and $k+1\leq j\leq n$. Moreover, we know the general 
-form of the polynomial $f_i$ :
-$$f_i(X) = c_i.\prod_{1\leq j\leq k, i\neq j} (X-\alpha_j)$$ where $c_i \in \F\backslash{0}$.
 
 For $2 \leq k \leq n-2$, this attack works with a complexity of ...
 
@@ -147,8 +140,8 @@ For $2 \leq k \leq n-2$, this attack works with a complexity of ...
 
 Secret keys consist of
 \begin{itemize}
-\item an element $t \in \GF{q}$ with algebraic degree $h$
-\item a generator $g$ of $\GF{q}^{\ast} $
+\item an element $t \in \GF(q)$ with algebraic degree $h$
+\item a generator $g$ of $\GF (q)^{\ast} $
 \item an integer $d \in \Z_{q-1} $
 \item a permutation $\pi$ of $\{ 0, ... , p-1 \}$.
 \end{itemize}
@@ -186,18 +179,18 @@ which allow us to retrieve all the $c_i$.
 
 We have for all $j$
 $$ g^{c_j} = g^d \cdot (t + \alpha_{\pi(j)} ) = A + \alpha_{\pi(j)} \cdot B $$
-where $\alpha_{\pi(j)} \in \GF{p}$ and $A$ and $B$ are elements of $\GF{p^h} \subset \GF{p}[X]$ and can be seen as polynomials of the variable $X$ with coefficients in $\GF{p}$.
-Then if we consider an other generator $g_0$ of $\GF{q}^{*}$, we have $g_0 = g^u$ and
+where $\alpha_{\pi(j)} \in \GF(p)$ and $A$ and $B$ are elements of $\GF(p^h) \subset \GF(p)[X]$ and can be seen as polynomials of the variable $X$ with coefficients in $\GF(p)$.
+Then if we consider another generator $g_0$ of $\GF(q)^{\*}$, we have $g_0 = g^u$ and
 $$ g_0 ^{c_j} = \left( A(X) + \alpha_{\pi(j)} \cdot B(X) \right)^u \mod \mu(X) $$
-where $\mu$ is the polynomial of degree $h$ defining the field $\GF{q}$.
+where $\mu$ is the polynomial of degree $h$ defining the field $\GF(q)$.
 
 As an attempt to guess $g$, we can choose a random generator $g_0$ and compute the quantities
 $$ g_0 ^{c_j} = \sum_{i=0}^{h-1} P_i(\alpha_{\pi(j)}) X^i $$
-where $P_i$ is a polynomial with coefficients in $\GF{p}$. $P_i$ depends on $A(X)$, $B(X)$, $u$ and obviously on $i$. However, $P_i$ does not depend on $j$.
+where $P_i$ is a polynomial with coefficients in $\GF(p)$. $P_i$ depends on $A(X)$, $B(X)$, $u$ and obviously on $i$. However, $P_i$ does not depend on $j$.
 
 Besides, we have
 \begin{itemize}
-\item $\deg P_i \leq u$ since the coefficients of $\left( A(X) + \alpha_{\pi(j)} \cdot B(X) \right)^u$ seen in $\GF{p}[X]$ are polynomials of degree smaller than $u$ in $\alpha_{\pi(j)}$.\\
+\item $\deg P_i \leq u$ since the coefficients of $\left( A(X) + \alpha_{\pi(j)} \cdot B(X) \right)^u$ seen in $\GF(p)[X]$ are polynomials of degree smaller than $u$ in $\alpha_{\pi(j)}$.\\
 When we compute the remain in the division of this polynomial by $\mu(X)$, these coefficients remain polynomials of degree smaller than $u$ in $\alpha_{\pi(j)}$.
 \item $\deg P_i < p$ since $\alpha_{\pi(j)}^p = \alpha_{\pi(j)}$.
 \end{itemize}
@@ -206,7 +199,7 @@ We now consider the matrix
 $$ \A := \left( \alpha_{\pi(j)}^i \right)_{0 \leq i,j \leq p-1} \in \mathcal{M}_{\F_p}(p,p)$$
 We call
 \begin{itemize}
-\item $P_i[j] \in \GF{p}$ the $j$-th coefficient of the polynomial $P_i$.
+\item $P_i[j] \in \GF(p)$ the $j$-th coefficient of the polynomial $P_i$.
 \item $H = \left( P_i[j] \right)_{i,j} \in \mathcal{M}_{\F_p}(h,p)$
 \item $M = \left( P_i(\alpha_{\pi(j)}) \right)_{i,j} \in \mathcal{M}_{\F_p}(h,p)$.
 \end{itemize}
@@ -215,7 +208,7 @@ $$ H \cdot \A = M $$
 
 We suppose now that we try to guess the private generator $g$ but only find a generator $g_0$ such that $g_0 = g^u$ with $u < h$.
 
-We can compute the elements $g_0^{c_j} \in \GF{q}$, the coefficients $P_i(\alpha_{\pi(j)}) \in \GF{p}$ and eventually the matrix $M$.
+We can compute the elements $g_0^{c_j} \in \GF(q)$, the coefficients $P_i(\alpha_{\pi(j)}) \in \GF(p)$ and eventually the matrix $M$.
 
 Since $\deg P_i \leq u$, we know that only the $u$ first columns of the matrix $H$ are non zero. Therefore we consider now the matrix $H'$ build from the $u$ first columns of $H$ (the other columns being equal to 0) and $\A'$ the $u$ first rows of $\A$.
 We get
@@ -250,19 +243,6 @@ In fact a condition for the previous to work is that when $u$ is written in base
 Remains to see how many different $u$ this methods allows to check... Is it reasonable to try this method with several value for $g_0$ until we find $g$ ? I guess not...
 
 Besides, as explained in Sidelnikov and Shestakov's article, if the previous reasoning excludes a set of candidates $u_i$, it also excludes $p \cdot u_i$ and even $p^r \cdot u_i$ for all $0 \leq r < h$. Actually, this doesn't excludes any more candidate since the writing of $p\cdot u_i$ and $u^i$ modulo $p^h-1$ in base $p$ are just rotated.
-
-
-
-\subsection{Vaudenay attack}
-We can see that the previous attack requires to find a generator of $\F_q$ among the elements that can be written $g^u$ with $w_p(u) \leq h$. Since there are very few of such elements compared to the $\phi(p^h)$ different generators of $\F_q$, Vaudenay suggests \cite{Vau01} to consider a generator $g_{p_r}$ of the sub-field $\F_{p^r}$ of $\F_{p^h}$. He introduces the following theorem
-\begin{theorem}
-For any factor $r$ of $h$, there exists a generator $g_{p^r}$ of the multiplicative group of the subfield $\F_{p^r}$ of $\F_q$ and a polynomial $Q$ with degree $h/r$ whose coefficients are in $\F_{p^r}$ and such that $-t$ is a root and that, for any $i$ , we have $Q(\alpha_{\pi(i)} = g_{p^r}^{c_i}$.
-\end{theorem}
-
-If we chose a base $(e_i)_{1 \leq i \leq r}$ of $\GF{p^r}$, we can write the coefficients of $g_{p^r}^{c_i}$ in this base as polynomials $Q_j$ in $\alpha_{\pi(i)}$. We get
-$$ g_{p^r}^{c_i} = \sum_{j=1}^r Q_j(\alpha_{\pi(i)}) e_j $$
-
-
 
 
 
