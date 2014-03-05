@@ -62,7 +62,7 @@ z_1 \alpha_1^1 &  z_2 \alpha_2^1 & \cdots & z_n \alpha_n^1 \\
 z_1 \alpha_1^{k-1} &  z_2 \alpha_2^{k-1} & \cdots & z_n \alpha_n^{k-1}
 \end{array}
 \right) \in \mathcal{M}_{\F_q}(k,n) $$
-where $\alpha_i \in \F$ and $z_i \in \F_q\backslash\{0\}$ for all $i \in \{1,...,n\}$. Note that, if $\alpha_i = \infty$, we replace the $i^t^h$ column by the vector $z_i(0,...,0,1)^T$, so that all the coefficients of the matrix are finite.
+where $\alpha_i \in \F$ and $z_i \in \F_q\backslash\{0\}$ for all $i \in \{1,...,n\}$. Note that, if $\alpha_i = \infty$, we replace the $i^{th}$ column by the vector $z_i(0,...,0,1)^T$, so that all the coefficients of the matrix are finite.
 
 \bigskip
 
@@ -86,7 +86,7 @@ $$c=(z_if_c(\alpha_i))_{1\leq i\leq n}$$ where $f_c$ is a polynomial whose degre
 
 
 Thus, given a message to send, which is actually a vector $b$ of $\F_q^k$, one will have to transmit the vector $b.M + e$ where $e$ is a random vector of $\F_q^n$ with Hamming weight at most $t=\lfloor\frac{n-k}{2}\rfloor$.
-So, since a GRS code correct at most $t=\lfloor\frac{n-k}{2}\rfloor$ error, the original message can be recovered by computing $b'=b.M$, finding the closest codeword from the received message, and then computing $b'M^-^1$.
+So, since a GRS code correct at most $t=\lfloor\frac{n-k}{2}\rfloor$ error, the original message can be recovered by computing $b'=b.M$, finding the closest codeword from the received message, and then computing $b'M^{-1}$.
 However, the original message can not be easily recovered when not knowing the GRS code used in the secret key.
 
 \subsection{Equivalence between Reed-Solomon codes}
@@ -105,7 +105,7 @@ with $H'$ nonsingular, $z'_i \neq 0$ and $\alpha_i$ distincts elements of $\F_q-
 
 So, when $M$ is given, it is impossible to compute the original matrices $\A$ and $H$ since many pairs of such matrices lead to the same public matrix $M$. However, computing an equivalent pair is sufficient
 since it will allow to decipher the messages as well as the original secret pair of matrices. So, the attack will consist of finding $H$ and $\A(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, z'_1, z'_2, \ ... \ , z'_n)$, equivalent to the original pair. 
-We can also assume that $z'_1=1$. Indeed, if we multiply all the elements $z'_i$ by a factor $a \in \F_q$ and all the elements of the matrix $H$ by $a^-^1$, the resulting matrix $M$ will be the same.
+We can also assume that $z'_1=1$. Indeed, if we multiply all the elements $z'_i$ by a factor $a \in \F_q$ and all the elements of the matrix $H$ by $a^{-1}$, the resulting matrix $M$ will be the same.
 
 \section{The Sidelnikov-Shestakov Attack}
 
