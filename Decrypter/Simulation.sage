@@ -75,15 +75,6 @@ M.rank()
 
 
 
+# Problemes :
+# - Comment calculer plus efficacement le log discret (discrete_log ne semble pas etre très efficace...)
 
-
-
-# def H(u):
-#     return [ (A + p * B)^u for p in pi ]
-# 
-# def MCoeff(u):
-#     aux = [ ((A + e * B)^u)._vector_() for e in pi ]
-#     return Mat(F, h, p)( [  [ aux[i][j] for i in range(p) ]  for j in range(h) ] )
-# 
-# def GetKey(u):
-#     return {"M" : MCoeff(u), "t": (p - h) // 2}
