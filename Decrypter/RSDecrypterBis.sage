@@ -3,6 +3,19 @@ load "GRSCode.sage"
 load "RSCryptosystem.sage"
 
 
+
+def BaseP(Field, e):
+    auxF.<X> = Field
+    p = auxF.characteristic()
+    power = auxF(1)
+    res = 0
+    while e > 0:
+        res += power * auxF(e % p)
+        power *= auxF(X)
+        e = e // p
+    return res
+
+
 def Decrypt( publicKey, verbose=True):
     
     def Verb(msg):
@@ -39,19 +52,23 @@ def Decrypt( publicKey, verbose=True):
     
     
     
+    # astuce pour trouver un élément différent des autres ? dans un corps
+    
     tab = [ True for i in range(q) ]
     for el in alpha:
         tab[ int(el.int_repr()) ] = False
-    
-    # astuce pour trouver un élément différent des autres ? dans un corps
     
     i = 0
     while not tab[i]:
         i+=1
     
-    !!! Error here !!!
-    ar = Field(i)
-    Field.fetch_int(i)
+    
+    ar = BaseP(Field , i)
+    
+    # ar = Field(i)
+    # Field.fetch_int(i)
+    
+    # Simplifier le code ci dessus
     
     
     alpha = [ 1/ (ar -  el) for el in alpha]
