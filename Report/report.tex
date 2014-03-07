@@ -313,18 +313,64 @@ g_{p^r} &=& g^{\frac{p^h-1}{p^r-1}} \\
 \item We choose different values for $d$, $t$ and $\pi$, the results remain the same.
 \item We choose the base $\left(g_{p^r}, g_{p^r}^p, g_{p^r}^{p^2} \right)$ for the $\F_p$-vector space $\F_{p^r}$ (but this is of no influence on the results).
 \item We choose $(u_i)_{1\leq  i \leq 11} = (1,2,p+1,3,2p+1,p+2,4,p+3,3p+1,2p+2,2p^2+p+1)$\\
-We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomials of degree smaller than $4h/r = 32$ in the $\alpha_{\pi(j)}$.
+We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomials of degree smaller than $4 h/r+1 = 33$ in the $\alpha_{\pi(j)}$.
 \end{itemize}
 As a result, we obtain $11 \times 3 = 33$ lines of coordinates linearly independent. This would allow the attack to retrieve the permutation $\pi$ using the attack on the cryptosystem based on Reed-Solomon codes.
 
 This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Therefore the condition $r \geq \sqrt{h}$ is not absolutely required and we can hope to get a very weaker condition (the minimum $r$ possible could even be a constant). 
 
+On the following tabular, we present the result of the simulation for different value of $p$, $h$, $r$.
 
 
+\begin{tabular}{|c|c|c|c|l|}
+\hline
+$p$ & $h$ & $r$ & $w_p(u_i)$ & Number of linearly independent lines  \\
+\hline
+197 & 24 & 2 & $w$ & $\frac{w(w+3)}{2} < 12w+1$ Attack impossible. \\
+\hline
+197 & 24 & 3 & 4 & 33\\
+\hline
+197 & 24 & 4 & 2 & 13\\
+\hline
+197 & 24 & $r \geq 6$ & 1 & $1 + h/r$ \\
+\hline
+193 & 36 & 2 & $w$ & $\frac{w(w+3)}{2} < 18w+1$ Attack impossible. \\
+\hline
+193 & 36 & 3 & 6 & 73\\
+\hline
+193 & 36 & 4 & 3 & 28\\
+\hline
+193 & 36 & 6 & 2 & 13\\
+\hline
+193 & 36 & $r \geq 9$ & 1 & $1 + h/r$ \\
+\hline
+251 & 60 & 2 & $w$ & $\frac{w(w+3)}{2} < 30w+1$ Attack impossible. \\
+\hline
+251 & 60 & 3 & 8 & 161\\
+\hline
+251 & 60 & 4 & 4 & 61\\
+\hline
+251 & 60 & 5 & 3 & 37\\
+\hline
+251 & 60 & 6 & 2 & 21\\
+\hline
+251 & 60 & $r \geq 10$ & 1 & $1 + h/r$ \\
+\hline
+\end{tabular}
 
+When we choose, $r = 2$ and $w_p(u_i) \leq w$, the number of linearly independent lines is $\frac{w(w+3)}{2}$. This does not allow to attack the cryptosystem since to have $\frac{w(w+3)}{2} \geq 12w+1$, we would need $w \geq 22$ and if $w_p(u_i) = 2$, then the degree of the corresponding polynomials is $22 \times 12+1 = 265 > 197$.
 
+Regarding that last set of examples, the Chor-Rivest attack would require to do an exhaustive research on approximately $251^{10}$ different possible generators of $\F_{p^{10}}$. With our approach, the cryptosystem can be attacked using the right generator $g_{p^3}$ of $\F_{p^3}$. The research is clearly a lot faster.
 
+\subsubsection{Number of linearly independent polynomials}
 
+We can study now the number of linearly independent polynomials that the writing of $g_{p^r}^{uc_j}$ can generate for all $u$ such that $w_p(u) \leq w$.
+
+For example, for $r = 2$, it seems (experimentally) that the number of such linearly independent polynomials is always $\frac{w(w+3)}{2}$ and does not depend on $p$ or $h$.
+
+For $r = 3$, the number of such linearly independent polynomials is $\frac{(w+1)(w+2)(w+3)}{6}-1$.
+
+We could guess that for bigger $r$, this number is always $\Theta\left(\frac{w^r}{r!}\right)$.
 \section{Conclusions}
 
 
