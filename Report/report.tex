@@ -393,10 +393,21 @@ For $r = 3$, the number of such linearly independent polynomials is $\frac{(w+1)
 
 We could guess that for bigger $r$, this number is always $\Theta\left(\frac{w^r}{r!}\right)$.
 
+Let $r$ divisor of $h$, we call $u_w$ the number of linearly independent lines we can get using $g_{p^r}^u$ with $w_p(u) \leq w$. We have $u_1 = r$ obviously because using $g_{p^r}$, we can only get $r$ lines corresponding to the $r$ different coordinate of $g_{p^r}^{c_j}$ in $\F_{p^r}$.
+Experimentally we notice the following
+\begin{itemize}
+\item For $w \leq h/r$, $u_w = u_{w-1} + \binom{w+r-1}{r-1}$
+\item For $w > h/r$, $u_w = u_{w-1} + h/r$.
+\end{itemize}
+
+We could guess that for all $w \leq h/r$,
+$$ u_w = \sum_{i=0}^{w-1} \binom{w+i}{i} = \Theta\left( \frac{w^r}{r!}\right) $$
+
+
 
 \section{Draft}
 
-We should prove that indeed at least $C\frac{w^r}{r!}$ linearly independent polynomials can be found in the coordinate of $g_{p^r}^{uc_j}$ with $w_p(u) \leq w$.
+We should prove that indeed at least $C\frac{w^r}{r!}$ linearly independent polynomials can be found in the coordinate of $g_{p^r}^{uc_j}$ with $w_p(u) \leq w \leq h/r$.
 
 Then, we have that all we need for the attack to work is to choose $r$ such that there exists $w$ such that $w \cdot \frac{h}{r} + 1 \leq p-2$ and
 
@@ -419,6 +430,9 @@ so
 $$ r \geq \frac{\log p - \log \log p}{C'' + \log \log p} \geq C''' \frac{\log p}{\log\log p}$$
 meaning that the research for a generator $g_{p^r}$ is almost polynomial...
 
+The condition $r w \leq h$ yields an upper bound on the $r$.
+$$ r^2 \leq C'' h h^{\frac{1}{r-1}} $$
+which is asymptotically always verified given the lower bound found.
 
 
 

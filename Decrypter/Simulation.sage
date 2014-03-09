@@ -1,7 +1,7 @@
-
-
 load "RandomFunc.sage"
 load "RSDecrypterBis.sage"
+
+
 
 p = 251
 h = 120
@@ -42,6 +42,7 @@ for i in range(r, h):
 
 b = baseInv ^(-1)
 
+print "Initialisation done."
 
 
 def MCoeff(u):
@@ -62,13 +63,13 @@ def LCoeff(l):
 
 
 # example of tests
-LCoeff([1,2,p+1]).rank()        # 9 as expected 
-LCoeff([1,2,p+1,p^2+1]).rank()  # only 9 because p^2+1 = p^2 * (p+1)  (rotation)
-LCoeff([1,2,p+1,3, 2*p+1, p+2]).rank()  # 18 because p^2+1 = p^2 * (p+1)  (rotation)
-LCoeff([1,2,p+1,3, 2*p+1, p+2, p^2+p+1]).rank()  # only 19 surprisingly
+# LCoeff([1,2,p+1]).rank()        # 9 as expected 
+# LCoeff([1,2,p+1,p^2+1]).rank()  # only 9 because p^2+1 = p^2 * (p+1)  (rotation)
+# LCoeff([1,2,p+1,3, 2*p+1, p+2]).rank()  # 18 because p^2+1 = p^2 * (p+1)  (rotation)
+# LCoeff([1,2,p+1,3, 2*p+1, p+2, p^2+p+1]).rank()  # only 19 surprisingly
 
-M = LCoeff([1,2,p+1,3, 2*p+1, p+2,4,p+3,3*p+1,2*p+2,2*p^2+p+1])
-M.rank()
+# M = LCoeff([1,2,p+1,3, 2*p+1, p+2,4,p+3,3*p+1,2*p+2,2*p^2+p+1])
+# M.rank()
 # 33
 # On a 33 lignes indépendantes qui sont des évaluations en les pi(i)
 # de polynomes de degrés 33 = 4*8 + 1 maximum (h/r = 8 et le poids max modulo p est 4)
