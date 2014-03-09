@@ -40,10 +40,19 @@ In this article, we discuss about the Sidelnikov-Shestakov attack on cryptosyste
 \section{Introduction}
 \label{sec:intro}
 
+Niederreiter and McEliece cryptosystem \cite{NiederH86} was one of the first to use randomization in the encryption process. Indeed, in such a scheme, the encrypter uses a random error to prevent attacks on the codeword. This codeword is then decrypted using an error-correcting Reed-Solomon code. This algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
+
+In 1992, Sidelnikov and Shestakov suggest an attack \cite{SidelShes92} on the public key of this cryptosystem using equivalences between private keys.
+
+The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it took longer to break than most, and is a very elegant use of finite fields.
+
+The first efficient attack for the proposed parameters (i.e., $p \simeq 200$, $h \simeq 24$) has been obtained by Vaudenay in 2001, assuming $h$ has a small factor.
 
 
 \subsection{Our Work}
+In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack. We use here the echelon form of the public key as suggested by Wieschebrink \cite{Wiesch}. This gives an easy algorithm to attack such a scheme.
 
+On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attacks" introduced by Vaudenay and the  Sidelnikov-Shestakov attack. This allow us to describe an algorithm for a "known $g_{p^r}$ attacks" which doesn't require $r$ to be as big as in Vaudenay's article. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p}$ assuming we have $h \simeq \frac{p}{\log p}$ as suggested in Chor and Rivest's article and $h$ has very small factors (around $\log p$). That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
 
 
 
@@ -54,7 +63,7 @@ In this article, we discuss about the Sidelnikov-Shestakov attack on cryptosyste
 
 \subsection{A cryptosystem based on Reed-Solomon codes}
 
-We study here the public-key cryptosystem introduced by Sidelnikov and Shestakov \cite{SidelShes92} applied to the generalized Reed-Solomon codes. Let $\F_q$ be a finite field with $q = p^h$ elements and $\F = \F_q \cup \{ \infty \}$, where $\infty$ has usual properties ( $1/\infty = 0$, etc). We call $\A$ the following matrix:
+We study here the public-key cryptosystem introduced by Niederreiter and McEliece \cite{NiederH86} applied to the generalized Reed-Solomon codes. Let $\F_q$ be a finite field with $q = p^h$ elements and $\F = \F_q \cup \{ \infty \}$, where $\infty$ has usual properties ( $1/\infty = 0$, etc). We call $\A$ the following matrix:
 $$ \A(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n) := \left(
 \begin{array}{cccc}
 z_1 \alpha_1^0 &  z_2 \alpha_2^0 & \cdots & z_n \alpha_n^0 \\
