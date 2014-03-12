@@ -2,17 +2,25 @@ load "RandomFunc.sage"
 load "RSDecrypterBis.sage"
 
 
+#r = 2
+#hsr = 2
+h = hsr * r
+# h = 120
 
 p = 251
-h = 120
 q = p ^ h
-r = 4
 bF = GF(p)
 F.<X> = GF(p^h)
 
-
+# Find a random generator of F_p^r
 g = F.multiplicative_generator()
 gpr = g^( (q-1)/(p^r-1) )
+aux = randrange(1, p^r-1)
+while gcd(aux, p^r-1) != 1:
+    aux = randrange(1, p^r-1)
+gpr = gpr ^ aux
+
+
 pi = random_permutation(F.base_ring())
 d = randrange(q)
 t = F.random_element()
@@ -94,14 +102,18 @@ def LightWords(u):
 
 u = 0
 ra = 0
-while ra < u * (h / r) + 1:
-    print str(u) + " : " + str(ra) + " -> " + str(u * (h / r) + 1)
+ok = ""
+while (u < hsr) & (ra < u * hsr + 1):
     u += 1
     ra = LCoeff(LightWords(u)).rank()
+    if ra >= u * hsr + 1:
+        ok = "  (OK)"
+    print str(u) + " : " + str(ra) + " -> " + str(u*hsr+1) + ok
+    
      
 
-print "Success : " + str(u)
-print "Degree max : " + str(u * (h / r) + 1)
+#print "Success : " + str(u)
+#print "Degree max : " + str(u*hsr+1)
 
 
 # Problemes :
