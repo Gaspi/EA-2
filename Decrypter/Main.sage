@@ -18,8 +18,8 @@ if small_case:
     k=4
 else:
     e=10
-    n=1000
-    k=700
+    n=251
+    k=240
 
 
 
@@ -31,15 +31,15 @@ rsc.init_random()
 Verb("Attack on the public key (new cryptosystem : rsd)")
 
 rsd = Decrypt( rsc.public_key(), verbose )
-
-Verb("Encrypting list on integers")
-message = [i for i in range(k) ]
-ciphered = rsc.cipher_int( message )
-
-Verb("Decrypting using new cryptosystem")
-deciphered = rsd.decipher_int(ciphered)
-
-if deciphered == message:
-    Verb("Successfully deciphered !")
-else:
-    Verb("Error during deciphering...")
+# 
+# Verb("Encrypting list on integers")
+# message = [i for i in range(k) ]
+# ciphered = rsc.cipher_int( message )
+# 
+# Verb("Decrypting using new cryptosystem")
+# deciphered = rsd.decipher_int(ciphered)
+# 
+# if deciphered == message:
+#     Verb("Successfully deciphered !")
+# else:
+#     Verb("Error during deciphering...")
