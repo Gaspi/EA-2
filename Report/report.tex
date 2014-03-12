@@ -399,16 +399,16 @@ For $r = 3$, the number of such linearly independent polynomials is $\frac{(w+1)
 
 We could guess that for bigger $r$, this number is always $\Theta\left(\frac{w^r}{r!}\right)$.
 
-Let $r$ divisor of $h$, we call $u_w$ the number of linearly independent lines we can get using $g_{p^r}^u$ with $w_p(u) \leq w$. We have $u_1 = r$ obviously because using $g_{p^r}$, we can only get $r$ lines corresponding to the $r$ different coordinate of $g_{p^r}^{c_j}$ in $\F_{p^r}$.
+Let $r$ divisor of $h$, we call $u_w$ the number of linearly independent lines we can get using $g_{p^r}^u$ with $w_p(u) \leq w$. We have $u_0 = 1$ obviously because using $g_{p^r}^0$, we only get one row filled with 1.
+We also have $u_r = r+1$ because we can only get $r$ more lines using $g_{p^r}$ corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in $\F_{p^r}$.
 Experimentally we notice the following
 \begin{itemize}
 \item For $w \leq h/r$, $u_w = u_{w-1} + \binom{w+r-1}{r-1}$
 \item For $w > h/r$, $u_w = u_{w-1} + h/r$.
 \end{itemize}
 
-We could guess that for all $w \leq h/r$,
-$$ u_w = \sum_{v=0}^{w-1} \binom{v+r-1}{r-1} = \Theta\left( \frac{w^r}{r!}\right) $$
-
+We could postulate that for all $w \leq h/r$,
+$$ u_w = \sum_{v=0}^{w} \binom{v+r-1}{r-1} = \binom{w+r}{r} $$
 
 \section{Optimum choice for $r$}
 
