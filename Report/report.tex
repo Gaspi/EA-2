@@ -300,15 +300,21 @@ However the "known $g_{p^r}$ attack" suggested in Vaudenay's article can be impr
 
 
 \subsection{Generating more rows...}
-When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ where $\deg Q \leq h/r$, we only have $r$ rows corresponding to the $r$ different polynomials of the coordinates of $g_{p^r}^{c_j}$ in a certain base of $\F_{p^r}$. Being able to generate more row would allow to chose a lower $r$ and improve drastically the attack.
+When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ where $\deg Q \leq h/r$, we only have $r$ polynomials corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in a certain base of $\F_{p^r}$. Being able to generate more polynomials would allow to chose a lower $r$ and improve drastically the attack.
 
-We could consider now the coordinates of $g_{p^r}^{u c_j}$ for $u$ such that $w_p(u)$ remains small. For example, we could decide $w_p(u) \leq w$.
+We could consider now the coordinates in the equation $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for $u \in [1,p^r-1]$. This yields again $r$ polynomials of degree smaller than $u h/r$. Actually, since $P \mapsto P^p$ let the degree invariant, if we define the weight by
+$$ w_p^{(r)} : u = \sum_{i=0}^{r-1} u_i p^i \longmapsto \sum_{i=0}^{r-1} u_i \ \ \ \ \ \text{ where }  \ 0 \leq u_i \leq p-1 $$
+we know that the degree of $Q^u$ is actually at most $w_p^{(r)}(u) h / r$.
 
-This should yield (assuming $w \gg r$) up to
-$$ \left( \binom{r+1}{w} \right) = \binom{r+w+1}{w} = \binom{r+w+1}{r+1} = \Theta\left(\frac{w^{r+1}}{(r+1)!}\right) $$
-different polynomials of degree at most $w \cdot \frac{h}{r}$.
-Unfortunately, it seems probable that these are strongly linearly dependent...
+To generate more polynomials, we could then decide to consider all the equations $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for all $u \in U_w^{(r)} := \{ u \in [1,p^r-1] | w_p^{(r)}(u) \leq w \}$
+This yields $r \cdot |U_w^{(r)}|$ polynomials of degree at most $wh/r$.
 
+Besides, assuming $w \gg r$, the number of such polynomials can be up to
+$$ | U_w^{(r)} | = \left( \binom{r+1}{w} \right) = \binom{r+w+1}{w} = \binom{r+w+1}{r+1} = \Theta\left(\frac{w^{r+1}}{(r+1)!}\right) .$$
+This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if we consider polynomials of higher degree ($wh/r$), the number of such polynomials we can get is far greater than $r$ and we can hope that if we choose $w$ high enough, we can get enough different polynomials to use a Sidelnikov-Shestakov attack.
+
+
+Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal base of $\F_{p^r}$, these two sets of vectors of coordinates only differs by a rotation.
 
 
@@ -401,38 +407,46 @@ Experimentally we notice the following
 \end{itemize}
 
 We could guess that for all $w \leq h/r$,
-$$ u_w = \sum_{i=0}^{w-1} \binom{w+i}{i} = \Theta\left( \frac{w^r}{r!}\right) $$
+$$ u_w = \sum_{v=0}^{w-1} \binom{v+r-1}{r-1} = \Theta\left( \frac{w^r}{r!}\right) $$
 
 
+\section{Optimum choice for $r$}
 
-\section{Draft}
+We suppose (and should prove) that indeed at least $C\frac{w^r}{r!}$ linearly independent polynomials can be found in the coordinate of $g_{p^r}^{uc_j}$ with $w_p(u) \leq w \leq h/r$.
 
-We should prove that indeed at least $C\frac{w^r}{r!}$ linearly independent polynomials can be found in the coordinate of $g_{p^r}^{uc_j}$ with $w_p(u) \leq w \leq h/r$.
+We suppose that we have found $r$ allowing to attack a Chor-Rivest cryptosystem. We choose $w$ as big as possible (to have the weakest condition on $r$).
+Being able to perform a Sidelnikov-Sjestakov attack imposes
+$$ wh/r+1 \leq p-2$$
+This mean that we choose $w = \lfloor r \frac{p-3}{h} \rfloor $
 
-Then, we have that all we need for the attack to work is to choose $r$ such that there exists $w$ such that $w \cdot \frac{h}{r} + 1 \leq p-2$ and
+Besides we know that $h$ is suppose to be chosen around $\frac{p}{\log p}$ This means that we have $w = \Theta(r \log p) \geq C' r \log p$.
+Then, all we need for the attack to work is that we get at least $p-2$ linearly independent lines.
 
+%\begin{eqnarray*}
+%C\frac{w^r}{r!} &\geq& w \frac{h}{r} \\
+%\Leftrightarrow C w^{r-1} &\geq& h\cdot (r-1)! \\
+%\Leftarrow C w^{r-1} &\geq& h (r-1)^{r-1} \\
+%\Leftarrow w &\geq& (r-1) \left(\frac{h}{C}\right)^{\frac{1}{r-1}} \geq C' r h^{\frac{1}{r-1}}
+%\end{eqnarray*}
+%This yield
+%\begin{eqnarray*}
+%C' h \cdot h^{\frac{1}{r-1}} &\leq& p-3 \\
+%\frac{\log h}{r-1} &\leq& \log (p-3) - \log h + C'' \\
+%r-1 &\geq& \frac{\log h}{\log(p-3) - \log h + C''} 
+%\end{eqnarray*}
 
 \begin{eqnarray*}
-C\frac{w^r}{r!} &\geq& w \frac{h}{r} \\
-\Leftrightarrow C w^{r-1} &\geq& h\cdot (r-1)! \\
-\Leftarrow C w^{r-1} &\geq& h (r-1)^{r-1} \\
-\Leftarrow w &\geq& (r-1) \left(\frac{h}{C}\right)^{\frac{1}{r-1}} \geq C' r h^{\frac{1}{r-1}}
+C_1 \frac{w^r}{r!} &\geq& p-2 \\
+\Leftarrow C_2  \frac{r^r (\log p)^r}{r!} &\geq& p \\
+\Leftarrow C_2 \sqrt{2\pi r} (e \log p)^r &\geq& p  \\
+\Leftarrow (e \log p)^r &\geq& C_3 p \\
+\Leftarrow r &\geq& \frac{C_4 + \log p}{1 + \log \log p} \sim \frac{\log p}{\log \log p}
 \end{eqnarray*}
-This yield
-\begin{eqnarray*}
-C' h \cdot h^{\frac{1}{r-1}} &\leq& p-3 \\
-\frac{\log h}{r-1} &\leq& \log (p-3) - \log h + C'' \\
-r-1 &\geq& \frac{\log h}{\log(p-3) - \log h + C''} 
-\end{eqnarray*}
-besides, $h$ must be chosen such that
-$$ h \simeq \frac{p}{\log p}$$
-so
-$$ r \geq \frac{\log p - \log \log p}{C'' + \log \log p} \geq C''' \frac{\log p}{\log\log p}$$
-meaning that the research for a generator $g_{p^r}$ is almost polynomial...
+This mean that the exhaustive research can be done in time $O\left( p^{\frac{\log p}{\log \log p}} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.
 
 The condition $r w \leq h$ yields an upper bound on the $r$.
-$$ r^2 \leq C'' h h^{\frac{1}{r-1}} $$
-which is asymptotically always verified given the lower bound found.
+$$ C' r^2 \leq \frac{p}{\log^2 p}  $$
+which is asymptotically always verified given the upper bound on $r$ found.
 
 
 
