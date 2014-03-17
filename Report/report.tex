@@ -110,15 +110,15 @@ However, the original message can not be easily recovered when not knowing the G
 
 Sidelnikov and Shestakov show \cite{SidelShes92} that for all $a \in \F_q\backslash\{0\}$ and $b \in \F_q$, there exists $H_1, H_2, H_3 \in \mathcal{M}_{\F_q}(k,k)$ nonsingular, $(c_1,... ,c_n) \in \F_q\backslash\{0\}^{n}$ and $(d_1,... ,d_n) \in \F_q\backslash\{0\}^{n}$ such that:
 \begin{equation}
-H_1.G(a\cdot\alpha_1 + b, \ ... \ , a\cdot \alpha_n + b, c_1z_1, \ ... \ , c_n z_n) &=& G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n) \\
+H_1.G(a\cdot\alpha_1 + b, \ ... \ , a\cdot \alpha_n + b, c_1z_1, \ ... \ , c_n z_n) = G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)
 \label{eq1}
 \end{equation}
 \begin{equation}
-H_2.G\left( \frac{1}{\alpha_1}, \ ... \ , \frac{1}{\alpha_n}, d_1z_1, \ ... \ , d_n z_n \right) &=& G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n) \\
+H_2.G\left( \frac{1}{\alpha_1}, \ ... \ , \frac{1}{\alpha_n}, d_1z_1, \ ... \ , d_n z_n \right) = G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n) \\
 \label{eq2}
 \end{equation}
 \begin{equation}
-H_3.G\left( \alpha_1, \ ... \ , \alpha_n, a\cdot z_1, \ ... \ , a\cdot z_n \right) &=& G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)
+H_3.G\left( \alpha_1, \ ... \ , \alpha_n, a\cdot z_1, \ ... \ , a\cdot z_n \right) = G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)
 \label{eq3}
 \end{equation}
 This means that for any cryptosystem $M = H.G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, for any birationnal transformation
@@ -132,7 +132,7 @@ with $H'$ nonsingular, $z'_i \neq 0$ and $\alpha_i$ distincts elements of $\F_q\
 So, when $M$ is given, it is impossible to compute the original matrices $G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$ and $H$ since many pairs of such matrices lead to the same public matrix $M$.
 However, computing an equivalent pair is sufficient since it will allow to decrypt the messages as well as the original secret pair of matrices.
 So, the attack will consist of finding $H$ and $G(0, 1, \infty, \alpha'_4, \ ... \ , \alpha'_n, z'_1, z'_2, \ ... \ , z'_n)$, equivalent to the original pair. 
-Considering $a=z_1^{-1}$ in equation \eqref{eq3}, we can also assume that $z'_1=1$.
+Considering $a=z_1'^{-1}$ in equation \eqref{eq3}, we can also assume that $z'_1=1$.
 
 
 \newpage
