@@ -207,7 +207,31 @@ If we still consider
 $$ \A_k := \left( \alpha_{\pi(j)}^i \right)_{0 \leq i < k, 0 \leq j \leq p-1} \in \mathcal{M}_{k,p}(\GF{p})$$
 We have the equality
 $$ H \cdot \A_k = M$$
-with $H$ non singular and since $k \leq p-2$, this is exactly the public key of a cryptosystem based on the Reed-Solomon codes described in section \ref{sec:Prel}.
+with $H$ non singular and since $k \leq p-2$, this is exactly the public key of a cryptosystem based on the Reed-Solomon codes described in Section~\ref{sec:Prel}.
+$$
+\begin{array}{ccl}
+& \left( \begin{array}{ccccc}
+1&\cdots&1&\cdots&1\\
+\alpha_1&\cdots&\alpha_j&\cdots&\alpha_p\\
+\vdots&&\vdots&&\vdots \\
+\alpha_1^{k-1}&\cdots&\alpha_j^{k-1}&\cdots&\alpha_p^{k-1}
+\end{array} \right) =: \A_k \\
+H := \left( \begin{array}{ccc}
+-&Q_1&-  \\
+&\vdots& \\
+-&Q_i&-  \\
+&\vdots& \\
+-&Q_k&-
+\end{array} \right) &
+\left( \begin{array}{ccccc}
+Q_1(\alpha_1)&&\cdots&&Q_1(\alpha_p)\\
+\vdots&&\vdots&&\vdots \\
+Q_i(\alpha_1)&&m_{i,j}&&Q_i(\alpha_p)\\
+\vdots&&\vdots&&\vdots \\
+Q_k(\alpha_1)&&\cdots&&Q_k(\alpha_p)
+\end{array} \right) =: M \\
+\end{array}
+$$
 \end{proof}
 
 So a possible way to attack the Chor-Rivest cryptosystem would be to find the evaluations of enough small degree polynomials in the $\alpha_{\pi(i)}$.
@@ -316,7 +340,12 @@ However the "known $g_{p^r}$ attack" suggested in Vaudenay's article can be impr
 
 
 \subsection{Generating more rows...}
-When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ where $\deg Q \leq h/r$, we only have $r$ polynomials corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in a certain base of $\F_{p^r}$. Being able to generate more polynomials would allow to chose a lower $r$ and improve drastically the attack.
+
+We now describe a "known $g_{p^r}$" attack which allow the divisor $r$ of $h$ to be far smaller.
+We still consider the expression of elements of $\F_{p^r}$ in a given base $(e_i)_{1 \leq i \leq r}$.
+
+
+When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ with $\deg Q \leq h/r$, we only have $r$ polynomials corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in a certain base of $\F_{p^r}$. Being able to generate more polynomials would allow to chose a lower $r$ and improve drastically the attack.
 
 We could consider now the coordinates in the equation $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for $u \in [1,p^r-1]$. This yields again $r$ polynomials of degree smaller than $u h/r$. Actually, since $P \mapsto P^p$ let the degree invariant we know that the degree of $Q^u$ is actually at most $w_p(u) h / r$.
 
@@ -330,6 +359,8 @@ This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if w
 
 Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal base of $\F_{p^r}$, these two sets of vectors of coordinates only differs by a rotation.
+
+
 
 
 
