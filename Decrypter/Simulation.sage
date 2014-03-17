@@ -45,7 +45,7 @@ for i in range(r):
     for j in range(h):
         baseInv[i,j] = v[j]
 for i in range(r, h):
-    for j in range(i):
+    for j in range(h):
         baseInv[i,j] = F(randrange(p))
 
 b = baseInv ^(-1)
@@ -87,7 +87,7 @@ def LCoeff(l):
 
 def LightWords(u):
     res= []
-    for i in range(1,(u+1)^r):
+    for i in range(0,(u+1)^r):
         weight = 0
         word = 0
         ip = i
@@ -103,14 +103,19 @@ def LightWords(u):
 u = 0
 ra = 0
 ok = ""
-while (u < hsr) & (ra < u * hsr + 1):
+# while (u < hsr) & (ra < u * hsr + 1):
+while (u < hsr+3) & (ra < u * hsr + 1):
     u += 1
     ra = LCoeff(LightWords(u)).rank()
     if ra >= u * hsr + 1:
         ok = "  (OK)"
     print str(u) + " : " + str(ra) + " -> " + str(u*hsr+1) + ok
     
-     
+
+
+
+
+
 
 #print "Success : " + str(u)
 #print "Degree max : " + str(u*hsr+1)
