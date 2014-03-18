@@ -7,6 +7,7 @@
 
 \input{defines}
 
+
 % \newcommand{\GF}[1]{\text{GF}(#1)}
 \newcommand{\GF}[1]{\F_{#1}}
 
@@ -438,18 +439,26 @@ For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the 
 
 
 
-\section{Simulation and expected complexity}
+\section{Simulations and expected complexity}
 \label{sec:Simul}
 
-In order to demonstrate the efficiency of the "known $g_p$" attack algorithm presented in Section~\ref{sec:Vau} with small $r$, we run simulations on the number of linearly independent lines that can be obtained from the coordinates of $g_{p^r}^{uc_j}$. For example, see Example~\ref{Ex:1} in appendix, we try $h = 24$ and $r = 3 < \sqrt{h}$. As a result, we manage to obtain $11 \times 3 = 33$ lines of coordinates linearly independent (the simulation is the verification of this independence). This would allow the attack to retrieve the permutation $\pi$ using the attack on the cryptosystem based on Reed-Solomon codes.
 
-This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Therefore the condition $r \geq \sqrt{h}$ is not absolutely necessary and we can hope to get a (far) smaller lower bound on $r$.\\
+In order to demonstrate the efficiency of the "known $g_p$" attack algorithm presented in Section~\ref{sec:Vau} with small $r$, we run simulations on the number of linearly independent lines that can be obtained from the coordinates of $g_{p^r}^{uc_j}$.
+
+
+\subsection{First examples}
+
+For example, see Example~\ref{Ex:1} in appendix, we try $h = 24$ and $r = 3 < \sqrt{h}$. As a result, we manage to obtain $11 \times 3 = 33$ lines of coordinates linearly independent (the simulation is the verification of this independence). This would allow the attack to retrieve the permutation $\pi$ using the attack on the cryptosystem based on Reed-Solomon codes.
+
+This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Here, the polynomials considered are of degree 32 instead of 8 but we manage to generate 33 linearly independent lines instead of only 3. Therefore the condition $r \geq \sqrt{h}$ is not absolutely necessary and we can hope to get a (far) smaller lower bound on $r$.\\
 
 In the Example~\ref{Ex:1} (see appendix), we chose $h = 27$, $p = 53$ and we manage to get 46 linearly independent lines using $r = 3$ only.
 An exhaustive research for $g_{p^3}$ would require circa 149.000 verifications whereas using $r = 9 > \sqrt{h}$, we would need at least $3.3 \cdot 10^{15}$ steps, which is out of most computer range.\\
 
 
-On several simulations for different values for $p$ and $h$, see Results~\ref{Sim:res} in appendix, we choose, each time, the smallest value for $r$ that allow an attack on the system. We present in the appendix the maximum weight $w$ chosen for the exponents $u_i$ of $g_{p^r}$ and the number of linearly independent lines these $g_{p^r}^{u_i}$ allow to generate (should be $w\cdot \frac{h}{r} +1$).
+\subsection{Number of linearly independent polynomials}
+
+On several simulations for different values for $p$ and $h$, see Results~\ref{Sim:res} in appendix, we choose, each time, the smallest value for $r$ that allow an attack on the system. We present in the appendix the maximum weight $w$ chosen for the exponents $u_i$ of $g_{p^r}$ and the number of linearly independent rows these $g_{p^r}^{u_i}$ allow to generate (should be $w\cdot \frac{h}{r} +1$).
 
 
 
@@ -459,50 +468,42 @@ On several simulations for different values for $p$ and $h$, see Results~\ref{Si
 %Regarding that last set of examples, the Chor-Rivest attack would require to do an exhaustive research on approximately $251^{10}$ different possible generators of $\F_{p^{10}}$. With our approach, the cryptosystem can be attacked using the right generator $g_{p^3}$ of $\F_{p^3}$. The research is clearly a lot faster.
 
 
-
-\subsection{Number of linearly independent polynomials}
-
 Let $r$ be a divisor of $h$, we call $u_w$ the number of linearly independent rows of coordinates we can get using the coordinates of $g_{p^r}^{uc_j}$ for all $u$ such that $w_p(u) \leq w$.
 
 We have $u_0 = 1$ obviously because using $g_{p^r}^0$, we only get one row filled with 1.
 
 We also have $u_1 = r+1$ because we can only get $r$ more lines using $g_{p^r}$ corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in $\F_{p^r}$. The coordinates given by the generator $g_{p^r}^{p^i}$ are the same as those given by $g_{p^r}$ in a normal base. This mean that whatever the base chosen, they are at least linearly dependent from each other and so using $g_{p^r}$ doesn't allow to generate more useful polynomials.
 
-\subsubsection{Postulate}
 
 
-%\begin{itemize}
-%\item For $w \leq h/r$, $u_w = u_{w-1} + \binom{w+r-1}{r-1}$
-%\item For $w > h/r$, $u_w = u_{w-1} + h/r$.
-%\end{itemize}
-%
-%We could postulate that for all $w \leq h/r$,
-%$$ u_w = \sum_{v=0}^{w} \binom{v+r-1}{r-1} = \binom{w+r}{r} $$
-We define $\upsilon(w)$ as
-$$ \upsilon(w) := \begin{cases}
-\binom{w+r}{r} & \mbox{if } w \leq h/r \\
-\upsilon\left(\frac{h}{r}\right) + n \frac{h}{r} & \mbox{if } w = h/r + n
-\end{cases} $$
+\subsection{Postulate}
 
-We notice experimentally the following behavior of $u_w$
-$$ u_w = \min \left( \upsilon(w), w\frac{h}{r} + 1 , p \right)$$
+We notice experimentally the following behavior
 
-This behavior has been observed for the following range of parameters :
+\begin{postulate}
+We have for $r > 2$
+$$ u_w = \min \left( \binom{w+r}{r}, w\frac{h}{r} + 1 , p \right)$$
+\end{postulate}
 
+This behavior has been observed for the following range of parameters
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
 $r$ & $w$ 	& $h/r$ \\
 \hline
-2	& 1-8	& 1-8	\\
+2	& 1-17	& 1-2	\\
 \hline
 3	& 1-17	& 1-17, 30 \\
 \hline
 4	& 1-17	& 1-17, 30 \\
 \hline
+5	& 1-17	& 1-17, 30 \\
+\hline
 \end{tabular}
 \end{center}
 
+
+For $r = 2$ and $h/r \geq 3$, we notice a different behavior...
 
 
 \subsection{Optimum choice for $r$}
@@ -598,6 +599,35 @@ We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomi
 \newpage
 \subsection{Example 2}
 \label{Ex:2}
+
+
+
+\begin{center}
+\begin{tabularx}{\textwidth}{|c|X|} \hline
+$p$ & 53  \\ \hline
+$h$ & 27  \\ \hline
+$r$ & $3 < \sqrt{h}$  \\ \hline
+$\GF{p^q}$ & $\GF{p}[X] / (P)$ with
+\begin{eqnarray*}
+P := X^{27} &+& X^{26} + X^{25} + 6X^{24} + 15X^{23} + 13X^{22} \\
+&+& 40X^{21} + 34X^{20} + 10X^{19} + 3X^{17} + 34X^{16}\\
+&+& 40X^{15} + 49X^{14} + 42X^{13} + 20X^{12} + 6X^{11} \\
+&+& X^{10} + 48X^9 + 35X^8 + 41X^7 + 27X^6 \\
+&+& 12X^5 + 34X^4 + 38X^3 + 47X^2 + 19X + 1
+\end{eqnarray*} \\ \hline
+$g$ & $X+2$ \\ \hline
+$g_{p^r}$ &  \begin{eqnarray*}
+2X^{26} &+& 20X^{25} + 38X^{24} + 32X^{23} + 15X^{22} + 28^{21} \\
+&+& 39X^{20} + 26X^{19} + 39X^{18} + 36X^{17} + 21X^{16}\\
+&+& 40X^{15} + 38X^{14} + 40X^{13} + 51X^{12} + 32X^{11} \\
+&+& 50X^{10} + 51X^9 + 2X^8 + 48X^7 + 17X^6 \\
+&+& 24X^5 + 31X^4 + 42X^3 + 6X^2 + 46X + 16
+\end{eqnarray*} \\ \hline
+$(u_i)_{1 \leq i \leq 16}$ & $$\{ 0,1,2,p+1,3,p+2,2p+1,4,p+3,3p+1,2p+2,2p^2+p+1,5,4p+1,3p+2,p^2+p+3 \} $$ \\ \hline
+$t, d, \pi$ & Several values chosen at random \\ \hline
+Rank & 46 \\ \hline
+\end{tabularx}
+\end{center}
 
 
 
