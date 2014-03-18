@@ -7,7 +7,9 @@ load "RSDecrypterBis.sage"
 h = hsr * r
 # h = 120
 
-p = 251
+try: p
+except: p = 251
+
 q = p ^ h
 bF = GF(p)
 F.<X> = GF(p^h)
