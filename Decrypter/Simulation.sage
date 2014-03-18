@@ -50,7 +50,7 @@ for i in range(r, h):
 
 b = baseInv ^(-1)
 
-print "Initialisation done."
+print "Init. done. r : " + str(r) + "  -  hsr : " + str(hsr)
 
 
 def MCoeff(u):
@@ -113,7 +113,7 @@ while (u < hsr+3) & (ra < u * hsr + 1):
     
 
 
-
+hsr+=1
 
 
 
