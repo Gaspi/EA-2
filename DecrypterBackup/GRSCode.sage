@@ -1,19 +1,45 @@
 
-load "RandomFunc.sage"
+from sage.misc.randstate import current_randstate
+
+
+randrange = current_randstate().python_random().randrange
+
+def random_distinct_int(start, end, number):
+    size = end - start
+    if size < 0:
+        raise BaseException("Invalid interval")
+    if number > size:
+        raise BaseException("Too small interval")
+    
+    if number <= size / 2:
+        ans = []
+        for i in range(number):
+            t = randrange(start,end)
+            while t in ans:
+                t = randrange(start,end)
+            ans.append(t)
+            yield t
+    else:
+        # We shuffle and take the first "number" elements
+        ans = [i for i in range(start, end)]
+        for i in range(0, number):
+            r = randrange(i, size)
+            ( ans[i], ans[r] ) = ( ans[r], ans[i] )
+            yield ans[i]
+    
 
 
 class GRSCode:
     
     
-    def __init__(self, p=2, e=5,n=10,k=4):
+    def __init__(self, e=5,n=10,k=4):
         self.e = e
-        self.p = p
-        self.q = p^e
+        self.q = 2^e
         if n > self.q:
-            raise BaseException("n is too big : " + str(n) + " > " + str(self.q))
+            raise "n is too big"
         self.n = n
         if k >= n-2:
-            raise BaseException("k is too big : " + str(k) + " >= " + str(n-2) )
+            raise "k is too big"
         self.k = k
         self.t = (n-k) / 2
         Field.<a> = GF(self.q, modulus='minimal_weight')
@@ -39,7 +65,7 @@ class GRSCode:
     
     
     # Generate a random Reed-Solomon code
-    def init_random(self, seed=0, generalized = True):
+    def init_random(self, generalized = True, seed=0):
         set_random_seed(seed)
         
         if generalized:
@@ -47,7 +73,7 @@ class GRSCode:
         else:
             y = [ 1 for i in range(self.n) ]
         
-        alpha = [ el for el in random_distinct_elements(self.F, self.n)  ]
+        alpha = [ self.F.fetch_int(e) for e in random_distinct_int(0, self.q, self.n)  ]
         
         GRSCode.init_param(self,alpha, y)
     
@@ -56,7 +82,7 @@ class GRSCode:
         return self.F.random_element()
     
     def nonzerorandelt(self):
-        return BaseP(self.F, randrange(1,self.q) )
+        return self.F.fetch_int( randrange(1,self.q) )
     
     
     def random_error(self, weight=-1):
@@ -69,7 +95,7 @@ class GRSCode:
     
     
     def vect_from_integers(self, l):
-        return Mat(self.F, 1, len(l))( [  BaseP(self.F, el % self.q) for el in l ]  )
+        return Mat(self.F, 1, len(l))( [ self.F.fetch_int(l[i] % self.q) for i in range(len(l)) ]  )
     
     def integers_from_vect(self, vect):
         return [ vect[0,i].int_repr() for i in range(self.k) ]

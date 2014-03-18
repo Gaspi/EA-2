@@ -2,44 +2,42 @@
 #load "GRSCode.sage"
 #load "RSCryptosystem.sage"
 load "RSDecrypterBis.sage"
-load "RandomFunc.sage"
 import sys
 
 try: size_case
-except: size_case = 4
+except: size_case = 2
+
+try: verbose
+except: verbose = True
+def Verb(msg):
+    if verbose:
+        print msg
 
 
 # Main parameters
 if size_case == 1:
-    p=2
     e=5
     n=10
     k=4
 elif size_case == 2:
-    p=2
     e=8
     n=40
     k=20
 elif size_case == 3:
-    p=2
     e=10
     n=1000
     k=700
-elif size_case == 4:
-    p=53
-    e=1
-    n=50
-    k=40
+
 
 
 Verb("Generating code and public key (original cryptosystem : rsc)")
 
-rsc = RSCryptosystem(p, e, n, k)
+rsc = RSCryptosystem(e, n, k)
 rsc.init_random()
 
 Verb("Attack on the public key (new cryptosystem : rsd)")
 
-rsd = Decrypt( rsc.public_key() )
+rsd = Decrypt( rsc.public_key(), verbose )
  
 Verb("Encrypting message")
 if size_case != 2:

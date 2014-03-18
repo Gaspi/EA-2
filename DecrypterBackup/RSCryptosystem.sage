@@ -4,8 +4,8 @@ load "GRSCode.sage"
 
 class RSCryptosystem(GRSCode):
     
-    def __init__(self, p=2, e=5, n=10, k=4):
-        GRSCode.__init__(self, p, e, n, k)
+    def __init__(self, e=5,n=10,k=4):
+        GRSCode.__init__(self, e, n, k)
         self.kkMatSpace = MatrixSpace(self.F, self.k, self.k)
         
     
@@ -53,7 +53,7 @@ class RSCryptosystem(GRSCode):
                         # Here, H is only a diagonal random matrix (invertible &  fast to generate, to invert and to multiply )
         elif algo == 'vandermonde':
             self.H    = self.kkMatSpace()
-            aux = [ BaseP(self.F, e) for e in random_distinct_int(1, self.q, self.k)  ]
+            aux = [ self.F.fetch_int(e) for e in random_distinct_int(1, self.q, self.k)  ]
             perm =[ i for i in random_distinct_int(0, self.k, self.k)]
             for j in range(self.k):
                 y = self.nonzerorandelt()
@@ -83,8 +83,6 @@ class RSCryptosystem(GRSCode):
     
     def decipher_int(self, codeword):
         v = self.decipher_vect(codeword)
-        if self.e == 1:
-            return [ int(v[0,i]) for i in range(self.k) ]
         return [ int(v[0,i].int_repr() ) for i in range(self.k) ]
     
     

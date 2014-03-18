@@ -1,10 +1,26 @@
 # import main classes
 load "GRSCode.sage"
 load "RSCryptosystem.sage"
-load "RandomFunc.sage"
 
 
-def Decrypt( publicKey ):
+
+def BaseP(Field, e):
+    auxF.<X> = Field
+    p = auxF.characteristic()
+    power = auxF(1)
+    res = 0
+    while e > 0:
+        res += power * auxF(e % p)
+        power *= auxF(X)
+        e = e // p
+    return res
+
+
+def Decrypt( publicKey, verbose=True):
+    
+    def Verb(msg):
+        if verbose:
+            print msg
     
     Verb("Initializing...")
     
@@ -14,8 +30,9 @@ def Decrypt( publicKey ):
     Field = M.base_ring()
     (k,n) = M.dimensions()
     q = Field.order()
-    p = Field.characteristic() # probably 2
-    e = log_b(q,p)   # q = p ^ e 
+    c = Field.characteristic() # probably 2
+    e = log_b(q,c)   # q = c ^ e 
+    
     
     Verb("Computing echelon matrix...")
     b = M.echelon_form()
@@ -36,12 +53,10 @@ def Decrypt( publicKey ):
     
     
     # astuce pour trouver un élément différent des autres ? dans un corps
+    
     tab = [ True for i in range(q) ]
     for el in alpha:
-        if e == 1:
-            tab[el] = False
-        else:
-            tab[ int(el.int_repr()) ] = False
+        tab[ int(el.int_repr()) ] = False
     
     i = 0
     while not tab[i]:
@@ -87,7 +102,7 @@ def Decrypt( publicKey ):
     
     
     Verb("Computing test code")
-    rsd = RSCryptosystem(p, e, n, k)
+    rsd = RSCryptosystem(e, n, k)
     rsd.init_param(alpha, x, H)
     
     if verbose:
