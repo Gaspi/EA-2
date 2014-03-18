@@ -240,7 +240,7 @@ $$ w_p : u = \sum_{i=0}^{d} u_i p^i \longmapsto \sum_{i=0}^{d} u_i \ \ \ \ \ \te
 The Chor-Rivest cryptosystem is a public key knapsack scheme using the 
 
 
-The secret key consist of
+The description of the field $\F_q$ is public. The secret key consist of
 \begin{itemize}
 \item an element $t \in \GF{q}$ with algebraic degree $h$.
 \item a generator $g$ of $\GF{q}^{*}$.
@@ -251,11 +251,15 @@ The secret key consist of
 Public keys consist of all
 $$ c_i := d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
 
-The message consists in a bitstring $m = [m_0...m_{p-1}]$ of length $p$ and weight $h$ : $\sum_i m_i = h$. The ciphertext is
+To be encrypted, a message should first be encoded into a bitstring $m = [m_0...m_{p-1}]$ of length $p$ and weight $h$ : $\sum_i m_i = h$. The ciphertext is
 $$ E(M) := \sum_{i=0}^{p-1} m_i c_i \mod q-1 $$
 To decipher this message, we compute
 $$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{pi(i)}\right)^{m_i} $$
 whose factorization leads to the message $m$.
+
+To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms.This allow us to suppose that
+$$ h = \Theta\left( \frac{p}{\log_2 p} \right) $$
+
 
 
 \subsubsection{Link with Reed-Solomon codes}
@@ -307,13 +311,13 @@ $$
 So a possible way to attack the Chor-Rivest cryptosystem would be to find the evaluations of enough small degree polynomials in the $\alpha_{\pi(i)}$.
 
 
-
+\newpage
 \subsection{A First Attack using Reed-Solomon codes}
 
 
 When we attack this cryptosystem, we can consider a generator $g_0 = g^u$ with $u$ unknown and $\gcd(u, q-1) = 1$ we then have
 $$ g_0^{c_i} = \left( g^d \left( t + \alpha_{\pi(i)} \right) \right)^u = \left(A + \alpha_{\pi(i)} \cdot B\right)^u$$
-We can then consider that the secret key is
+The unknown quantities, which can then be considered as an equivalent secret key, are
 \begin{itemize}
 \item $A \in \F_q$.
 \item $B \in \F_q$ such that $t = A\cdot B^{-1}$ has algebraic degree $h$.
@@ -334,13 +338,13 @@ We have for all $j$
 $$ g^{c_j} = g^d \cdot (t + \alpha_{\pi(j)} ) = A + \alpha_{\pi(j)} \cdot B $$
 where $\alpha_{\pi(j)} \in \GF{p}$ and $A$ and $B$ are elements of $\GF{p^h}$.
 
-A naive attack would be then to try to guess at random the generator $g$. We will see that although finding the precise $g$ is very unlikely, there is a family of generators that can still allow us to retrieve $\pi$.
+A naive attack would be then to try to guess at random the generator $g$ and perform a polynomial "known $g$" attack. We will see that although finding the precise $g$ is very unlikely, there is a family of generators that still allow to retrieve the permutation $\pi$ and perform then a polynomial "known $\pi$" attack.
 
 \subsubsection{Small powers of $g$}
 
-As an attempt to guess $g$, we can choose a random generator $g_0$ of $\GF{q}^{*}$. We have $g_0 = g^u$ and
+As an attempt to guess $g$, we suppose that a random generator $g_0$ of $\GF{q}^{*}$ has been chosen. We know that $g_0 = g^u$ for a $u$ integer such that $\gcd(u, p^h-1) = 1$ and
 $$ g_0 ^{c_j} = (A + \alpha_{\pi(j)} \cdot B)^u $$
-if we write this quantity in a certain base $(e_i)_{1 \leq i \leq h}$ of $\GF{p^h}$, we notice that each coordinate is a polynomial $Q_i$ in the $\alpha_{\pi(j)}$.
+We chose now a base $(e_i)_{1 \leq i \leq h}$ of $\GF{q}$ as a $\GF{p}$-vector space. When written in this base, each coordinate of $g_0^{c_j}$ is a polynomial $Q_i$ in the $\alpha_{\pi(j)}$.
 $$ g_0^{c_j} = \sum_{i=1}^h Q_i(\alpha_{\pi(j)}) e_i $$
 where $Q_i$ has its coefficients in $\GF{p}$.
 $Q_i$ depends on $A$, $B$, $u$ and obviously on $i$. However, $Q_i$ does not depend on $j$.
@@ -361,11 +365,11 @@ Considering all these acceptable generators only slightly improves the exhaustiv
 We can notice that if $u = u'p$,
 $$ g_0^{c_j} = (A + \alpha_{\pi(j)} \cdot B)^{u'p} = (A^p + \alpha_{\pi(j)} \cdot B^p)^{u'} $$
 and the coordinates of this quantity are polynomials of degree $u'$ in $\alpha_{\pi(j)}$.
-This also means that if $u$ is written $u = \sum_{i=0}^{h-1} u_i p^i$ in base $p$, then
+Actually, if $u$ is written $u = \sum_{i=0}^{h-1} u_i p^i$ in base $p$, then we have
 $$ g_0^{c_j} = \prod_{i=0}^{h-1} (A^{p^i} + \alpha_{\pi(j)} \cdot B^{p^i} )^{u_i} $$
-whose coordinates are a polynomial of degree $w_p(u) := \sum_{i=0}^{h-1} u_i$ in the $\alpha_{\pi(j)}$.
+whose coordinates are polynomials of degree $w_p(u) := \sum_{i=0}^{h-1} u_i$ in the $\alpha_{\pi(j)}$.
 
-This mean that all $u$ such that $w_p(u) < h$ allow to retrieve the permutation and break the cryptosystem.
+This means that all $u$ such that $w_p(u) < h$ allow to retrieve the permutation and break the cryptosystem.
 The number of such $u$ is
 $$ \left( \binom{h+1}{h-1} \right) = \binom{2h}{h-1} =\Theta\left( 4^h \sqrt{h} \right) $$
 This is a drastic improvement in the exhaustive research of $g$. However this remains quite small compared to the number $\phi(p^h-1)$ of different generators in $\GF{p^h}$ which is comparable to $p^h$.
@@ -437,76 +441,22 @@ For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the 
 \section{Simulation and expected complexity}
 \label{sec:Simul}
 
-\subsection{A first example}
+In order to demonstrate the efficiency of the "known $g_p$" attack algorithm presented in Section~\ref{sec:Vau} with small $r$, we run simulations on the number of linearly independent lines that can be obtained from the coordinates of $g_{p^r}^{uc_j}$. For example, see Example~\ref{Ex:1} in appendix, we try $h = 24$ and $r = 3 < \sqrt{h}$. As a result, we manage to obtain $11 \times 3 = 33$ lines of coordinates linearly independent (the simulation is the verification of this independence). This would allow the attack to retrieve the permutation $\pi$ using the attack on the cryptosystem based on Reed-Solomon codes.
 
-In order to demonstrate how the algorithm presented in Section~\ref{sec:Vau}, we run a simulation of the exhaustive search of $g_{p^r}$ with the following parameters
-\begin{itemize}
-\item $p = 197$, $h = 24$, $r = 3 < \sqrt{h}$.
-\item We define $\F_q$ as the quotient of $\F_p[X]$ by the polynomial
-\begin{eqnarray*}
-X^{24} &+& 192X^{23} + 152X^{22} + 25X^{21} + 75X^{20} + 67X^{19} + 92X^{18} + 23X^{17} + 45X^{16} + 97X^{15} \\
- &+& 2X^{14} + 21X^{13} + 106X^{12} + 130X^{11} + 128X^{10} + 136X^9 + 195X^8 + 95X^7 + 155X^6 \\
- &+& 34X^5 + 51X^4 + 180X^3 + 97X^2 + 23X + 87
-\end{eqnarray*}
-\item We choose $g := X + 2$ the private multiplicative generator.
-\item We compute
-\begin{eqnarray*}
-g_{p^r} &=& g^{\frac{p^h-1}{p^r-1}} \\
-&=& 153X^{23} + 168X^{22} + 167X^{21} + 45X^{20} + 128X^{19} + 68X^{18} + 103X^{17} + 11X^{16}\\
-&&+ 139X^{15} + 190X^{14} + 75X^{13} + 73X^{12} + 190X^{11} + 64X^{10} + 173X^9 + 34X^8 \\
-&&+ 88X^7 + 30X^6 + 139X^5 + 146X^4 + 111X^3 + 80X^2 + 136X + 48\\
-\end{eqnarray*}
-\item We choose different values for $d$, $t$ and $\pi$, the results remain the same.
-\item We choose the base $\left(g_{p^r}, g_{p^r}^p, g_{p^r}^{p^2} \right)$ for the $\F_p$-vector space $\F_{p^r}$ (but this is of no influence on the results).
-\item We choose $(u_i)_{1\leq  i \leq 11} = (1,2,p+1,3,2p+1,p+2,4,p+3,3p+1,2p+2,2p^2+p+1)$\\
-We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomials of degree smaller than $4 h/r+1 = 33$ in the $\alpha_{\pi(j)}$.
-\end{itemize}
-As a result, we obtain $11 \times 3 = 33$ lines of coordinates linearly independent (the simulation is the verification of this independence). This would allow the attack to retrieve the permutation $\pi$ using the attack on the cryptosystem based on Reed-Solomon codes.
+This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Therefore the condition $r \geq \sqrt{h}$ is not absolutely necessary and we can hope to get a (far) smaller lower bound on $r$.\\
 
-This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Therefore the condition $r \geq \sqrt{h}$ is not absolutely necessary and we can hope to get a (far) smaller lower bound on $r$.
-
-On the following tabular, we present the results of several simulations for different value of $p$, $h$. Each time, we choose the smallest value for $r$ that allow an attack on the system. We display here the maximum weight $w$ chosen for the exponents $u_i$ of $g_{p^r}$ and the number of linearly independent lines these $g_{p^r}^{u_i}$ allow to generate (should be $w\cdot \frac{h}{r} +1$).
+In the Example~\ref{Ex:1} (see appendix), we chose $h = 27$, $p = 53$ and we manage to get 46 linearly independent lines using $r = 3$ only.
+An exhaustive research for $g_{p^3}$ would require circa 149.000 verifications whereas using $r = 9 > \sqrt{h}$, we would need at least $3.3 \cdot 10^{15}$ steps, which is out of most computer range.\\
 
 
-\begin{tabular}{|c|c|c|c|l|}
-\hline
-$p$ & $h$ & $r$ & $w_p(u_i)$ & Number of linearly independent lines  \\
-\hline
-197 & 24 & 2 & $w$ & $\frac{w(w+3)}{2} < 12w+1$ Attack impossible. \\
-\hline
-197 & 24 & 3 & 4 & 33\\
-\hline
-197 & 24 & 4 & 2 & 13\\
-\hline
-197 & 24 & $r \geq 6$ & 1 & $1 + h/r$ \\
-\hline
-193 & 36 & 2 & $w$ & $\frac{w(w+3)}{2} < 18w+1$ Attack impossible. \\
-\hline
-193 & 36 & 3 & 6 & 73\\
-\hline
-193 & 36 & 4 & 3 & 28\\
-\hline
-193 & 36 & 6 & 2 & 13\\
-\hline
-193 & 36 & $r \geq 9$ & 1 & $1 + h/r$ \\
-\hline
-251 & 60 & 2 & $w$ & $\frac{w(w+3)}{2} < 30w+1$ Attack impossible. \\
-\hline
-251 & 60 & 3 & 8 & 161\\
-\hline
-251 & 60 & 4 & 4 & 61\\
-\hline
-251 & 60 & 5 & 3 & 37\\
-\hline
-251 & 60 & 6 & 2 & 21\\
-\hline
-251 & 60 & $r \geq 10$ & 1 & $1 + h/r$ \\
-\hline
-\end{tabular}
+On several simulations for different values for $p$ and $h$, see Results~\ref{Sim:res} in appendix, we choose, each time, the smallest value for $r$ that allow an attack on the system. We present in the appendix the maximum weight $w$ chosen for the exponents $u_i$ of $g_{p^r}$ and the number of linearly independent lines these $g_{p^r}^{u_i}$ allow to generate (should be $w\cdot \frac{h}{r} +1$).
 
-When we choose, $r = 2$ and $w_p(u_i) \leq w$, the number of linearly independent lines is $\frac{w(w+3)}{2}$. This does not allow to attack the cryptosystem since to have $\frac{w(w+3)}{2} \geq 12w+1$, we would need $w \geq 22$ and if $w_p(u_i) = 2$, then the degree of the corresponding polynomials is $22 \times 12+1 = 265 > 197$.
 
-Regarding that last set of examples, the Chor-Rivest attack would require to do an exhaustive research on approximately $251^{10}$ different possible generators of $\F_{p^{10}}$. With our approach, the cryptosystem can be attacked using the right generator $g_{p^3}$ of $\F_{p^3}$. The research is clearly a lot faster.
+
+
+
+%When we choose, $r = 2$ and $w_p(u_i) \leq w$, the number of linearly independent lines is $\frac{w(w+3)}{2}$. This does not allow to attack the cryptosystem since to have $\frac{w(w+3)}{2} \geq 12w+1$, we would need $w \geq 22$ and if $w_p(u_i) = 2$, then the degree of the corresponding polynomials is $22 \times 12+1 = 265 > 197$.\\
+%Regarding that last set of examples, the Chor-Rivest attack would require to do an exhaustive research on approximately $251^{10}$ different possible generators of $\F_{p^{10}}$. With our approach, the cryptosystem can be attacked using the right generator $g_{p^3}$ of $\F_{p^3}$. The research is clearly a lot faster.
 
 
 
@@ -602,7 +552,10 @@ which is asymptotically always verified given the upper bound on $r$ found.
 
 \section{Conclusions}
 
-We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains however useless nowadays essentially because of the complexity of the discrete logarithm problem.
+We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor.
+
+% For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains however useless nowadays essentially because of the complexity of the discrete logarithm problem.
+
 
 
 
@@ -612,4 +565,84 @@ We can notice that this attack on Chor-Rivest cryptosystem is only effective whe
 \bibliography{references}
 \newpage
 \appendix
+
+\section{Simulation examples}
+
+\subsection{Example 1}
+\label{Ex:1}
+
+We choose the following parameters
+\begin{itemize}
+\item $p = 197$, $h = 24$, $r = 3 < \sqrt{h}$.
+\item We define $\F_q$ as the quotient of $\F_p[X]$ by the polynomial
+\begin{eqnarray*}
+X^{24} &+& 192X^{23} + 152X^{22} + 25X^{21} + 75X^{20} + 67X^{19} + 92X^{18} + 23X^{17} + 45X^{16} + 97X^{15} \\
+ &+& 2X^{14} + 21X^{13} + 106X^{12} + 130X^{11} + 128X^{10} + 136X^9 + 195X^8 + 95X^7 + 155X^6 \\
+ &+& 34X^5 + 51X^4 + 180X^3 + 97X^2 + 23X + 87
+\end{eqnarray*}
+\item We choose $g := X + 2$ the private multiplicative generator.
+\item We compute
+\begin{eqnarray*}
+g_{p^r} &=& g^{\frac{p^h-1}{p^r-1}} \\
+&=& 153X^{23} + 168X^{22} + 167X^{21} + 45X^{20} + 128X^{19} + 68X^{18} + 103X^{17} + 11X^{16}\\
+&&+ 139X^{15} + 190X^{14} + 75X^{13} + 73X^{12} + 190X^{11} + 64X^{10} + 173X^9 + 34X^8 \\
+&&+ 88X^7 + 30X^6 + 139X^5 + 146X^4 + 111X^3 + 80X^2 + 136X + 48\\
+\end{eqnarray*}
+\item We choose different values for $d$, $t$ and $\pi$, the results remain the same.
+\item We choose the base $\left(g_{p^r}, g_{p^r}^p, g_{p^r}^{p^2} \right)$ for the $\F_p$-vector space $\F_{p^r}$ (this is however of no influence on the results).
+\item We choose $(u_i)_{1\leq  i \leq 11} = (1,2,p+1,3,2p+1,p+2,4,p+3,3p+1,2p+2,2p^2+p+1)$\\
+We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomials of degree smaller than $4 h/r+1 = 33$ in the $\alpha_{\pi(j)}$.
+\end{itemize}
+
+
+\newpage
+\subsection{Example 2}
+\label{Ex:2}
+
+
+
+
+\newpage
+\section{Simulation results}
+\label{Sim:res}
+
+\begin{tabular}{|c|c|c|c|l|}
+\hline
+$p$ & $h$ & $r$ & $w_p(u_i)$ & Number of linearly independent lines  \\
+\hline
+197 & 24 & 2 & $w$ & $\frac{w(w+3)}{2} < 12w+1$ Attack impossible. \\
+\hline
+197 & 24 & 3 & 4 & 33\\
+\hline
+197 & 24 & 4 & 2 & 13\\
+\hline
+197 & 24 & $r \geq 6$ & 1 & $1 + h/r$ \\
+\hline
+193 & 36 & 2 & $w$ & $\frac{w(w+3)}{2} < 18w+1$ Attack impossible. \\
+\hline
+193 & 36 & 3 & 6 & 73\\
+\hline
+193 & 36 & 4 & 3 & 28\\
+\hline
+193 & 36 & 6 & 2 & 13\\
+\hline
+193 & 36 & $r \geq 9$ & 1 & $1 + h/r$ \\
+\hline
+251 & 60 & 2 & $w$ & $\frac{w(w+3)}{2} < 30w+1$ Attack impossible. \\
+\hline
+251 & 60 & 3 & 8 & 161\\
+\hline
+251 & 60 & 4 & 4 & 61\\
+\hline
+251 & 60 & 5 & 3 & 37\\
+\hline
+251 & 60 & 6 & 2 & 21\\
+\hline
+251 & 60 & $r \geq 10$ & 1 & $1 + h/r$ \\
+\hline
+\end{tabular}
+
+
+
+
 \end{document}
