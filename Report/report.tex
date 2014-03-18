@@ -1,9 +1,10 @@
 
-\documentclass[12pt,a4paper,titlepage]{article}
-
+\documentclass[a4paper]{article}
+% Package fullpage  (réduire les marges)
+\usepackage{fullpage}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\usepackage[left=1.5cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+% \usepackage[left=1.5cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 
 \input{defines}
 
@@ -25,9 +26,8 @@
 
 \begin{document}
 
-\maketitle
-\tableofcontents
 
+\maketitle
 
 \begin{abstract}
 
@@ -35,9 +35,6 @@ In this article, we discuss about the Sidelnikov-Shestakov attack on cryptosyste
 
 \end{abstract}
 
-
-
-\newpage
 \section{Introduction}
 \label{sec:intro}
 
@@ -269,7 +266,7 @@ So, we found a pair of matrices $(G',H')$ equivalent to the original private key
 
 From now on, $p$ is a power of a prime and $q := p^h$ with $h$ integer. We call $\F_n := \text{GF}(n)$ the finite field of order $n$. We often refer in this article to $\F_p$ and $\F_{p^r}$ (with $r$ a divisor of $h$) both sub-fields of $\F_q$. The elements of $\F_p$ are $\{ \alpha_0, ... , \alpha_{p-1} \}$.
 
-When $n \in \N$, we define the weight of $n$ in base $p$ as follow
+When $n \in \N$, we define the weight of $n$ in basis $p$ as follow
 $$ w_p : u = \sum_{i=0}^{d} u_i p^i \longmapsto \sum_{i=0}^{d} u_i \ \ \ \ \ \text{ where }  \ 0 \leq u_i \leq p-1 $$
 
 \subsection{The Chor-Rivest Cryptosystem}
@@ -381,7 +378,7 @@ A naive attack would be then to try to guess at random the generator $g$ and per
 
 As an attempt to guess $g$, we suppose that a random generator $g_0$ of $\GF{q}^{*}$ has been chosen. We know that $g_0 = g^u$ for a $u$ integer such that $\gcd(u, p^h-1) = 1$ and
 $$ g_0 ^{c_j} = (A + \alpha_{\pi(j)} \cdot B)^u $$
-We chose now a base $(e_i)_{1 \leq i \leq h}$ of $\GF{q}$ as a $\GF{p}$-vector space. When written in this base, each coordinate of $g_0^{c_j}$ is a polynomial $Q_i$ in the $\alpha_{\pi(j)}$.
+We chose now a basis $(e_i)_{1 \leq i \leq h}$ of $\GF{q}$ as a $\GF{p}$-vector space. When written in this basis, each coordinate of $g_0^{c_j}$ is a polynomial $Q_i$ in the $\alpha_{\pi(j)}$.
 $$ g_0^{c_j} = \sum_{i=1}^h Q_i(\alpha_{\pi(j)}) e_i $$
 where $Q_i$ has its coefficients in $\GF{p}$.
 $Q_i$ depends on $A$, $B$, $u$ and obviously on $i$. However, $Q_i$ does not depend on $j$.
@@ -402,7 +399,7 @@ Considering all these acceptable generators only slightly improves the exhaustiv
 We can notice that if $u = u'p$,
 $$ g_0^{c_j} = (A + \alpha_{\pi(j)} \cdot B)^{u'p} = (A^p + \alpha_{\pi(j)} \cdot B^p)^{u'} $$
 and the coordinates of this quantity are polynomials of degree $u'$ in $\alpha_{\pi(j)}$.
-Actually, if $u$ is written $u = \sum_{i=0}^{h-1} u_i p^i$ in base $p$, then we have
+Actually, if $u$ is written $u = \sum_{i=0}^{h-1} u_i p^i$ in basis $p$, then we have
 $$ g_0^{c_j} = \prod_{i=0}^{h-1} (A^{p^i} + \alpha_{\pi(j)} \cdot B^{p^i} )^{u_i} $$
 whose coordinates are polynomials of degree $w_p(u) := \sum_{i=0}^{h-1} u_i$ in the $\alpha_{\pi(j)}$.
 
@@ -428,15 +425,18 @@ $$ Q(X) = g_{p^r}^d \prod_{i=0}^{h/r-1} \left( X + t^{p^{ri}} \right) $$
 where $g_{p^r} = g^{\frac{q-1}{p^r-1}}$. 
 \end{proof}
 
-If we chose a base $(e_i)_{1 \leq i \leq r}$ of $\GF{p^r}$ (seen as a $\F_p$-vector space), we can write the coefficients of $g_{p^r}^{c_j}$ in this base as polynomials $Q_i$ in $\alpha_{\pi(j)}$. We get
+If we chose a basis $(e_i)_{1 \leq i \leq r}$ of $\GF{p^r}$ (seen as a $\F_p$-vector space), we can write the coefficients of $g_{p^r}^{c_j}$ in this basis as polynomials $Q_i$ in $\alpha_{\pi(j)}$. We get
 $$ g_{p^r}^{c_j} = \sum_{i=1}^r Q_i(\alpha_{\pi(j)}) e_i $$
 with $\deg Q_i \leq h/r$. We get the evaluation of $r$ polynomials of degree smaller than $h/r$.
 
-This means that instead of searching a generator among the approximately $p^h$ generators of $\F_q$, we could search only within $\F_{p^r}$ with $r$ as small as possible. We notice that to be able to apply Theorem~\ref{thm:link}, we must have $h/r < r$. This yields the following theorem.
+This means that instead of searching the generator $g$ among the approximately $p^h$ generators of $\F_q$, one could search only within the generators of $\F_{p^r}$ with $r$ as small as possible. This reduces a lot the exhaustive research and we notice that when $h/r < r$ Theorem~\ref{thm:link} can be applied and the permutation $\pi$ can be retrieved. This allow to perform an effective attack and yields the following theorem.
 
 \begin{theorem}
-When $r > \sqrt{h}$, there exists a polynomial "known $g_{p^r}$" attack on the Chor-Rivest cryptosystem.
+When $r > \sqrt{h}$, if the generator $g_{p^r}$ of $\GF{p^r}$ is guessed correctly, there exists an attack (called "known $g_{p^r}$" attack) in polynomial time on the Chor-Rivest cryptosystem.
 \end{theorem}
+\begin{proof}
+The known $r$ coordinates of $g_{p^r}^{c_j}$ are polynomials in $\alpha_{\pi(j)}$ of degree $h/r < r$. We can use a Sidelnikov-Shestakov attack on the matrix of these coordinates as described in Theorem~\ref{thm:link}.
+\end{proof}
 
 This theorem is basically the main result from Vaudenay's article \cite{Vau01}. It states that to attack the Chor-Rivest cryptosystem, one can only search for the generator $g_{p^r}$ among $\phi(p^r-1)$ (which is about $p^r$) possible choices instead of the exhaustive research for $g$ (around $p^h$ choices).
 
@@ -453,14 +453,14 @@ However the "known $g_{p^r}$ attack" suggested in Vaudenay's article can be impr
 \subsection{Generating more rows...}
 
 We now describe a "known $g_{p^r}$" attack which allow the divisor $r$ of $h$ to be far smaller.
-We still consider the expression of elements of $\F_{p^r}$ in a given base $(e_i)_{1 \leq i \leq r}$.
+We still consider the expression of elements of $\F_{p^r}$ in a given basis $(e_i)_{1 \leq i \leq r}$.
 
 
-When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ with $\deg Q \leq h/r$, we only have $r$ polynomials corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in a certain base of $\F_{p^r}$. Being able to generate more polynomials would allow to chose a lower $r$ and improve drastically the attack.
+When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ with $\deg Q \leq h/r$, we only have $r$ polynomials corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in a certain basis of $\F_{p^r}$. Being able to generate more polynomials would allow to chose a lower $r$ and improve drastically the attack.
 
 We could consider now the coordinates in the equation $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for $u \in [1,p^r-1]$. This yields again $r$ polynomials of degree smaller than $u h/r$. Actually, since $P \mapsto P^p$ let the degree invariant we know that the degree of $Q^u$ is actually at most $w_p(u) h / r$.
 
-To generate more polynomials, we could then decide to consider all the equations $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for all $u \in U_w^{(r)} := \{ u \in [1,p^r-1] | w_p(u) \leq w \}$
+To generate more polynomials, we could then decide to consider all the equations $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for all $u \in U_w^{(r)} := \{ u \in [0,p^r-1] | w_p(u) \leq w \}$
 This yields $r \cdot |U_w^{(r)}|$ polynomials of degree at most $wh/r$.
 
 Besides, assuming $w \gg r$, the number of such polynomials can be up to
@@ -469,7 +469,7 @@ This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if w
 
 
 Unfortunately, these polynomials are strongly linearly dependent.
-For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal base of $\F_{p^r}$, these two sets of vectors of coordinates only differs by a rotation.
+For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differs by a rotation.
 
 
 
@@ -489,7 +489,7 @@ For example, see Example~\ref{Ex:1} in appendix, we try $h = 24$ and $r = 3 < \s
 This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Here, the polynomials considered are of degree 32 instead of 8 but we manage to generate 33 linearly independent lines instead of only 3. Therefore the condition $r \geq \sqrt{h}$ is not absolutely necessary and we can hope to get a (far) smaller lower bound on $r$.\\
 
 In the Example~\ref{Ex:1} (see appendix), we chose $h = 27$, $p = 53$ and we manage to get 46 linearly independent lines using $r = 3$ only.
-An exhaustive research for $g_{p^3}$ would require circa 149.000 verifications whereas using $r = 9 > \sqrt{h}$, we would need at least $3.3 \cdot 10^{15}$ steps, which is out of most computer range.\\
+An exhaustive research for $g_{p^3}$ would require circa $149.000 \simeq 2^17$ uses of a "known $g_{p^r}$" attack whereas using $r = 9 > \sqrt{h}$, as required by Vaudenay's algorithm, one would need at least $2^51$ steps, which can be considered quite challenging.\\
 
 
 \subsection{Number of linearly independent polynomials}
@@ -508,7 +508,7 @@ Let $r$ be a divisor of $h$, we call $u_w$ the number of linearly independent ro
 
 We have $u_0 = 1$ obviously because using $g_{p^r}^0$, we only get one row filled with 1.
 
-We also have $u_1 = r+1$ because we can only get $r$ more lines using $g_{p^r}$ corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in $\F_{p^r}$. The coordinates given by the generator $g_{p^r}^{p^i}$ are the same as those given by $g_{p^r}$ in a normal base. This mean that whatever the base chosen, they are at least linearly dependent from each other and so using $g_{p^r}$ doesn't allow to generate more useful polynomials.
+We also have $u_1 = r+1$ because we can only get $r$ more lines using $g_{p^r}$ corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in $\F_{p^r}$. The coordinates given by the generator $g_{p^r}^{p^i}$ are the same as those given by $g_{p^r}$ in a normal basis. This mean that whatever the basis chosen, they are at least linearly dependent from each other and so using $g_{p^r}$ doesn't allow to generate more useful polynomials.
 
 
 
@@ -527,13 +527,13 @@ This behavior has been observed for the following range of parameters
 \hline
 $r$ & $w$ 	& $h/r$ \\
 \hline
-2	& 1-17	& 1-2	\\
+2	& [1,17]	& \{1,2\}	\\
 \hline
-3	& 1-17	& 1-17, 30 \\
+3	& [1,17]	& [1,30] \\
 \hline
-4	& 1-17	& 1-17, 30 \\
+4	& [1,17]	& [1,30] \\
 \hline
-5	& 1-17	& 1-17, 30 \\
+5	& [1,17]	& [1,30] \\
 \hline
 \end{tabular}
 \end{center}
@@ -589,9 +589,13 @@ which is asymptotically always verified given the upper bound on $r$ found.
 
 \section{Conclusions}
 
-We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor.
+Sidelnikov and Shestakov ... \\
 
-% For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains however useless nowadays essentially because of the complexity of the discrete logarithm problem.
+
+
+This attack works even when not all the permutation $\pi$ is revealed.
+
+We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in this fields might allow this cryptosystem to resist most of the current known attacks.
 
 
 
@@ -626,7 +630,7 @@ g_{p^r} &=& g^{\frac{p^h-1}{p^r-1}} \\
 &&+ 88X^7 + 30X^6 + 139X^5 + 146X^4 + 111X^3 + 80X^2 + 136X + 48\\
 \end{eqnarray*}
 \item We choose different values for $d$, $t$ and $\pi$, the results remain the same.
-\item We choose the base $\left(g_{p^r}, g_{p^r}^p, g_{p^r}^{p^2} \right)$ for the $\F_p$-vector space $\F_{p^r}$ (this is however of no influence on the results).
+\item We choose the basis $\left(g_{p^r}, g_{p^r}^p, g_{p^r}^{p^2} \right)$ for the $\F_p$-vector space $\F_{p^r}$ (this is however of no influence on the results).
 \item We choose $(u_i)_{1\leq  i \leq 11} = (1,2,p+1,3,2p+1,p+2,4,p+3,3p+1,2p+2,2p^2+p+1)$\\
 We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomials of degree smaller than $4 h/r+1 = 33$ in the $\alpha_{\pi(j)}$.
 \end{itemize}
