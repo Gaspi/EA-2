@@ -51,7 +51,9 @@ The first efficient attack for the proposed parameters (i.e., $p \simeq 200$, $h
 
 
 \subsection{Our Work}
-In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack. We use here the echelon form of the public key as suggested by Wieschebrink \cite{Wiesch}. This gives an easy algorithm to attack such a scheme.
+In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack \cite{SidelShes92}, which is also explained more clearly by Wieschebrink in Cryptanalysis of the Niederreiter public key scheme based on GRS subcodes \cite{Wiesch}.
+We try to make a mix between the simplicity of the arguments given by Wieshbrink and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
+not introduced by Wieshbrink, and which leads to get a better complexity.
 
 On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. This allows us to describe an algorithm for a "known $g_{p^r}$ attack" which doesn't require $r$ to be as big as in Vaudenay's article. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p}$ assuming we have $h \simeq \frac{p}{\log p}$ as suggested in Chor and Rivest's article and $h$ has very small factors (around $\log p$). That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
 
@@ -104,7 +106,7 @@ $$c=(z_if_c(\alpha_i))_{1\leq i\leq n}$$ where $f_c$ is a polynomial whose degre
 Once again, we can notice that, if $\alpha_i = \infty$, $f_c(\alpha_i)$ is equal to the dominant coefficient of the polynomial $f_c$.
 
 Thus, given a message to send, which is actually a vector $b$ of $\F_q^k$, one will have to transmit the vector $b\cdot M + e$ where $e$ is a random vector of $\F_q^n$ with Hamming weight at most $t=\lfloor\frac{n-k}{2}\rfloor$.
-Since a GRS code correct $\lfloor\frac{n-k}{2}\rfloor$ errors, this property remains true for $M$. Indeed, $b\cdot M$ remains a codeword of the GRS code, since it is the codeword obtained applying the GRS code to $b\cdot H$.
+Since a GRS code can correct $\lfloor\frac{n-k}{2}\rfloor$ errors, this property remains true for $M$. Indeed, $b\cdot M$ remains a codeword of the GRS code, since it is the codeword obtained applying the GRS code to $b\cdot H$.
 So, in order to decrypt the message, we first compute $b'=b\cdot H$, finding the closest codeword from the received message, using for example the Berlekamp-Welch algorithm.
 Then, we compute $b'\cdot H^{-1}$ to get the original message.
 
@@ -112,7 +114,7 @@ However, the original message can not be easily recovered when not knowing the G
 
 \subsection{Equivalence between Reed-Solomon codes}
 
-Sidelnikov and Shestakov show \cite{SidelShes92} that for all $a \in \F_q\backslash\{0\}$ and $b \in \F_q$, there exists $H_1, H_2, H_3 \in \mathcal{M}_{\F_q}(k,k)$ nonsingular, $(c_1,... ,c_n) \in \F_q\backslash\{0\}^{n}$ and $(d_1,... ,d_n) \in \F_q\backslash\{0\}^{n}$ such that:
+Sidelnikov and Shestakov show \cite{SidelShes92} that for all $a \in \F_q\backslash\{0\}$ and $b \in \F_q$, there exist $H_1, H_2, H_3 \in \mathcal{M}_{\F_q}(k,k)$ nonsingular, $(c_1,... ,c_n) \in \F_q\backslash\{0\}^{n}$ and $(d_1,... ,d_n) \in \F_q\backslash\{0\}^{n}$ such that:
 \begin{equation}
 H_1\cdot G(a\cdot\alpha_1 + b, \ ... \ , a\cdot \alpha_n + b, c_1z_1, \ ... \ , c_n z_n) = G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)
 \label{eq1}
@@ -128,17 +130,16 @@ H_3\cdot G\left( \alpha_1, \ ... \ , \alpha_n, a\cdot z_1, \ ... \ , a\cdot z_n 
 This means that for any cryptosystem $M = H\cdot G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, for any birationnal transformation
 $$ \phi : x \mapsto \frac{ax+b}{cx+d}$$
 there exist a nonsingular matrix $H_{\phi}$ and a vector $(z'_1,... ,z'_n) \in \F_q\backslash\{0\}^{n}$ such that:
-$$M = H_{\phi}\cdot G(\phi(\alpha_1), \ ... \ , \phi(\alpha_n), z'_1, \ ... \ , z'_n)$$
-By using the unique transformation $\phi$ that maps $(\alpha_1, \alpha_2, \alpha_3)$ to $(0,1,\infty)$, we get that, for any cryptosystem $M = H\cdot G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, $M$ can be uniquely written
-$$ M = H'\cdot G(0, 1,\alpha'_3, \ ... \ ,\alpha'_k, \infty, \alpha'_{k+2}, \ ... \ , \alpha'_n, z'_1, \ ... \ , z'_n) $$
-with $H'$ nonsingular, $z'_i \neq 0$ and $\alpha_i$ distincts elements of $\F_q\backslash\{0, 1, \infty)$.
-So, we can assume that $\alpha_1 = 0$, $\alpha_2 = 1$ and $\alpha_{k+1} = \infty$.
+\begin{equation}
+ M = H_{\phi}\cdot G(\phi(\alpha_1), \ ... \ , \phi(\alpha_n), z'_1, \ ... \ , z'_n)
+ \label{eq4}
+\end{equation}
+
 
 So, when $M$ is given, it is impossible to compute the original matrices $G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$ and $H$ since many pairs of such matrices lead to the same public matrix $M$.
 However, computing an equivalent pair is sufficient since it will allow to decrypt the messages as well as the original secret pair of matrices.
+It is the main idea of the attack.
 
-So, the attack will consist of finding $H$ and $G(0, 1,\alpha'_3, \ ... \ ,\alpha'_k, \infty, \alpha'_{k+2}, \ ... \ , \alpha'_n, z'_1, \ ... \ , z'_n)$, equivalent to the original pair. 
-Considering $a=z_{k+1}'^{-1}$ in equation \eqref{eq3}, we can also assume that $z'_{k+1}=1$.
 
 
 \newpage
@@ -146,9 +147,11 @@ Considering $a=z_{k+1}'^{-1}$ in equation \eqref{eq3}, we can also assume that $
 \label{sec:SSattack}
 \subsection{A first important remark}
 
-As described in the previous section, we assume that we have:
-$$ M = H\cdot G(0, 1,\alpha_3, \ ... \ ,\alpha_k, \infty, \alpha_{k+2}, \ ... \ , \alpha_n, z_1, \ ... \ , z_k, 1, z_{k+2}, \ ... \, z_n) $$
-
+By using the unique transformation $\phi$ that maps $(\alpha_1, \alpha_2, \alpha_3)$ to $(0,1,\infty)$ in equation \eqref{eq4}, we get that, for any cryptosystem $M = H\cdot G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, $M$ can be uniquely written
+$$ M = H'\cdot G(0, 1,\alpha'_3, \ ... \ ,\alpha'_k, \infty, \alpha'_{k+2}, \ ... \ , \alpha'_n, z'_1, \ ... \ , z'_n) $$
+with $H'$ nonsingular, $z'_i \neq 0$ and $\alpha_i$ distinct elements of $\F_q\backslash\{0, 1, \infty)$.
+So, we can assume that $\alpha_1 = 0$, $\alpha_2 = 1$ and $\alpha_{k+1} = \infty$.
+Considering $a=z_{k+1}'^{-1}$ in equation \eqref{eq3}, we can also assume that $z_{k+1}=1$.
 
 First, we compute the echelon form of $M$:
 $$ E(M) = 
@@ -174,7 +177,7 @@ So, since all the $\alpha_i$ are different, the polynomial $f_{b_i}$ has $k-1$ s
 form of the polynomial $f_i$ :
 \begin{equation}
 f_{b_i}(X) = c_{b_i}\cdot \prod_{1\leq j\leq k, i\neq j} (X-\alpha_j)
-\label{eq4}
+\label{eq5}
 \end{equation}
 where $c_{b_i} \in \F_q\backslash\{0\}$.
 
@@ -182,46 +185,79 @@ Since $\alpha_{k+1} = \infty$, we have $z_{k+1}\cdot f_{b_i}(\alpha_{k+1}) = b_{
 So, we know the coefficients $c_{b_i}$ for all the rows of the matrix $E(M)$.
 
 \subsection{Computation of the $\alpha_i$}
-Consider now the first and second rows. Using the fact that, for all $k+2\leq i\leq n$, $b_{1,j}\neq 0$ and $b_{2,j}\neq 0$, and the form of the polynomials $f_{b_i}$ given in equation \eqref{eq4}, the following holds:
+Consider now the first and second rows. Using the fact that, for all $k+2\leq i\leq n$, $b_{1,j}\neq 0$ and $b_{2,j}\neq 0$, and the form of the polynomials $f_{b_i}$ given in equation \eqref{eq5}, the following holds:
 \begin{equation}
 \frac{b_{1,j}}{b_{2,j}} = \frac{z_j\cdot f_{b_1}(\alpha_j)}{z_j\cdot f_{b_2}(\alpha_j)} = \frac{c_{b_1}\cdot (\alpha_j - \alpha_2)}{c_{b_2}\cdot (\alpha_j - \alpha_1)} = \frac{c_{b_1}\cdot (\alpha_j - 1)}{c_{b_2}\cdot \alpha_j}
-\label{eq5}
+\label{eq6}
 \end{equation}
 So, we have that:
 \begin{equation}
 \forall k+2\leq j\leq n, \alpha_j = \frac{b_{2,j}\cdot c_{b_1}}{b_{2,j}\cdot c_{b_1} - b_{1,j}\cdot c_{b_2}}
-\label{eq6}
+\label{eq7}
 \end{equation}
 
-Consider now the same equation as in equation \eqref{eq5}, replacing the second row by the $i$-th row where $3\leq i\leq k$. We obtain:
+Consider now the same equation as in equation \eqref{eq6}, replacing the second row by the $i$-th row where $3\leq i\leq k$. We obtain:
 \begin{equation}
 \frac{b_{1,j}}{b_{i,j}} = \frac{z_j\cdot f_{b_1}(\alpha_j)}{z_j\cdot f_{b_i}(\alpha_j)} = \frac{c_{b_1}\cdot (\alpha_j - \alpha_i)}{c_{b_i}\cdot (\alpha_j - \alpha_1)} = \frac{c_{b_1}\cdot (\alpha_j - 1)}{c_{b_2}\cdot (\alpha_j - \alpha_i)}
-\label{eq7}
+\label{eq8}
 \end{equation}
 
 Then, we get, considering for instance $j=k+2$:
 \begin{equation}
-\forall 3\leq i\leq k, \alpha_i = \alpha_j - \frac{b_{i,k+2}}{b_{1,k+2}}\cdot \frac{c_{b_1}}{c_{b_2}}\cdot (\alpha_{k+2}-1)
-\label{eq8}
+\forall 3\leq i\leq k, \alpha_i = \alpha_{k+2} - \frac{b_{i,k+2}}{b_{1,k+2}}\cdot \frac{c_{b_1}}{c_{b_2}}\cdot (\alpha_{k+2}-1)
+\label{eq9}
 \end{equation}
 
-So, we now know the set $\{\alpha_1,... ,\alpha_n\}$.
+So, we now found an equivalent set of $\alpha_i$ for the GRS code.
+
+The next step is to find another set of $\alpha_i$ with no inifinite coefficient. The idea is to find an element $\alpha$ different from all the $\alpha_i$ we computed.
+We then apply the birationnal transformation
+$$ \phi : x \mapsto \frac{1}{x - \alpha}$$
+Using equation \eqref{eq4}, we get that there exist a nonsingular matrix $H''$ and a vector $(z''_1,... ,z''_n) \in \F_q\backslash\{0\}^{n}$ such that:
+$$M = H''\cdot G(\phi(\alpha_1), \ ... \ , \phi(\alpha_n), z''_1, \ ... \ , z''_n)$$
+So, we have an equivalent set of $\alpha_i$ in which all the elements are finite.
 
 \subsection{Computation of the $z_i$}
-First, note that, since we know $\alpha_1, \ ... \ , \alpha_n$ and $c_{b_1}, \ ... \ , c_{b_k}$, we can completely compute the polynomials $f_{b_1}, \ ... \ , f_{b_k}$.
-Consider now, for all $1\leq i\leq k$ and $1\leq j\leq n$, that $b_{i,j} = z_j\cdot f_{b_i}(\alpha_j)$.
-Then, considering $k+2\leq j\leq n$, we get that:
+It remains to find the coefficients $z''_i$. To simplify the notations, we assume that the equivalent matrix we are looking for is exactly the matrix used to generate the code. So, $z''_i = z_i$.
+Once again, considering $a=z_{k+1}^{-1}$ in equation \eqref{eq3}, we can also assume that $z_{k+1}=1$.
+
+First, note that equation \eqref{eq5} remains true but, since we applied a transformation on the set of $\alpha_i$, the polynomials are not the same than in the previous part.
+In particular, we don't know the coefficients $c_{b_i}$ anymore.
+
+Let $L_i$ be the polynomial defined by:
 \begin{equation}
- \forall k+2\leq i\leq n, z_j = \frac{b_{i,j}}{f_{b_i}(\alpha_j)}
- \label{eq9}
+L_i(X) = \prod_{1\leq j\leq k, i\neq j} (X-\alpha_j) = \frac{1}{c_{b_i}}\cdot f_{b_i}(X)
+\label{eq10}
 \end{equation}
-If we now take $i=j$ and $1\leq i\leq k$, we get that:
+Since we know the values of the $\alpha_i$, we can compute these polynomials.
+
+We know that, for all $1\leq i\leq k$ and $1\leq j\leq n$, 
 \begin{equation}
- \forall 1\leq i\leq k, z_i = \frac{1}{f_{b_i}(\alpha_i)}
- \label{eq10}
+ b_{i,j} = z_j\cdot c_{b_i} \cdot L_i(\alpha_j)
+ \label{eq11}
 \end{equation}
-So, we can easily compute the set $\{z_1,... ,z_n\}$ and then the matrix $G(\alpha_1, \ ... \ ,\alpha_n, z_1, \ ... \ , z_n)$. Finally, we can also get the nonsingular matrix H by computing $H=M'\cdot G'^{-1}$ where
-$G'$ is the matrix formed by the $k$ first columns of $G$ and $M'$ the matrix formed by the $k$ first columns of $M$.
+
+
+
+Considering, for $1\leq i\leq k$, $j=k+1$ and $j=i$ in equation \eqref{eq11}, we get that $b_{i,k+1} = z_{k+1}\cdot c_{b_i} \cdot L_i(\alpha_{k+1}) = c_{b_i} \cdot L_i(\alpha_{k+1})$
+and $1 = b_{i,i} = z_{i}\cdot c_{b_i} \cdot L_i(\alpha_{i})$. So, making the quotient of the two equalities, we obtain:
+\begin{equation}
+\forall 1\leq i\leq k, z_i = \frac{L_i(\alpha_{k+1})}{b_{i,k+1}\cdot L_i(\alpha_i)}
+ \label{eq12}
+\end{equation}
+
+Considering now, for $k+2\leq j\leq n$, $i=1$ and $j=k+1$ in equation \eqref{eq11}, we get that $b_{1,j} = z_{j}\cdot c_{b_1} \cdot L_1(\alpha_{j})$
+and $b_{1,k+1} = z_{k+1}\cdot c_{b_1} \cdot L_1(\alpha_{k+1}) = c_{b_1} \cdot L_1(\alpha_{k+1})$. So, making the quotient of the two equalities, we obtain:
+\begin{equation}
+\forall k+2\leq j\leq n, z_j = \frac{b_{1,j}}{b_{1,k+1}} \cdot \frac{L_1(\alpha_{k+1})}{L_1(\alpha_j)}
+ \label{eq12}
+\end{equation}
+
+So, we managed to compute the set $\{ z_1, \ ... \ ,z_n \}$ and we now know completely an equivalent GRS code $G'$. In order to compute the matrix $H'$ corresponding to the equivalent code we found, we consider
+$G_{k}$ and $M_{k}$ the matrices formed by the k first columns of $G'$ and $M$. We then have:
+$$H' = M_{k}\cdot G_{k}^{-1}$$
+
+So, we found a pair of matrices $(G',H')$ equivalent to the original private key.
 
 \subsection{Some remarks about the attack}
 
