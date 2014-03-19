@@ -3,11 +3,15 @@ from sage.misc.randstate import current_randstate
 
 randrange = current_randstate().python_random().randrange
 
+
+# Debugging function
+# Set verbose to False to disable
 try: verbose
 except: verbose = True
 def Verb(msg):
     if verbose:
         print msg
+
 
 def random_distinct_int(start, end, number):
     size = end - start
@@ -31,7 +35,7 @@ def random_distinct_int(start, end, number):
             r = randrange(i, size)
             ( ans[i], ans[r] ) = ( ans[r], ans[i] )
             yield ans[i]
-    
+
 
 def BaseP(Field, e):
     if Field.polynomial().degree() > 1:
@@ -46,6 +50,7 @@ def BaseP(Field, e):
         power *= X
         e = e // p
     return res
+
 
 def random_distinct_elements(Field, n = None):
     o = Field.order()

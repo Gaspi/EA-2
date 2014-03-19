@@ -1,7 +1,7 @@
 
 
 load "RandomFunc.sage"
-load "RSDecrypterBis.sage"
+load "RSDecrypter.sage"
 
 p = 197
 h = 24

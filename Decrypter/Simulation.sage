@@ -1,5 +1,5 @@
 load "RandomFunc.sage"
-load "RSDecrypterBis.sage"
+load "RSDecrypter.sage"
 
 
 #r = 2
