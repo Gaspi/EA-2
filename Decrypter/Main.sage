@@ -19,7 +19,7 @@ except: hsr = 8
 h = hsr * r
 
 try: p
-except: p = 256
+except: p = 53
 
 q = p ^ h
 bF = GF(p)
@@ -52,6 +52,52 @@ while t.minimal_polynomial().degree() < h:
 gc = [ g^d*(t + e) for e in pi ]
 
 
+def MCoeff(u):
+    aux = [ (gprci^u)._vector_() * basis for gprci in gprc ]
+    return Mat(F, r, p)( [  [ aux[i][j] for i in range(p) ] for j in range(r) ] )
+
+def LCoeff(l):
+    lines = r * len(l)
+    res = Mat(bF, lines, p)()
+    for i in range(len(l)):
+        u = l[i]
+        aux = [ (gprci^u)._vector_() * basis for gprci in gprc ]
+        for j in range(p):
+            for k in range(r):
+                res[i * r + k, j] = aux[j][k]
+    return res
+
+def LCoeff2(l, lines):
+    res = Mat(bF, lines, p)()
+    ind = 0
+    
+    for i in range(len(l)):
+        u = l[i]
+        aux = Mat(bF,p,r)([ e for e in [ (gprci^u)._vector_() * basis for gprci in gprc ] ])
+        
+        for row in aux.columns():
+            res[ind,:] = row
+            if res.rank() == (ind+1) :
+                ind += 1
+            if ind == lines:
+                return res
+
+def LightWords(u):
+    res= []
+    for i in range(0,(u+1)^r):
+        weight = 0
+        word = 0
+        ip = i
+        for j in range(r):
+            weight += ip % (u+1)
+            word = word * p + ip % (u+1)
+            ip = ip // (u+1)
+        if weight <= u:
+            res.append(word)
+    return res
+
+
+
 # init clock
 t0 = time.time()
 
@@ -69,32 +115,22 @@ for i in range(r, h):
     for j in range(h):
         baseInv[i,j] = F(randrange(p))
 
-b = baseInv ^(-1)
+basis = (baseInv^(-1))[:,0:r]
 
 print "Init. done. r : " + str(r) + "  -  hsr : " + str(hsr)
 
 
-def MCoeff(u):
-    aux = [ (gprci^u)._vector_() * b for gprci in gprc ]
-    return Mat(F, r, p)( [  [ aux[i][j] for i in range(p) ] for j in range(r) ] )
 
-def LCoeff(l):
-    lines = r * len(l)
-    res = Mat(bF, lines, p)()
-    for i in range(len(l)):
-        u = l[i]
-        aux = [ (gprci^u)._vector_() * b for gprci in gprc ]
-        for j in range(p):
-            for k in range(r):
-                res[i * r + k, j] = aux[j][k]
-    return res
+
 
 
 Clock()
 
-M = LCoeff([1,2,p+1,3,2*p+1,p+2,4,3*p+1,2*p+2,p^2+p+2,5,4*p+1,3*p+2,p^2+p+3,p^2+2*p+2,0])
-M = M[0:46]
+# M = LCoeff2([1,2,p+1,3,2*p+1,p+2,4,3*p+1,2*p+2,p^2+p+2,5,4*p+1,3*p+2,p^2+p+3,p^2+2*p+2,0] , 46)
+w = 5
+M = LCoeff2( LightWords(w) , w * hsr + 1)
 
+Clock()
 
 # Try to find pi
 (k,n) = M.dimensions()
@@ -110,15 +146,18 @@ alpha = [ bF(0), bF(1)] \
 Clock()
 
 
-for c in bF:
-    if not c in alpha:
-        for a in bF:
-            for b in bF:
-                aux = [ a + b / (el - c) for el in alpha]
-                aux[k] = a
+nbPossibilities = 0
+for c1 in bF:
+    if not c1 in alpha:
+        for a1 in bF:
+            for b1 in bF:
+                nbPossibilities += 1
+                aux = [ a1 + b1 / (el - c1) for el in alpha]
+                aux[k] = a1
                 if aux == pi:
-                    print "Jackpot !"
+                    Verb("Jackpot !")
 
+Verb("Number of possible permutations : " + str(nbPossibilities) )
 
 Clock()
 
