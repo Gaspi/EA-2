@@ -472,7 +472,27 @@ Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differs by a rotation.
 
 
+\subsection{Complexity}
 
+
+a simple test for g pr .
+2
+\begin{theorem}
+If there exists $w \geq 1$ and a factor $r$ of $h$ such that $u_w > wh/r + 1$, if we let $g_{p^r}$ denote $g^{\frac{p^h-1}{p^r-1}}$, then all the $g_{p^r}^{uc_j}$ (with $0 \leq j\leq p$ and $w_p(u) \leq w$) stands on the same $(1+wh/r)$-dimensional affine space when considering $\GF{p^r}$ as an $r$-dimensional $\GF{p}$-affine space.
+\end{theorem}
+Thus there is an algorithm which can check if a candidate for $g_{p^r}$ is good: the algorithm simply check that all $g_{p^r}^{uc_j}$ are affine-dependent. The algorithm has an average complexity of $O(p^2)$ operations in $\GF{p}$. Since there are $\phi(p^r-1)/r$ candidates, we can exhaustively search for $g_{p^r}$ within a complexity of $O(p^{r+2} /r)$.
+
+
+\textbf{Input : } Problem data, $r$, $w$ and $g_{p^r}$.
+
+Compute $N := w h / r$. \ \ \ \ $\rightarrow \Theta(\log p)$
+
+Compute the matrix $M$ of $N$ linearly independent lines from the coefficients of $g_{p^r}^{uc_j}$ with $w_p(u) \leq w$. \ \ \ \ $\rightarrow \Theta(p^3)$\\
+We could fail here if we manage to get more than $1+wh/r$ linearly independent rows. (early abort)
+
+Perform a Sidelnikov Shestakov attack on $M$ to retrieve all possible permutations $\pi$. \ \ \ \ $\rightarrow \Theta( ? )$
+
+For each possible $\pi$, perform a "known $g_{p^r}$ and $\pi$" attack.
 
 
 \section{Simulations and expected complexity}
@@ -517,6 +537,7 @@ We also have $u_1 = r+1$ because we can only get $r$ more lines using $g_{p^r}$ 
 We notice experimentally the following behavior
 
 \begin{postulate}
+\label{postulate}
 We have for $r > 2$
 $$ u_w = \min \left( \binom{w+r}{r}, w\frac{h}{r} + 1 , p \right)$$
 \end{postulate}
@@ -549,40 +570,51 @@ We suppose that we have found $r$ allowing to attack a Chor-Rivest cryptosystem.
 wh/r+1 &\leq & p-2 \\
 wh/r+1 &\leq & u_w 
 \end{eqnarray*}
-We choose the biggest $w$ verifying the first condition to have the weakest condition on $r$ : $w = \lfloor r \frac{p-3}{h} \rfloor $. Besides we know that $h$ is suppose to be chosen around $\frac{p}{\log p}$. This means that we have $w = \Theta(r \log p) \geq C r \log p$.
+We choose the biggest $w$ verifying the first condition to obtain the weakest condition on $r$ : $$ w = \lfloor r \frac{p-3}{h} \rfloor \geq C \frac{rp}{h} $$
 
-We suppose that we remain in the domain $w \leq h/r$ and that the postulate in the Section~\ref{sec:Simul} is true. The second condition is then easily equivalent to
-$$ \upsilon(w) = \binom{w+r}{r} \geq w\frac{h}{r}+1 $$
+
+
+Besides we know that $h$ is suppose to be chosen around $\frac{p}{\log p}$. This means that we have $w = \Theta(r \log p) \geq C r \log p$.
+
+We suppose that the Postulate~\ref{postulate} in the Section~\ref{sec:Simul} is true. The second condition is then easily equivalent to
+$$ \binom{w+r}{r} \geq w\frac{h}{r}+1 $$
 and since
 $$ \binom{w+r}{r} \geq \frac{w^r}{r!} \ \ \text{ and } \ \ p \geq w\frac{h}{r}+1 $$
 a sufficient condition would be
 
 
+%\begin{eqnarray*}
+%\frac{w^r}{r!} &\geq& p \\
+%\Leftarrow \ \ \ \ \ \ \ \ C r^r (\log p)^r &\geq& p \cdot r! \\
+%\Leftarrow (e \log p)^r &\geq& \frac{p}{C \sqrt{2\pi r}} \geq C' p \\
+%\Leftarrow r &\geq& \frac{\log p + C''}{\log \log p + 1} \sim \frac{\log p}{\log \log p}
+%\end{eqnarray*}
 
-%\begin{eqnarray*}
-%C\frac{w^r}{r!} &\geq& w \frac{h}{r} \\
-%\Leftrightarrow C w^{r-1} &\geq& h\cdot (r-1)! \\
-%\Leftarrow C w^{r-1} &\geq& h (r-1)^{r-1} \\
-%\Leftarrow w &\geq& (r-1) \left(\frac{h}{C}\right)^{\frac{1}{r-1}} \geq C' r h^{\frac{1}{r-1}}
-%\end{eqnarray*}
-%This yield
-%\begin{eqnarray*}
-%C' h \cdot h^{\frac{1}{r-1}} &\leq& p-3 \\
-%\frac{\log h}{r-1} &\leq& \log (p-3) - \log h + C'' \\
-%r-1 &\geq& \frac{\log h}{\log(p-3) - \log h + C''} 
-%\end{eqnarray*}
 
 \begin{eqnarray*}
 \frac{w^r}{r!} &\geq& p \\
-\Leftarrow \ \ \ \ \ \ \ \ C r^r (\log p)^r &\geq& p \cdot r! \\
-\Leftarrow (e \log p)^r &\geq& \frac{p}{C \sqrt{2\pi r}} \geq C' p \\
-\Leftarrow r &\geq& \frac{\log p + C''}{\log \log p + 1} \sim \frac{\log p}{\log \log p}
+\Leftarrow \ \ \ \ \ \ \ \ \ \ \ \left(\frac{Crp}{h}\right)^r  &\geq& p \cdot r! \sim \frac{1}{\sqrt{2\pi r}} \left(\frac{r}{e}\right)^r \\
+\Leftarrow \ \ \ \sqrt{2\pi r} \left(\frac{Cep}{h}\right)^r &\geq& \left(\frac{p}{h}\right)^r \geq p \ \ \ \ \ \ \text{ for $r$ big enough.}
 \end{eqnarray*}
-This mean that the exhaustive research can be done in time $O\left( p^{\frac{\log p}{\log \log p}} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.
+An asymptotic condition would be
+$$ r \geq \frac{\log p}{\log p - \log h}$$
 
-The condition $r w \leq h$ yields an upper bound on the $r$.
-$$ C' r^2 \leq \frac{p}{\log^2 p}  $$
-which is asymptotically always verified given the upper bound on $r$ found.
+If we suppose that $h \gg p$, then this attack can't be efficient. Indeed, we would have then $w \ll r$ and the second condition can't be fulfilled when the parameters are large enough.
+
+If we suppose $h = \frac{p}{\log p}$, then we have the following lower bound for $r$
+$$ r \geq \frac{\log p}{\log \log p}$$
+
+
+\subsection{Complexity}
+
+
+For a big enough instance of a Chor-Rivest cryptosystem, the exhaustive research of a generator $g_{p^r}$ that can be used to perform a polynomial "known $g_{p^r}$ attack" on this cryptosystem is bounded above by $p^r$ with $r$ the smallest divisor of $h$ such that $r \geq \frac{\log p}{\log p - \log h}$\\
+
+The cost of such a "known $g_{p^r}$ attack is ...\\
+
+If we suppose that the density of the finite field chosen close to 1 (i.e. $h \sim \frac{p}{\log p}$), and that $h$ has a lot of small divisors, then the complexity of the full attack on the Chor-Rivest cryptosystem is $O\left( p^{\frac{\log p}{\log \log p}} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.\\
+
+The size of the public key is $N = hp\log p \sim p^2$. The complexity found is bounded above by $N^{\log N}$ which is almost polynomial.
 
 
 
