@@ -288,7 +288,7 @@ $$ c_i := d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
 To be encrypted, a message should first be encoded into a bitstring $m = [m_0...m_{p-1}]$ of length $p$ and weight $h$ : $\sum_i m_i = h$. The ciphertext is
 $$ E(M) := \sum_{i=0}^{p-1} m_i c_i \mod q-1 $$
 To decipher this message, we compute
-$$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{pi(i)}\right)^{m_i} $$
+$$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{\pi(i)}\right)^{m_i} $$
 whose factorization leads to the message $m$.
 
 To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms.This allow us to suppose that
@@ -499,7 +499,7 @@ For each possible $\pi$, perform a "known $g_{p^r}$ and $\pi$" attack.
 \label{sec:Simul}
 
 
-In order to demonstrate the efficiency of the "known $g_p$" attack algorithm presented in Section~\ref{sec:Vau} with small $r$, we run simulations on the number of linearly independent lines that can be obtained from the coordinates of $g_{p^r}^{uc_j}$.
+In order to demonstrate the efficiency of the "known $g_{p^r}$" attack algorithm presented in Section~\ref{sec:Vau} with small $r$, we run simulations on the number of linearly independent lines that can be obtained from the coordinates of $g_{p^r}^{uc_j}$.
 
 
 \subsection{First examples}
