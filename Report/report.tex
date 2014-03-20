@@ -139,7 +139,6 @@ It is the main idea of the attack.
 
 
 
-\newpage
 \section{The Sidelnikov-Shestakov Attack}
 \label{sec:SSattack}
 \subsection{A first important remark}
@@ -258,6 +257,9 @@ So, we found a pair of matrices $(G',H')$ equivalent to the original private key
 
 \subsection{Some remarks about the attack}
 
+
+
+
 \newpage
 \section{Application to the Chor-Rivest Cryptosystem}
 \label{sec:CRcrypt}
@@ -294,7 +296,7 @@ whose factorization leads to the message $m$.
 To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms.This allow us to suppose that
 $$ h = \Theta\left( \frac{p}{\log_2 p} \right) $$
 
-
+Vaudenay show that when some parts of the secret key is disclosed, for example $g$, $t$ or $\pi$, there exists polynomials attack on this cryptosystem. For instance, he introduces the "known $t$", "known $g$" and "known $\pi$" attacks.
 
 \subsubsection{Link with Reed-Solomon codes}
 
@@ -345,7 +347,7 @@ $$
 So a possible way to attack the Chor-Rivest cryptosystem would be to find the evaluations of enough small degree polynomials in the $\alpha_{\pi(i)}$.
 
 
-\newpage
+
 \subsection{A First Attack using Reed-Solomon codes}
 
 
@@ -411,7 +413,6 @@ This is a drastic improvement in the exhaustive research of $g$. However this re
 
 
 
-\newpage
 \section{Vaudenay attack}
 \label{sec:Vau}
 
@@ -472,28 +473,6 @@ Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differs by a rotation.
 
 
-\subsection{Complexity}
-
-
-a simple test for g pr .
-2
-\begin{theorem}
-If there exists $w \geq 1$ and a factor $r$ of $h$ such that $u_w > wh/r + 1$, if we let $g_{p^r}$ denote $g^{\frac{p^h-1}{p^r-1}}$, then all the $g_{p^r}^{uc_j}$ (with $0 \leq j\leq p$ and $w_p(u) \leq w$) stands on the same $(1+wh/r)$-dimensional affine space when considering $\GF{p^r}$ as an $r$-dimensional $\GF{p}$-affine space.
-\end{theorem}
-Thus there is an algorithm which can check if a candidate for $g_{p^r}$ is good: the algorithm simply check that all $g_{p^r}^{uc_j}$ are affine-dependent. The algorithm has an average complexity of $O(p^2)$ operations in $\GF{p}$. Since there are $\phi(p^r-1)/r$ candidates, we can exhaustively search for $g_{p^r}$ within a complexity of $O(p^{r+2} /r)$.
-
-
-\textbf{Input : } Problem data, $r$, $w$ and $g_{p^r}$.
-
-Compute $N := w h / r$. \ \ \ \ $\rightarrow \Theta(\log p)$
-
-Compute the matrix $M$ of $N$ linearly independent lines from the coefficients of $g_{p^r}^{uc_j}$ with $w_p(u) \leq w$. \ \ \ \ $\rightarrow \Theta(p^3)$\\
-We could fail here if we manage to get more than $1+wh/r$ linearly independent rows. (early abort)
-
-Perform a Sidelnikov Shestakov attack on $M$ to retrieve all possible permutations $\pi$. \ \ \ \ $\rightarrow \Theta( ? )$
-
-For each possible $\pi$, perform a "known $g_{p^r}$ and $\pi$" attack.
-
 
 \section{Simulations and expected complexity}
 \label{sec:Simul}
@@ -509,7 +488,7 @@ For example, see Example~\ref{Ex:1} in appendix, we try $h = 24$ and $r = 3 < \s
 This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Here, the polynomials considered are of degree 32 instead of 8 but we manage to generate 33 linearly independent lines instead of only 3. Therefore the condition $r \geq \sqrt{h}$ is not absolutely necessary and we can hope to get a (far) smaller lower bound on $r$.\\
 
 In the Example~\ref{Ex:1} (see appendix), we chose $h = 27$, $p = 53$ and we manage to get 46 linearly independent lines using $r = 3$ only.
-An exhaustive research for $g_{p^3}$ would require circa $149.000 \simeq 2^17$ uses of a "known $g_{p^r}$" attack whereas using $r = 9 > \sqrt{h}$, as required by Vaudenay's algorithm, one would need at least $2^51$ steps, which can be considered quite challenging.\\
+An exhaustive research for $g_{p^3}$ would require circa $149.000 \simeq 2^{17}$ uses of a "known $g_{p^r}$" attack whereas using $r = 9 > \sqrt{h}$, as required by Vaudenay's algorithm, one would need at least $2^{51}$ steps, which can be considered quite challenging.\\
 
 
 \subsection{Number of linearly independent polynomials}
@@ -605,16 +584,54 @@ If we suppose $h = \frac{p}{\log p}$, then we have the following lower bound for
 $$ r \geq \frac{\log p}{\log \log p}$$
 
 
-\subsection{Complexity}
 
+\section{Complexity}
+
+\subsection{The algorithm}
+
+\textbf{Input : } The description of the finite field $\F_{p^h}$ and the public key $(c_j)_{1 \leq j \leq p}$
+\begin{itemize}
+\item Compute the smallest $r$ divisor of $h$ such that $w := \lfloor r \frac{p-3}{h} \rfloor$ satisfy $u_w > wh/r+1$.
+
+\item Precompute the set $U_w$ of all $u$ such that $w_p(u) \leq w$
+\item Chose a basis $(e_i)_{1 \leq i \leq r}$ of $\F_{p^r}$ and compute the matrix projecting elements of $F_{p^r}$ in this basis.
+
+\item \textbf{For} all possible $g_{p^r}$ generator of $F_{p^r}$ \textbf{do}
+\begin{itemize}
+\item Compute the matrix $M$ containing the maximum of linearly independent rows from the coordinates of $\left( g_{p^r}^{uc_j} \right)_{u \in U_w}$ in the basis $(e_i)$.
+
+\item \textbf{If } strictly more than $wh/r+1$ rows are obtained\\
+\textbf{Then } Abort and chose an other generator $g_{p^r}$. \\
+\textbf{Else } Leave this loop and keep $M$ and $g_{p^r}$.
+\end{itemize}
+\item Perform a Sidelnikov Shestakov attack on $M$ to generate all possible permutations $(\pi_i)$.
+\item \textbf{For each } permutation $\pi$ \textbf{ do }
+\begin{itemize}
+\item Decrypt using a "known $g_{p^r}$ and $\pi$" attack.
+\end{itemize}
+\end{itemize}
+
+
+
+\subsection{A simple test for $g_{p^r}$}
+
+\begin{theorem}
+If there exists $w \geq 1$ and a factor $r$ of $h$ such that $u_w > wh/r + 1$, if we let $g_{p^r}$ denote $g^{\frac{p^h-1}{p^r-1}}$, then all the $g_{p^r}^{uc_j}$ (with $0 \leq j\leq p$ and $w_p(u) \leq w$) stands on the same $(1+wh/r)$-dimensional affine space when considering $\GF{p^r}$ as an $r$-dimensional $\GF{p}$-affine space.
+\end{theorem}
+Thus there is an algorithm which can check if a candidate for $g_{p^r}$ is good: the algorithm simply check that all $g_{p^r}^{uc_j}$ are affine-dependent. The algorithm has an average complexity of $O(p^2)$ operations in $\GF{p}$. Since there are $\phi(p^r-1)/r$ candidates, we can exhaustively search for $g_{p^r}$ within a complexity of $O(p^{r+2} /r)$.
+
+This gives us an "early abort" and allow us not to perform a Sidelnikov Shestakov attack on all the $M$ generated by all the possible $g_{p^r}$.
+
+\subsection{Time complexity}
 
 For a big enough instance of a Chor-Rivest cryptosystem, the exhaustive research of a generator $g_{p^r}$ that can be used to perform a polynomial "known $g_{p^r}$ attack" on this cryptosystem is bounded above by $p^r$ with $r$ the smallest divisor of $h$ such that $r \geq \frac{\log p}{\log p - \log h}$\\
 
-The cost of such a "known $g_{p^r}$ attack is ...\\
+The cost of the initial computations, the Sidelnikov-Shestakov and the "known $g_{p^r}$ and $\pi$" attacks are polynomial in $p$ and can be thus neglected.
 
-If we suppose that the density of the finite field chosen close to 1 (i.e. $h \sim \frac{p}{\log p}$), and that $h$ has a lot of small divisors, then the complexity of the full attack on the Chor-Rivest cryptosystem is $O\left( p^{\frac{\log p}{\log \log p}} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.\\
+If we suppose that the density of the finite field chosen close to 1 (i.e. $h \sim \frac{p}{\log p}$), and that $h$ has a lot of small divisors, then the complexity of the full attack on the Chor-Rivest cryptosystem is $O\left( p^{\frac{\log p}{\log \log p} + C} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.\\
 
 The size of the public key is $N = hp\log p \sim p^2$. The complexity found is bounded above by $N^{\log N}$ which is almost polynomial.
+
 
 
 
@@ -703,46 +720,16 @@ Rank & 46 \\ \hline
 
 
 
-
-\newpage
 \section{Simulation results}
 \label{Sim:res}
 
-\begin{tabular}{|c|c|c|c|l|}
-\hline
-$p$ & $h$ & $r$ & $w_p(u_i)$ & Number of linearly independent lines  \\
-\hline
-197 & 24 & 2 & $w$ & $\frac{w(w+3)}{2} < 12w+1$ Attack impossible. \\
-\hline
-197 & 24 & 3 & 4 & 33\\
-\hline
-197 & 24 & 4 & 2 & 13\\
-\hline
-197 & 24 & $r \geq 6$ & 1 & $1 + h/r$ \\
-\hline
-193 & 36 & 2 & $w$ & $\frac{w(w+3)}{2} < 18w+1$ Attack impossible. \\
-\hline
-193 & 36 & 3 & 6 & 73\\
-\hline
-193 & 36 & 4 & 3 & 28\\
-\hline
-193 & 36 & 6 & 2 & 13\\
-\hline
-193 & 36 & $r \geq 9$ & 1 & $1 + h/r$ \\
-\hline
-251 & 60 & 2 & $w$ & $\frac{w(w+3)}{2} < 30w+1$ Attack impossible. \\
-\hline
-251 & 60 & 3 & 8 & 161\\
-\hline
-251 & 60 & 4 & 4 & 61\\
-\hline
-251 & 60 & 5 & 3 & 37\\
-\hline
-251 & 60 & 6 & 2 & 21\\
-\hline
-251 & 60 & $r \geq 10$ & 1 & $1 + h/r$ \\
-\hline
-\end{tabular}
+We perform the simulations for $p = 251$ but several\\
+values of $p$ large enough yield the same results.
+\begin{minipage}[H]{30cm}
+\includepdf{include/SimResults2.pdf}
+\end{minipage}
+
+
 
 
 
