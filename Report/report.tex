@@ -269,7 +269,7 @@ So, we found a pair of matrices $(G',H')$ equivalent to the original private key
 From now on, $p$ is a power of a prime and $q := p^h$ with $h$ integer. We call $\F_n := \text{GF}(n)$ the finite field of order $n$. We often refer in this article to $\F_p$ and $\F_{p^r}$ (with $r$ a divisor of $h$) both sub-fields of $\F_q$. The elements of $\F_p$ are $\{ \alpha_0, ... , \alpha_{p-1} \}$.
 
 When $n \in \N$, we define the weight of $n$ in basis $p$ as follow
-$$ w_p : u = \sum_{i=0}^{d} u_i p^i \longmapsto \sum_{i=0}^{d} u_i \ \ \ \ \ \text{ where }  \ 0 \leq u_i \leq p-1 $$
+$$ w_p : n = \sum_{i=0}^{d} n_i p^i \longmapsto \sum_{i=0}^{d} n_i \ \ \ \ \ \text{ where }  \ 0 \leq n_i \leq p-1 $$
 
 \subsection{The Chor-Rivest Cryptosystem}
 
@@ -311,13 +311,13 @@ Then the permutation $\pi$ can be recovered in polynomial time using a Sidelniko
 \end{theorem}
 \begin{proof}
 We suppose here that one of the $Q_i$ has a degree exactly $k$.
-Then we write the square non singular matrix $H = (h_{i,j}) \in \mathcal{M}_k(\GF{p})$ of the coefficients of the $Q_i$
+Then we write the square matrix $H = (h_{i,j}) \in \mathcal{M}_k(\GF{p})$ of the coefficients of the $Q_i$
 $$ Q_i(X) = \sum_{j=0}^{k-1} h_{i,j} X^j $$
 If we still consider
 $$ \A_k := \left( \alpha_{\pi(j)}^i \right)_{0 \leq i < k, 0 \leq j \leq p-1} \in \mathcal{M}_{k,p}(\GF{p})$$
 We have the equality
 $$ H \cdot \A_k = M$$
-with $H$ non singular and since $k \leq p-2$, this is exactly the public key of a cryptosystem based on the Reed-Solomon codes described in Section~\ref{sec:Prel}.
+with $H$ non singular because the polynomials $Q_i$ are linearly independent and since $k \leq p-2$, this is exactly the public key of a cryptosystem based on the Reed-Solomon codes described in Section~\ref{sec:Prel}.
 $$
 \begin{array}{ccl}
 & \left( \begin{array}{ccccc}
@@ -344,7 +344,7 @@ Q_k(\alpha_1)&&\cdots&&Q_k(\alpha_p)
 $$
 \end{proof}
 
-So a possible way to attack the Chor-Rivest cryptosystem would be to find the evaluations of enough small degree polynomials in the $\alpha_{\pi(i)}$.
+This show that a possible way to attack the Chor-Rivest cryptosystem would be to find the evaluations of enough small degree polynomials in the $\alpha_{\pi(i)}$.
 
 
 
@@ -430,7 +430,7 @@ If we chose a basis $(e_i)_{1 \leq i \leq r}$ of $\GF{p^r}$ (seen as a $\F_p$-ve
 $$ g_{p^r}^{c_j} = \sum_{i=1}^r Q_i(\alpha_{\pi(j)}) e_i $$
 with $\deg Q_i \leq h/r$. We get the evaluation of $r$ polynomials of degree smaller than $h/r$.
 
-This means that instead of searching the generator $g$ among the approximately $p^h$ generators of $\F_q$, one could search only within the generators of $\F_{p^r}$ with $r$ as small as possible. This reduces a lot the exhaustive research and we notice that when $h/r < r$ Theorem~\ref{thm:link} can be applied and the permutation $\pi$ can be retrieved. This allow to perform an effective attack and yields the following theorem.
+This means that instead of searching the generator $g$ among the approximately $p^h$ generators of $\F_q$, one could search only among the generators of $\F_{p^r}$ with $r$ as small as possible. This reduces a lot the exhaustive research and we notice that when $h/r < r$ Theorem~\ref{thm:link} can be applied and the permutation $\pi$ can be retrieved. This allow to perform an effective attack and yields the following theorem.
 
 \begin{theorem}
 When $r > \sqrt{h}$, if the generator $g_{p^r}$ of $\GF{p^r}$ is guessed correctly, there exists an attack (called "known $g_{p^r}$" attack) in polynomial time on the Chor-Rivest cryptosystem.
@@ -466,7 +466,7 @@ This yields $r \cdot |U_w^{(r)}|$ polynomials of degree at most $wh/r$.
 
 Besides, assuming $w \gg r$, the number of such polynomials can be up to
 $$ | U_w^{(r)} | = \left( \binom{r+1}{w} \right) = \binom{r+w+1}{w} = \binom{r+w+1}{r+1} = \Theta\left(\frac{w^{r+1}}{(r+1)!}\right) .$$
-This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if we consider polynomials of higher degree ($wh/r$), the number of such polynomials we can get is far greater than $r$ and we can hope that if we choose $w$ high enough, we can get enough different polynomials to use a Sidelnikov-Shestakov attack.
+This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if we consider polynomials of higher degree ($wh/r$), the number of such polynomials we can get is far greater than $r$ and we can hope that if we choose $w$ high enough, we can get enough linearly independent polynomials to use a Sidelnikov-Shestakov attack.
 
 
 Unfortunately, these polynomials are strongly linearly dependent.
@@ -488,7 +488,9 @@ For example, see Example~\ref{Ex:1} in appendix, we try $h = 24$ and $r = 3 < \s
 This proves that it is possible to duplicate the number of lines at the expense of the degree of the polynomials considered. Here, the polynomials considered are of degree 32 instead of 8 but we manage to generate 33 linearly independent lines instead of only 3. Therefore the condition $r \geq \sqrt{h}$ is not absolutely necessary and we can hope to get a (far) smaller lower bound on $r$.\\
 
 In the Example~\ref{Ex:1} (see appendix), we chose $h = 27$, $p = 53$ and we manage to get 46 linearly independent lines using $r = 3$ only.
-An exhaustive research for $g_{p^3}$ would require circa $149.000 \simeq 2^{17}$ uses of a "known $g_{p^r}$" attack whereas using $r = 9 > \sqrt{h}$, as required by Vaudenay's algorithm, one would need at least $2^{51}$ steps, which can be considered quite challenging.\\
+An exhaustive research for $g_{p^3}$ would require $58.752 \leq  2^{16}$ uses of a "known $g_{p^r}$" attack whereas using $r = 9 > \sqrt{h}$, as required by Vaudenay's algorithm, one would need at least $2^{50}$ steps, which can be considered quite challenging.\\
+
+The time 
 
 
 \subsection{Number of linearly independent polynomials}
@@ -653,9 +655,30 @@ We can notice that this attack on Chor-Rivest cryptosystem is only effective whe
 
 \bibliographystyle{abbrv}
 \bibliography{references}
+
+
 \newpage
 \appendix
+\section{Sources}
 
+The source code used to perform the following simulation and timing is available on GitHub at this address : \url{https://github.com/Gaspi/EA-2/tree/master/Decrypter}.
+
+The main files are
+\begin{itemize}
+\item \class{RandomFunc}: This script defines some global useful functions.
+\item \class{GRSCode}: This class implements a Generalized Reed-Solomon error correcting code. Random construction, encoding and non efficient decoding implemented.
+\item \class{RSCryptosystem}: This class implements the cryptosystem described in Section~\ref{sec:Prel}. Random construction, ciphering and deciphering implemented.
+\item \class{RSDecrypter}: This script define the function \class{Decrypt} which implements the Sidelnikov-Shestakov attack on the public key of a \class{RSCryptosystem}. It returns an instance of \class{RSCryptosystem} that allow to decipher the messages encoded by the original cryptosystem.
+\end{itemize}
+The following scripts use the previous to provides the results
+\begin{itemize}
+\item \class{RSDecrypterDemo}: Basically a demonstration of how to use the \class{RSDecrypter} class.
+\item \class{Simulation}: This script compute the number of linearly different lines that can be obtained using the coordinates of $g_{p^r}^{uc_j}$ for light $p$-weighted integers $u$. Used to compute both examples \ref{Ex:1} and \ref{Ex:2} and the simulation results \ref{Sim:res}
+\item \class{CRClock}: A script to compute the time tables of the execution of the attack on the Chor-Rivest cryptosystem.
+\end{itemize}
+
+
+\newpage
 \section{Simulation examples}
 
 \subsection{Example 1}
@@ -719,7 +742,7 @@ Rank & 46 \\ \hline
 \end{center}
 
 
-
+\newpage
 \section{Simulation results}
 \label{Sim:res}
 
@@ -730,7 +753,9 @@ values of $p$ large enough yield the same results.
 \end{minipage}
 
 
-
+\newpage
+\section{Time tables}
+\label{Sim:time}
 
 
 
