@@ -554,9 +554,6 @@ wh/r+1 &\leq & u_w
 We choose the biggest $w$ verifying the first condition to obtain the weakest condition on $r$ : $$ w = \lfloor r \frac{p-3}{h} \rfloor \geq C \frac{rp}{h} $$
 
 
-
-Besides we know that $h$ is suppose to be chosen around $\frac{p}{\log p}$. This means that we have $w = \Theta(r \log p) \geq C r \log p$.
-
 We suppose that the Postulate~\ref{postulate} in the Section~\ref{sec:Simul} is true. The second condition is then easily equivalent to
 $$ \binom{w+r}{r} \geq w\frac{h}{r}+1 $$
 and since
@@ -574,15 +571,15 @@ a sufficient condition would be
 
 \begin{eqnarray*}
 \frac{w^r}{r!} &\geq& p \\
-\Leftarrow \ \ \ \ \ \ \ \ \ \ \ \left(\frac{Crp}{h}\right)^r  &\geq& p \cdot r! \sim \frac{1}{\sqrt{2\pi r}} \left(\frac{r}{e}\right)^r \\
-\Leftarrow \ \ \ \sqrt{2\pi r} \left(\frac{Cep}{h}\right)^r &\geq& \left(\frac{p}{h}\right)^r \geq p \ \ \ \ \ \ \text{ for $r$ big enough.}
+\Leftarrow \ \ \ \ \ \ \ \ \ \ \ \left(\frac{Crp}{h}\right)^r  &\geq& p \cdot r! \sim p \sqrt{2\pi r} \left(\frac{r}{e}\right)^r \\
+\Leftarrow \ \ \ \frac{1}{\sqrt{2\pi r}} \left(\frac{Cep}{h}\right)^r &\geq& \left(C'\frac{p}{h}\right)^r \geq p \ \ \ \ \ \ \text{ for $r$ big enough.}
 \end{eqnarray*}
-An asymptotic condition would be
-$$ r \geq \frac{\log p}{\log p - \log h}$$
+An asymptotic condition would be (for $C$ a constant)
+$$ r \geq \frac{\log p}{\log p - \log h + C} .$$
 
 If we suppose that $h \gg p$, then this attack can't be efficient. Indeed, we would have then $w \ll r$ and the second condition can't be fulfilled when the parameters are large enough.
 
-If we suppose $h = \frac{p}{\log p}$, then we have the following lower bound for $r$
+If we suppose $h \sim \frac{p}{\log p}$, then we have $w \sim r \log p$ and the following asymptotic lower bound for $r$
 $$ r \geq \frac{\log p}{\log \log p}$$
 
 
