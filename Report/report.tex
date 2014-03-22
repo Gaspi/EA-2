@@ -56,7 +56,9 @@ In this article, we first describe the Niederreiter and McEliece cryptosystem an
 We try to make a mix between the simplicity of the arguments given by Wieshbrink, which lead to a better understanding of the attack, and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
 not introduced by Wieshbrink, and which leads to get a better complexity.
 
-On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. This allows us to describe an algorithm for a "known $g_{p^r}$ attack" which doesn't require $r$ to be as big as in Vaudenay's article. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p}$ assuming we have $h \simeq \frac{p}{\log p}$ as suggested in Chor and Rivest's article and $h$ has very small factors (around $\log p$). That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
+On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. Indeed, $\F_{p^r}$ can be seen as a $\F_p$-vector space and the knowledge of the particular generator $g_{p^r}$ of $\F_{p^r}$ yield the values of $r$ small degree polynomials in the private key $\alpha_{\pi(j)}$. This was how Vaudenay was able to suggest a "known $g_{p^r}$" attack working for any factor $r$ of $h$ bigger than $\sqrt{h}$.
+
+These similarities allow us to describe a more efficient algorithm for a "known $g_{p^r}$ attack" which require $r$ to be much smaller than in Vaudenay's article. Using the small powers of $g_{p^r}$, we manage to get the weaker condition $r > \log p$. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p}$ assuming we have $h \simeq \frac{p}{\log p}$  and $h$ has very small factors (around $\log p$). The first condition is suggested in Chor and Rivest's article because the density of the  finite field chosen should be close to 1 in order for the cryptosystem not be attacked using lattice reduction algorithms . That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
 
 
 
@@ -319,20 +321,20 @@ The description of the field $\F_q$ is public. The secret key consists of
 \item an integer $0 \leq d < q$.
 \item a permutation $\pi$ of $\{ 0, ... , p-1 \}$.
 \end{itemize}
-
-Public keys consist of all
+The public key consist in all
 $$ c_i := d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
 
 To be encrypted, a message should first be encoded into a bitstring $m = [m_0...m_{p-1}]$ of length $p$ and weight $h$ : $\sum_i m_i = h$. The ciphertext is
 $$ E(M) := \sum_{i=0}^{p-1} m_i c_i \mod q-1 $$
-To decipher this message, we compute
+To decipher this codeword, we compute
 $$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{\pi(i)}\right)^{m_i} $$
-whose factorization leads to the message $m$.
+whose factorization leads to the original message $m$.
 
-To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. Besides the density $d := p / \log_2 q$ which characterizes subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms. This allows us to suppose that
+To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. This weakness will allow us to consider later subfields $\F_{p^r}$ of $\F_q$. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms.This allow us to suppose that
 $$ h = \Theta\left( \frac{p}{\log_2 p} \right) $$
 
-Vaudenay shows that when some parts of the secret key are disclosed, for example $g$, $t$ or $\pi$, there exists polynomial attacks on this cryptosystem. For instance, he introduces the "known $t$", "known $g$" and "known $\pi$" attacks.
+Vaudenay show that when some parts of the secret key is disclosed, for example $g$, $t$ or $\pi$, there exists polynomials attack on this cryptosystem. For instance, he introduces the "known $t$", "known $g$" and "known $\pi$" attacks that we will consider but not describe here.
+
 
 \subsubsection{Link with Reed-Solomon codes}
 
@@ -396,7 +398,7 @@ The unknown quantities, which can then be considered as an equivalent secret key
 \item $0 < u < q-1$ prime with $q-1$.
 \item the permutation $\pi$ of $\{ 0, ... , p-1 \}$.
 \end{itemize}
-and public key consists in all the
+and the public key consists then in all the
 $$ d_i := \left(A + \alpha_{\pi(i)} \cdot B\right)^u \in \F_q$$
 The ciphertext becomes
 $$ E'(M) := \prod_{i=0}^{p-1} d_i^{m_i} = g^{uE(M)} = B^{uh} \left( \prod_i \left( t + \alpha_{\pi(i)}\right)^{c_i} \right)^u$$
@@ -442,17 +444,20 @@ $$ g_0^{c_j} = \prod_{i=0}^{h-1} (A^{p^i} + \alpha_{\pi(j)} \cdot B^{p^i} )^{u_i
 whose coordinates are polynomials of degree $w_p(u) := \sum_{i=0}^{h-1} u_i$ on the $\alpha_{\pi(j)}$.
 
 This means that all $u$ such that $w_p(u) < h$ allow to retrieve the permutation and break the cryptosystem.
-The number of such $u$ is
+The number of such $u$ is equal to the number of sets of $h+1$ integers whose sum is equal to $h-1$. This quantity can be written as follow
 $$ \left( \binom{h+1}{h-1} \right) = \binom{2h}{h-1} =\Theta\left( 4^h \sqrt{h} \right) $$
-This is a drastic improvement in the exhaustive research of $g$. However, this remains quite small compared to the number $\phi(p^h-1)$ of different generators in $\GF{p^h}$ which is comparable to $p^h$.
 
+This is a much better improvement in the exhaustive research of $g$. It shows that in order to retrieve the secret permutation $\pi$, one does not require the knowledge of $g$ but the knowledge of any of these $\Theta\left( 4^h \sqrt{h} \right)$ other generators.  
 
+This remains however quite a small progress compared to the number $\phi(p^h-1)$ of different generators in $\GF{q}$ which is comparable to $q = p^h$.
 
 
 \section{Vaudenay attack}
 \label{sec:Vau}
 
-The previous attack requires to find a generator of $\F_q$ among the elements that can be written $g^u$ with $w_p(u) < h$. Since there are very few of such elements compared to the $\phi(q-1)$ different generators of $\F_q$, Vaudenay suggests \cite{Vau01} to consider a generator $g_{p_r}$ of the subfield $\F_{p^r} \subseteq \F_{p^h}$. He introduces the following theorem
+The previous attack requires to find a generator of $\F_q$ among the elements that can be written $g^u$ with $w_p(u) < h$. We seen though that there are very few of such elements compared to the $\phi(q-1)$ different generators of $\F_q$.
+
+Vaudenay suggests \cite{Vau01} to consider the generators of the subfield $\F_{p^r} \subseteq \F_{p^h}$ which is much smaller than $\F_q$. He introduces the following theorem
 \begin{theorem}
 For any factor $r$ of $h$, there exists a generator $g_{p^r}$ of the multiplicative group of the subfield $\F_{p^r}$ of $\F_q$ and a polynomial $Q$ with degree $h/r$ whose coefficients are in $\F_{p^r}$ and such that $-t$ is a root and for all $j$ , we have $Q(\alpha_{\pi(j)}) = g_{p^r}^{c_j}$.
 \end{theorem}
@@ -531,22 +536,16 @@ The time
 
 \subsection{Number of linearly independent polynomials}
 
-On several simulations for different values for $p$ and $h$, see Results~\ref{Sim:res} in appendix, we choose, each time, the smallest value for $r$ that allows an attack on the system. We present in the appendix the maximum weight $w$ chosen for the exponents $u_i$ of $g_{p^r}$ and the number of linearly independent rows these $g_{p^r}^{u_i}$ allow to generate (should be $w\cdot \frac{h}{r} +1$).
-
-
-
-
-
-%When we choose, $r = 2$ and $w_p(u_i) \leq w$, the number of linearly independent lines is $\frac{w(w+3)}{2}$. This does not allow to attack the cryptosystem since to have $\frac{w(w+3)}{2} \geq 12w+1$, we would need $w \geq 22$ and if $w_p(u_i) = 2$, then the degree of the corresponding polynomials is $22 \times 12+1 = 265 > 197$.\\
-%Regarding that last set of examples, the Chor-Rivest attack would require to do an exhaustive research on approximately $251^{10}$ different possible generators of $\F_{p^{10}}$. With our approach, the cryptosystem can be attacked using the right generator $g_{p^3}$ of $\F_{p^3}$. The research is clearly a lot faster.
-
-
 Let $r$ be a divisor of $h$, we call $u_w$ the number of linearly independent rows of coordinates we can get using the coordinates of $g_{p^r}^{uc_j}$ for all $u$ such that $w_p(u) \leq w$.
 
 We have $u_0 = 1$ obviously because using $g_{p^r}^0$, we only get one row filled with 1.
 
 We also have $u_1 = r+1$ because we can only get $r$ more lines using $g_{p^r}$ corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in $\F_{p^r}$. The coordinates given by the generator $g_{p^r}^{p^i}$ are the same as those given by $g_{p^r}$ in a normal basis. This means that whatever the basis chosen, they are at least linearly dependent from each other and so using $g_{p^r}$ doesn't allow to generate more useful polynomials.
 
+
+On several simulations for different values of $p$, $r$ and $h/r$, see Results~\ref{Sim:res} in appendix, we compute, each time, the number $u_w$ of linearly independent rows that can be obtained from the coordinates of $g_{p^r}^{u_i}$ with $w_p(u_i) \leq w$.
+
+We show in green the parameters that allow an attack on the system (i.e. when for $w$ big enough, we manage to get $u_w = w\cdot \frac{h}{r} +1$).
 
 
 \subsection{Postulate}
