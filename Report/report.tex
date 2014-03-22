@@ -274,8 +274,8 @@ of $\F_q$ and sorting the $\alpha_l$ in the defined order. Then, if we suppose t
 $1\leq j\leq i$, $e_j = \alpha_{k_j}$. Since the elements are enumerated in the defined order (denoted by $\prec$), we know that $\alpha_{k_1} \prec \ ... \prec \alpha_{k_i}$. Then, when we have to know if
 $e_{i+1}$ is in the set of the $\alpha_l$, we just have to compare it with $\alpha_{k_i+1}, \ ... \ , \alpha_n$ because $e_{i+1} \succ e_i = \alpha_{k_i} \succ \alpha_j , \forall 1\leq j\leq k_i$. So, if
 $e_{i+1}$ is different from all the remaining $\alpha_l$, it is different from all the $\alpha_l$. Else, we apply the same argument with $i+1$ and, by induction, we get that we can find
-the element different from the $\alpha_l$ with only $n$ comparisons (so, we have a linear complexity $O(n)$) provided the $\alpha_k$ are sorted, which can be done with a complexity of $O(n \cdot log(n))$.
-The global complexity of the step is then $O(n \cdot log(n))$.
+the element different from the $\alpha_l$ with only $n$ comparisons (so, we have a linear complexity $O(n)$) provided the $\alpha_k$ are sorted, which can be done with a complexity of $O(n \cdot \log(n))$.
+The global complexity of the step is then $O(n \cdot \log(n))$.
 Note that, since $\F_q \simeq \F_p^{h-1}[X]$ and each element is represented by a polynomial of degree at most $h-1$, an easy way to enumerate the elements is to enumerate the polynomials, which can
 be done using for instance the lexicographical order.
 
@@ -284,13 +284,13 @@ leads to a complexity $O(k \cdot n)$. Since we have evaluated these values, the 
 
 Finally, in order to compute $H$, we have to invert a matrix $k\times k$ and to multiply two such matrices. We then have a complexity of $O(k^{3})$ for these two operations.
 
-Putting things together, we get a global complexity for the attack of $O(n \cdot log(n) + n \cdot k^{2} + k^{3}) = O(n \cdot log(n) + n \cdot k^{2})$ since $k<n$. We can make two remarks. First, if we don't
-order the elements of $\F_q$, we have a $O(n^{2})$ factor instead of $O(n \cdot log(n))$. But, since we have very often $k=\varTheta(n)$, the global complexity is then $O(n^{3})$. Then, we can note that
+Putting things together, we get a global complexity for the attack of $O(n \cdot \log(n) + n \cdot k^{2} + k^{3}) = O(n \cdot \log(n) + n \cdot k^{2})$ since $k<n$. We can make two remarks. First, if we don't
+order the elements of $\F_q$, we have a $O(n^{2})$ factor instead of $O(n \cdot \log(n))$. But, since we have very often $k=\varTheta(n)$, the global complexity is then $O(n^{3})$. Then, we can note that
 the cost of the attack is mainly due to the computation of the echelon form, the other steps having a smaller complexity.
 
 Note that the complexity is expressed in terms of the number of simple operations on the field $\F_q$. Then, since the elements of the field can be seen as polynomials of degree at most
 $h-1$, such an operation is not done in constant time if we consider an algebraic expression as the time unit. For example, an addition requires $h$ operations, a multiplication $h^{2}$, a comparison
-$h$,... So, in terms of algebraic expressions, we would have to multiply our complexity by $O(h^{\varTheta(1)}) = O(log(q)^{\varTheta(1)}) = O(log(n)^{\varTheta(1)})$ if $n=q$, which is often the choice made to
+$h$,... So, in terms of algebraic expressions, we would have to multiply our complexity by $O(h^{\varTheta(1)}) = O(\log(q)^{\varTheta(1)}) = O(\log(n)^{\varTheta(1)})$ if $n=q$, which is often the choice made to
 create the cryptosystem.
 
 Finally, we could be interested by knowing when the attack fails. Then, we don't really have any condition available before runing completely the algorithm.
@@ -311,17 +311,18 @@ $$ w_p : n = \sum_{i=0}^{d} n_i p^i \longmapsto \sum_{i=0}^{d} n_i \ \ \ \ \ \te
 
 \subsection{The Chor-Rivest Cryptosystem}
 
-The Chor-Rivest cryptosystem is a public key knapsack scheme using the 
+The Chor-Rivest cryptosystem is a public key knapsack scheme that does not use any form of modular multiplication to disguise the easy subset sum problem. It has been broken, like all knapsack systems, however, it took longer to break than most.
 
-
-The description of the field $\F_q$ is public. The secret key consists of
+To construct the knapsack, the cryptographer construct the field $\F_q$ and generate the secret key which consists of
 \begin{itemize}
 \item an element $t \in \GF{q}$ with algebraic degree $h$.
 \item a generator $g$ of $\GF{q}^{*}$.
 \item an integer $0 \leq d < q$.
 \item a permutation $\pi$ of $\{ 0, ... , p-1 \}$.
 \end{itemize}
-The public key consist in all
+The description of the field $\F_q$ does not matter for the public key. It can then be considered public (the concealed information being the generator $g$ chosen).
+
+The public key consist of all the integers
 $$ c_i := d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
 
 To be encrypted, a message should first be encoded into a bitstring $m = [m_0...m_{p-1}]$ of length $p$ and weight $h$ : $\sum_i m_i = h$. The ciphertext is
@@ -531,7 +532,6 @@ This proves that it is possible to duplicate the number of lines at the expense 
 In the Example~\ref{Ex:1} (see appendix), we chose $h = 27$, $p = 53$ and we manage to get 46 linearly independent lines using $r = 3$ only.
 An exhaustive research for $g_{p^3}$ would require $58.752 \leq  2^{16}$ uses of a "known $g_{p^r}$" attack whereas using $r = 9 > \sqrt{h}$, as required by Vaudenay's algorithm, one would need at least $2^{50}$ steps, which can be considered quite challenging.\\
 
-The time 
 
 
 \subsection{Number of linearly independent polynomials}
@@ -576,7 +576,7 @@ $r$ & $w$ 	& $h/r$ \\
 \end{center}
 
 
-For $r = 2$ and $h/r \geq 3$, we notice a different behavior...
+For $r = 2$ and $h/r \geq 3$, we notice a different behavior which does not allow to use this attack.
 
 
 \subsection{Optimum choice for $r$}
