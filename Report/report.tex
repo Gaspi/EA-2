@@ -38,9 +38,13 @@ In this article, we discuss about the Sidelnikov-Shestakov attack on cryptosyste
 \section{Introduction}
 \label{sec:intro}
 
-Niederreiter and McEliece cryptosystem \cite{NiederH86} was one of the first to use randomization in the encryption process. Indeed, in such a scheme, the encrypter uses a random error to prevent attacks on the codeword. This codeword is then decrypted using an error-correcting Reed-Solomon code. This algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
+The McEliece cryptosystem \cite{NiederH86} was one of the first to use randomization in the encryption process. Indeed, in such a scheme, the encrypter uses a random error to prevent attacks on the codeword. This codeword is then decrypted using an error-correcting code. 
+First, Goppa codes were used but the keys were too much large. Then, the idea was to use Generalized Reed-Solomon (GRS) codes instead.
+This algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
 
-In 1992, Sidelnikov and Shestakov suggest an attack \cite{SidelShes92} on the public key of this cryptosystem using equivalences between private keys.
+In 1992, Sidelnikov and Shestakov suggest an attack \cite{SidelShes92} on the public key of this cryptosystem (based on GRS codes) using equivalences between private keys.
+
+Nowadays, all the versions of the McEliece cryptosystem had been broken.
 
 The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it took longer to break than most, and is a very elegant use of finite fields.
 
@@ -48,8 +52,8 @@ The first efficient attack for the proposed parameters (i.e., $p \simeq 200$, $h
 
 
 \subsection{Our Work}
-In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack \cite{SidelShes92}, which is also explained more clearly by Wieschebrink in Cryptanalysis of the Niederreiter public key scheme based on GRS subcodes \cite{Wiesch}.
-We try to make a mix between the simplicity of the arguments given by Wieshbrink and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
+In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack \cite{SidelShes92}, which is also explained more clearly by Wieschebrink \cite{Wiesch}.
+We try to make a mix between the simplicity of the arguments given by Wieshbrink, which lead to a better understanding of the attack, and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
 not introduced by Wieshbrink, and which leads to get a better complexity.
 
 On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. This allows us to describe an algorithm for a "known $g_{p^r}$ attack" which doesn't require $r$ to be as big as in Vaudenay's article. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p}$ assuming we have $h \simeq \frac{p}{\log p}$ as suggested in Chor and Rivest's article and $h$ has very small factors (around $\log p$). That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
@@ -111,7 +115,7 @@ However, the original message can not be easily recovered when not knowing the G
 
 \subsection{Equivalence between Reed-Solomon codes}
 
-Sidelnikov and Shestakov show \cite{SidelShes92} that for all $a \in \F_q\backslash\{0\}$ and $b \in \F_q$, there exist $H_1, H_2, H_3 \in \mathcal{M}_{\F_q}(k,k)$ nonsingular, $(c_1,... ,c_n) \in \F_q\backslash\{0\}^{n}$ and $(d_1,... ,d_n) \in \F_q\backslash\{0\}^{n}$ such that:
+Sidelnikov and Shestakov show \cite{SidelShes92} that for all $a \in \F_q\backslash\{0\}$ and $b \in \F_q$, there exists $H_1, H_2, H_3 \in \mathcal{M}_{\F_q}(k,k)$ nonsingular, $(c_1,... ,c_n) \in \F_q\backslash\{0\}^{n}$ and $(d_1,... ,d_n) \in \F_q\backslash\{0\}^{n}$ such that:
 \begin{equation}
 H_1\cdot G(a\cdot\alpha_1 + b, \ ... \ , a\cdot \alpha_n + b, c_1z_1, \ ... \ , c_n z_n) = G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)
 \label{eq1}
@@ -126,7 +130,7 @@ H_3\cdot G\left( \alpha_1, \ ... \ , \alpha_n, a\cdot z_1, \ ... \ , a\cdot z_n 
 \end{equation}
 This means that for any cryptosystem $M = H\cdot G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, for any birationnal transformation
 $$ \phi : x \mapsto \frac{ax+b}{cx+d}$$
-there exist a nonsingular matrix $H_{\phi}$ and a vector $(z'_1,... ,z'_n) \in \F_q\backslash\{0\}^{n}$ such that:
+there exists a nonsingular matrix $H_{\phi}$ and a vector $(z'_1,... ,z'_n) \in \F_q\backslash\{0\}^{n}$ such that:
 \begin{equation}
  M = H_{\phi}\cdot G(\phi(\alpha_1), \ ... \ , \phi(\alpha_n), z'_1, \ ... \ , z'_n)
  \label{eq4}
@@ -143,7 +147,7 @@ It is the main idea of the attack.
 \label{sec:SSattack}
 \subsection{A first important remark}
 
-By using the unique transformation $\phi$ that maps $(\alpha_1, \alpha_2, \alpha_3)$ to $(0,1,\infty)$ in equation \eqref{eq4}, we get that, for any cryptosystem $M = H\cdot G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, $M$ can be uniquely written
+By using the unique transformation $\phi$ that maps $(\alpha_1, \alpha_2, \alpha_{k+1})$ to $(0,1,\infty)$ in equation \eqref{eq4}, we get that, for any cryptosystem $M = H\cdot G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$, $M$ can be uniquely written
 $$ M = H'\cdot G(0, 1,\alpha'_3, \ ... \ ,\alpha'_k, \infty, \alpha'_{k+2}, \ ... \ , \alpha'_n, z'_1, \ ... \ , z'_n) $$
 with $H'$ nonsingular, $z'_i \neq 0$ and $\alpha_i$ distinct elements of $\F_q\backslash\{0, 1, \infty)$.
 So, we can assume that $\alpha_1 = 0$, $\alpha_2 = 1$ and $\alpha_{k+1} = \infty$.
@@ -161,7 +165,7 @@ $$ E(M) =
 \right)
 $$
 
-Since the echelon form can be computed only with left multiplication of the matrix M, the $k$ lines of $E(M)$ are codewords. As a consequence, if we call $f_{b_i}$ the polynomial associated to the $i$-th
+Since the echelon form can be computed only with left multiplication on the matrix M, the $k$ lines of $E(M)$ are codewords. As a consequence, if we call $f_{b_i}$ the polynomial associated to the $i$-th
 row, we have :
 \begin{itemize}
 \item $\forall$  $1\leq i\leq k, f_{b_i}(\alpha_i)=1 $
@@ -170,14 +174,14 @@ row, we have :
 \end{itemize}
 
 So, since all the $\alpha_i$ are different, the polynomial $f_{b_i}$ has $k-1$ simple roots. Since its degree is at most $k-1$, we know all its roots. As a consequence, $b_{i,j}\neq0$ for all $1\leq i\leq k$ and $k+1\leq j\leq n$. Moreover, we know the general 
-form of the polynomial $f_i$ :
+form of the polynomial $f_{b_i}$ :
 \begin{equation}
 f_{b_i}(X) = c_{b_i}\cdot \prod_{1\leq j\leq k, i\neq j} (X-\alpha_j)
 \label{eq5}
 \end{equation}
 where $c_{b_i} \in \F_q\backslash\{0\}$.
 
-Since $\alpha_{k+1} = \infty$, we have $z_{k+1}\cdot f_{b_i}(\alpha_{k+1}) = b_{i,k+1} = c_{b_i}\cdot z_{k+1} = c_{b_i}$.
+Since $\alpha_{k+1} = \infty$, we have $b_{i,k+1} = z_{k+1}\cdot f_{b_i}(\alpha_{k+1}) = c_{b_i}\cdot z_{k+1} = c_{b_i}$.
 So, we know the coefficients $c_{b_i}$ for all the rows of the matrix $E(M)$.
 
 \subsection{Computation of the $\alpha_i$}
@@ -255,12 +259,44 @@ $$H' = M_{k}\cdot G_{k}^{-1}$$
 
 So, we found a pair of matrices $(G',H')$ equivalent to the original private key.
 
-\subsection{Some remarks about the attack}
+\subsection{Complexity of the attack}
+The first step of the attack is to compute the echelon form of the public matrix $M$. This can be done with Gaussian eliminations on the $k$ first columns. So, $k^{2}$ operations are necessary and each
+operation has a complexity $O(n)$ since it is a Gaussian operation on the lines. So, the total complexity of computing the echelon form is $O(n\cdot k^{2})$.
+
+The computation  of the $\alpha_l$ consists of $n$ simple operations in the coefficients of the matrix $E(M)$, which leads to a linear complexity $O(n)$.
+
+We then have to compute an equivalent set of finite $\alpha'_l$, finding first an element different from all the computed $\alpha_l$. Since we are able to enumerate the elements of $\F_q$ by enumerating
+the polynomials representing the elements, we just have to enumerate the elements until we find  one which is different from all the $\alpha_l$. So, it takes at most $n+1$ steps if the $n$ first enumerated
+elements are exactly the $\alpha_l$ and each step requires at most $n$ comparisons, which leads to a quadratic complexity $O(n^{2})$. We could improve this complexity by choosing an order on the elements
+of $\F_q$ and sorting the $\alpha_l$ in the defined order. Then, if we suppose that we have enumerated $i$ elements $e_1, \ ... \ , e_i$ which are all in the set of the $\alpha_l$, we have that, for all
+$1\leq j\leq i$, $e_j = \alpha_{k_j}$. Since the elements are enumerated in the defined order (denoted by $\prec$), we know that $\alpha_{k_1} \prec \ ... \prec \alpha_{k_i}$. Then, when we have to know if
+$e_{i+1}$ is in the set of the $\alpha_l$, we just have to compare it with $\alpha_{k_i+1}, \ ... \ , \alpha_n$ because $e_{i+1} \succ e_i = \alpha_{k_i} \succ \alpha_j , \forall 1\leq j\leq k_i$. So, if
+$e_{i+1}$ is different from all the remaining $\alpha_l$, it is different from all the $\alpha_l$. Else, we apply the same argument with $i+1$ and, by induction, we get that we can find
+the element different from the $\alpha_l$ with only $n$ comparisons (so, we have a linear complexity $O(n)$) provided the $\alpha_k$ are sorted, which can be done with a complexity of $O(n \cdot log(n))$.
+The global complexity of the step is then $O(n \cdot log(n))$.
+Note that, since $\F_q \simeq \F_p^{h-1}[X]$ and each element is represented by a polynomial of degree at most $h-1$, an easy way to enumerate the elements is to enumerate the polynomials, which can
+be done using for instance the lexicographical order.
+
+We then have to compute the set of $z_l$. It requires to evaluate the value of the polynomials $L_l$ on the $\alpha_l$. Since $L_l$ has a degree $k-1$, each evaluation requires $k$ operations which
+leads to a complexity $O(k \cdot n)$. Since we have evaluated these values, the computation of $z_i$ requires simple operations, which leads to a complexity $O(n)$.
+
+Finally, in order to compute $H$, we have to invert a matrix $k\times k$ and to multiply two such matrices. We then have a complexity of $O(k^{3})$ for these two operations.
+
+Putting things together, we get a global complexity for the attack of $O(n \cdot log(n) + n \cdot k^{2} + k^{3}) = O(n \cdot log(n) + n \cdot k^{2})$ since $k<n$. We can make two remarks. First, if we don't
+order the elements of $\F_q$, we have a $O(n^{2})$ factor instead of $O(n \cdot log(n))$. But, since we have very often $k=\varTheta(n)$, the global complexity is then $O(n^{3})$. Then, we can note that
+the cost of the attack is mainly due to the computation of the echelon form, the other steps having a smaller complexity.
+
+Note that the complexity is expressed in terms of the number of simple operations on the field $\F_q$. Then, since the elements of the field can be seen as polynomials of degree at most
+$h-1$, such an operation is not done in constant time if we consider an algebraic expression as the time unit. For example, an addition requires $h$ operations, a multiplication $h^{2}$, a comparison
+$h$,... So, in terms of algebraic expressions, we would have to multiply our complexity by $O(h^{\varTheta(1)}) = O(log(q)^{\varTheta(1)}) = O(log(n)^{\varTheta(1)})$ if $n=q$, which is often the choice made to
+create the cryptosystem.
+
+Finally, we could be interested by knowing when the attack fails. Then, we don't really have any condition available before runing completely the algorithm.
+However, since we compute the matrix $H$ from only $k$ columns (and not $n$), there must be redundant information in the remaining columns. So, when computing $H^{-1} \cdot M$, we must find $G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$.
+If it is not true, it means that the matrix $M$ can not be obtained from a GRS code. But we have to execute the whole attack to determine it.
 
 
 
-
-\newpage
 \section{Application to the Chor-Rivest Cryptosystem}
 \label{sec:CRcrypt}
 
@@ -276,7 +312,7 @@ $$ w_p : n = \sum_{i=0}^{d} n_i p^i \longmapsto \sum_{i=0}^{d} n_i \ \ \ \ \ \te
 The Chor-Rivest cryptosystem is a public key knapsack scheme using the 
 
 
-The description of the field $\F_q$ is public. The secret key consist of
+The description of the field $\F_q$ is public. The secret key consists of
 \begin{itemize}
 \item an element $t \in \GF{q}$ with algebraic degree $h$.
 \item a generator $g$ of $\GF{q}^{*}$.
@@ -293,20 +329,20 @@ To decipher this message, we compute
 $$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{\pi(i)}\right)^{m_i} $$
 whose factorization leads to the message $m$.
 
-To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms.This allow us to suppose that
+To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. Besides the density $d := p / \log_2 q$ which characterizes subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms. This allows us to suppose that
 $$ h = \Theta\left( \frac{p}{\log_2 p} \right) $$
 
-Vaudenay show that when some parts of the secret key is disclosed, for example $g$, $t$ or $\pi$, there exists polynomials attack on this cryptosystem. For instance, he introduces the "known $t$", "known $g$" and "known $\pi$" attacks.
+Vaudenay shows that when some parts of the secret key are disclosed, for example $g$, $t$ or $\pi$, there exists polynomial attacks on this cryptosystem. For instance, he introduces the "known $t$", "known $g$" and "known $\pi$" attacks.
 
 \subsubsection{Link with Reed-Solomon codes}
 
-Trying to attack this cryptosystem show some relations between this problem and the previous one studied in section \ref{sec:Prel}. In particular we have the following theorem.
+Trying to attack this cryptosystem shows some relations between this problem and the previous one, studied in section \ref{sec:Prel}. In particular we have the following theorem.
 
 \begin{theorem}
 \label{thm:link}
 Let $2 \leq k \leq p-2$.
 Suppose there exists $(Q_i)_{0 \leq i \leq k-1}$ $k$ polynomials of $\GF{p}[X]$ linearly independent with degree smaller than $k-1$.
-Suppose the evaluations $m_{i,j} := Q_i(\alpha_{\pi(j)})$ is known for all $i$ and $j$.
+Suppose the evaluations $m_{i,j} := Q_i(\alpha_{\pi(j)})$ are known for all $i$ and $j$.
 Then the permutation $\pi$ can be recovered in polynomial time using a Sidelnikov-Shestakov attack on the matrix $M = (m_{i,j})_{i,j} \in \mathcal{M}_{k,p}(\GF{p})$.
 \end{theorem}
 \begin{proof}
@@ -317,7 +353,7 @@ If we still consider
 $$ \A_k := \left( \alpha_{\pi(j)}^i \right)_{0 \leq i < k, 0 \leq j \leq p-1} \in \mathcal{M}_{k,p}(\GF{p})$$
 We have the equality
 $$ H \cdot \A_k = M$$
-with $H$ non singular because the polynomials $Q_i$ are linearly independent and since $k \leq p-2$, this is exactly the public key of a cryptosystem based on the Reed-Solomon codes described in Section~\ref{sec:Prel}.
+with $H$ nonsingular because the polynomials $Q_i$ are linearly independent and, since $k \leq p-2$, this is exactly the public key of a cryptosystem based on the Reed-Solomon codes described in Section~\ref{sec:Prel}.
 $$
 \begin{array}{ccl}
 & \left( \begin{array}{ccccc}
@@ -344,14 +380,14 @@ Q_k(\alpha_1)&&\cdots&&Q_k(\alpha_p)
 $$
 \end{proof}
 
-This show that a possible way to attack the Chor-Rivest cryptosystem would be to find the evaluations of enough small degree polynomials in the $\alpha_{\pi(i)}$.
+This shows that a possible way to attack the Chor-Rivest cryptosystem would be to find the evaluations of enough small degree polynomials on the $\alpha_{\pi(i)}$.
 
 
 
 \subsection{A First Attack using Reed-Solomon codes}
 
 
-When we attack this cryptosystem, we can consider a generator $g_0 = g^u$ with $u$ unknown and $\gcd(u, q-1) = 1$ we then have
+When we attack this cryptosystem, we can consider a generator $g_0 = g^u$ with $u$ unknown and $\gcd(u, q-1) = 1$. We then have
 $$ g_0^{c_i} = \left( g^d \left( t + \alpha_{\pi(i)} \right) \right)^u = \left(A + \alpha_{\pi(i)} \cdot B\right)^u$$
 The unknown quantities, which can then be considered as an equivalent secret key, are
 \begin{itemize}
@@ -363,10 +399,10 @@ The unknown quantities, which can then be considered as an equivalent secret key
 and public key consists in all the
 $$ d_i := \left(A + \alpha_{\pi(i)} \cdot B\right)^u \in \F_q$$
 The ciphertext becomes
-$$ E'(M) := \prod_{i=0}^{p-1} d_i^{m_i} = g^{uE(M)} = B^{uh} \left( \prod_i \left( t + \alpha_{pi(i)}\right)^{c_i} \right)^u$$
+$$ E'(M) := \prod_{i=0}^{p-1} d_i^{m_i} = g^{uE(M)} = B^{uh} \left( \prod_i \left( t + \alpha_{\pi(i)}\right)^{c_i} \right)^u$$
 Knowing $u$, $B$ and $h$, it is easy to compute from $E'(M)$, the following quantity
-$$ \prod_i \left( t + \alpha_{pi(i)}\right)^{c_i} $$
-which allow us to retrieve all the $c_i$.
+$$ \prod_i \left( t + \alpha_{\pi(i)}\right)^{c_i} $$
+which allows us to retrieve all the $c_i$.
 
 
 
@@ -378,9 +414,9 @@ A naive attack would be then to try to guess at random the generator $g$ and per
 
 \subsubsection{Small powers of $g$}
 
-As an attempt to guess $g$, we suppose that a random generator $g_0$ of $\GF{q}^{*}$ has been chosen. We know that $g_0 = g^u$ for a $u$ integer such that $\gcd(u, p^h-1) = 1$ and
+As an attempt to guess $g$, we suppose that a random generator $g_0$ of $\GF{q}^{*}$ has been chosen. We know that $g_0 = g^u$ for $u$ an integer such that $\gcd(u, p^h-1) = 1$ and
 $$ g_0 ^{c_j} = (A + \alpha_{\pi(j)} \cdot B)^u $$
-We chose now a basis $(e_i)_{1 \leq i \leq h}$ of $\GF{q}$ as a $\GF{p}$-vector space. When written in this basis, each coordinate of $g_0^{c_j}$ is a polynomial $Q_i$ in the $\alpha_{\pi(j)}$.
+We chose now a basis $(e_i)_{1 \leq i \leq h}$ of $\GF{q}$ as a $\GF{p}$-vector space. When written in this basis, each coordinate of $g_0^{c_j}$ is a polynomial $Q_i$ on the $\alpha_{\pi(j)}$.
 $$ g_0^{c_j} = \sum_{i=1}^h Q_i(\alpha_{\pi(j)}) e_i $$
 where $Q_i$ has its coefficients in $\GF{p}$.
 $Q_i$ depends on $A$, $B$, $u$ and obviously on $i$. However, $Q_i$ does not depend on $j$.
@@ -391,7 +427,7 @@ Besides, we have
 \item $\deg Q_i < p$ since $\alpha_{\pi(j)}^p = \alpha_{\pi(j)}$.
 \end{itemize}
 
-This means that we have access to the evaluations in the $\alpha_{\pi(j)}$ of $h$ polynomials of degree smaller than $u$. According to Theorem~\ref{thm:link}, a sufficient condition for this attack to work is $u \leq h-1 \leq p-3$. The last inequality is  always true for a big enough instance of the cryptosystem since $h$ is supposed to be chosen close to $p / \log p$. However there are only $h-1$ different elements of $\GF{p^h}$ fulfilling the first inequality.
+This means that we have access to the evaluations on the $\alpha_{\pi(j)}$ of $h$ polynomials of degree smaller than $u$. According to Theorem~\ref{thm:link}, a sufficient condition for this attack to work is $u \leq h-1 \leq p-3$. The last inequality is  always true for a large enough instance of the cryptosystem since $h$ is supposed to be chosen close to $p / \log p$. However there are only $h-1$ different elements of $\GF{p^h}$ fulfilling the first inequality.
 
 Considering all these acceptable generators only slightly improves the exhaustive research of $g$ by a factor of $h$.
 
@@ -400,15 +436,15 @@ Considering all these acceptable generators only slightly improves the exhaustiv
 
 We can notice that if $u = u'p$,
 $$ g_0^{c_j} = (A + \alpha_{\pi(j)} \cdot B)^{u'p} = (A^p + \alpha_{\pi(j)} \cdot B^p)^{u'} $$
-and the coordinates of this quantity are polynomials of degree $u'$ in $\alpha_{\pi(j)}$.
+and the coordinates of this quantity are polynomials of degree $u'$ on $\alpha_{\pi(j)}$.
 Actually, if $u$ is written $u = \sum_{i=0}^{h-1} u_i p^i$ in basis $p$, then we have
 $$ g_0^{c_j} = \prod_{i=0}^{h-1} (A^{p^i} + \alpha_{\pi(j)} \cdot B^{p^i} )^{u_i} $$
-whose coordinates are polynomials of degree $w_p(u) := \sum_{i=0}^{h-1} u_i$ in the $\alpha_{\pi(j)}$.
+whose coordinates are polynomials of degree $w_p(u) := \sum_{i=0}^{h-1} u_i$ on the $\alpha_{\pi(j)}$.
 
 This means that all $u$ such that $w_p(u) < h$ allow to retrieve the permutation and break the cryptosystem.
 The number of such $u$ is
 $$ \left( \binom{h+1}{h-1} \right) = \binom{2h}{h-1} =\Theta\left( 4^h \sqrt{h} \right) $$
-This is a drastic improvement in the exhaustive research of $g$. However this remains quite small compared to the number $\phi(p^h-1)$ of different generators in $\GF{p^h}$ which is comparable to $p^h$.
+This is a drastic improvement in the exhaustive research of $g$. However, this remains quite small compared to the number $\phi(p^h-1)$ of different generators in $\GF{p^h}$ which is comparable to $p^h$.
 
 
 
@@ -426,7 +462,7 @@ $$ Q(X) = g_{p^r}^d \prod_{i=0}^{h/r-1} \left( X + t^{p^{ri}} \right) $$
 where $g_{p^r} = g^{\frac{q-1}{p^r-1}}$. 
 \end{proof}
 
-If we chose a basis $(e_i)_{1 \leq i \leq r}$ of $\GF{p^r}$ (seen as a $\F_p$-vector space), we can write the coefficients of $g_{p^r}^{c_j}$ in this basis as polynomials $Q_i$ in $\alpha_{\pi(j)}$. We get
+If we chose a basis $(e_i)_{1 \leq i \leq r}$ of $\GF{p^r}$ (seen as a $\F_p$-vector space), we can write the coefficients of $g_{p^r}^{c_j}$ in this basis as polynomials $Q_i$ on $\alpha_{\pi(j)}$. We get
 $$ g_{p^r}^{c_j} = \sum_{i=1}^r Q_i(\alpha_{\pi(j)}) e_i $$
 with $\deg Q_i \leq h/r$. We get the evaluation of $r$ polynomials of degree smaller than $h/r$.
 
@@ -436,10 +472,10 @@ This means that instead of searching the generator $g$ among the approximately $
 When $r > \sqrt{h}$, if the generator $g_{p^r}$ of $\GF{p^r}$ is guessed correctly, there exists an attack (called "known $g_{p^r}$" attack) in polynomial time on the Chor-Rivest cryptosystem.
 \end{theorem}
 \begin{proof}
-The known $r$ coordinates of $g_{p^r}^{c_j}$ are polynomials in $\alpha_{\pi(j)}$ of degree $h/r < r$. We can use a Sidelnikov-Shestakov attack on the matrix of these coordinates as described in Theorem~\ref{thm:link}.
+The known $r$ coordinates of $g_{p^r}^{c_j}$ are polynomials on $\alpha_{\pi(j)}$ of degree $h/r < r$. We can use a Sidelnikov-Shestakov attack on the matrix of these coordinates as described in Theorem~\ref{thm:link}.
 \end{proof}
 
-This theorem is basically the main result from Vaudenay's article \cite{Vau01}. It states that to attack the Chor-Rivest cryptosystem, one can only search for the generator $g_{p^r}$ among $\phi(p^r-1)$ (which is about $p^r$) possible choices instead of the exhaustive research for $g$ (around $p^h$ choices).
+This theorem is basically the main result from Vaudenay's article \cite{Vau01}. It states that, in order to attack the Chor-Rivest cryptosystem, one can only look for the generator $g_{p^r}$ among $\phi(p^r-1)$ (which is about $p^r$) possible choices instead of the exhaustive research for $g$ (around $p^h$ choices).
 
 However the "known $g_{p^r}$ attack" suggested in Vaudenay's article can be improved in two ways.
 
@@ -453,24 +489,24 @@ However the "known $g_{p^r}$ attack" suggested in Vaudenay's article can be impr
 
 \subsection{Generating more rows...}
 
-We now describe a "known $g_{p^r}$" attack which allow the divisor $r$ of $h$ to be far smaller.
+We now describe a "known $g_{p^r}$" attack which allows the divisor $r$ of $h$ to be far smaller.
 We still consider the expression of elements of $\F_{p^r}$ in a given basis $(e_i)_{1 \leq i \leq r}$.
 
 
 When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ with $\deg Q \leq h/r$, we only have $r$ polynomials corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in a certain basis of $\F_{p^r}$. Being able to generate more polynomials would allow to chose a lower $r$ and improve drastically the attack.
 
-We could consider now the coordinates in the equation $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for $u \in [1,p^r-1]$. This yields again $r$ polynomials of degree smaller than $u h/r$. Actually, since $P \mapsto P^p$ let the degree invariant we know that the degree of $Q^u$ is actually at most $w_p(u) h / r$.
+We could consider now the coordinates in the equation $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for $u \in [1,p^r-1]$. This yields again $r$ polynomials of degree smaller than $u h/r$. Actually, since $P \mapsto P^p$ lets the degree invariant, we know that the degree of $Q^u$ is actually at most $w_p(u) h / r$.
 
 To generate more polynomials, we could then decide to consider all the equations $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for all $u \in U_w^{(r)} := \{ u \in [0,p^r-1] | w_p(u) \leq w \}$
 This yields $r \cdot |U_w^{(r)}|$ polynomials of degree at most $wh/r$.
 
 Besides, assuming $w \gg r$, the number of such polynomials can be up to
 $$ | U_w^{(r)} | = \left( \binom{r+1}{w} \right) = \binom{r+w+1}{w} = \binom{r+w+1}{r+1} = \Theta\left(\frac{w^{r+1}}{(r+1)!}\right) .$$
-This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if we consider polynomials of higher degree ($wh/r$), the number of such polynomials we can get is far greater than $r$ and we can hope that if we choose $w$ high enough, we can get enough linearly independent polynomials to use a Sidelnikov-Shestakov attack.
+This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if we consider polynomials of higher degree ($wh/r$), the number of such polynomials is far greater than $r$ and we can hope that if we choose $w$ high enough, we can get enough linearly independent polynomials to use a Sidelnikov-Shestakov attack.
 
 
 Unfortunately, these polynomials are strongly linearly dependent.
-For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differs by a rotation.
+For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differ by a rotation.
 
 
 
@@ -495,7 +531,7 @@ The time
 
 \subsection{Number of linearly independent polynomials}
 
-On several simulations for different values for $p$ and $h$, see Results~\ref{Sim:res} in appendix, we choose, each time, the smallest value for $r$ that allow an attack on the system. We present in the appendix the maximum weight $w$ chosen for the exponents $u_i$ of $g_{p^r}$ and the number of linearly independent rows these $g_{p^r}^{u_i}$ allow to generate (should be $w\cdot \frac{h}{r} +1$).
+On several simulations for different values for $p$ and $h$, see Results~\ref{Sim:res} in appendix, we choose, each time, the smallest value for $r$ that allows an attack on the system. We present in the appendix the maximum weight $w$ chosen for the exponents $u_i$ of $g_{p^r}$ and the number of linearly independent rows these $g_{p^r}^{u_i}$ allow to generate (should be $w\cdot \frac{h}{r} +1$).
 
 
 
@@ -509,7 +545,7 @@ Let $r$ be a divisor of $h$, we call $u_w$ the number of linearly independent ro
 
 We have $u_0 = 1$ obviously because using $g_{p^r}^0$, we only get one row filled with 1.
 
-We also have $u_1 = r+1$ because we can only get $r$ more lines using $g_{p^r}$ corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in $\F_{p^r}$. The coordinates given by the generator $g_{p^r}^{p^i}$ are the same as those given by $g_{p^r}$ in a normal basis. This mean that whatever the basis chosen, they are at least linearly dependent from each other and so using $g_{p^r}$ doesn't allow to generate more useful polynomials.
+We also have $u_1 = r+1$ because we can only get $r$ more lines using $g_{p^r}$ corresponding to the $r$ different coordinates of $g_{p^r}^{c_j}$ in $\F_{p^r}$. The coordinates given by the generator $g_{p^r}^{p^i}$ are the same as those given by $g_{p^r}$ in a normal basis. This means that whatever the basis chosen, they are at least linearly dependent from each other and so using $g_{p^r}$ doesn't allow to generate more useful polynomials.
 
 
 
@@ -590,9 +626,9 @@ $$ r \geq \frac{\log p}{\log \log p}$$
 
 \textbf{Input : } The description of the finite field $\F_{p^h}$ and the public key $(c_j)_{1 \leq j \leq p}$
 \begin{itemize}
-\item Compute the smallest $r$ divisor of $h$ such that $w := \lfloor r \frac{p-3}{h} \rfloor$ satisfy $u_w > wh/r+1$.
+\item Compute the smallest $r$ divisor of $h$ such that $w := \lfloor r \frac{p-3}{h} \rfloor$ satisfies $u_w > wh/r+1$.
 
-\item Precompute the set $U_w$ of all $u$ such that $w_p(u) \leq w$
+\item Precompute the set $U_w$ of all $u$ such that $w_p(u) \leq w$.
 \item Chose a basis $(e_i)_{1 \leq i \leq r}$ of $\F_{p^r}$ and compute the matrix projecting elements of $F_{p^r}$ in this basis.
 
 \item \textbf{For} all possible $g_{p^r}$ generator of $F_{p^r}$ \textbf{do}
@@ -600,8 +636,8 @@ $$ r \geq \frac{\log p}{\log \log p}$$
 \item Compute the matrix $M$ containing the maximum of linearly independent rows from the coordinates of $\left( g_{p^r}^{uc_j} \right)_{u \in U_w}$ in the basis $(e_i)$.
 
 \item \textbf{If } strictly more than $wh/r+1$ rows are obtained\\
-\textbf{Then } Abort and chose an other generator $g_{p^r}$. \\
-\textbf{Else } Leave this loop and keep $M$ and $g_{p^r}$.
+\textbf{Then } Abort and chose another generator $g_{p^r}$. \\
+\textbf{Else } Break this loop and keep $M$ and $g_{p^r}$.
 \end{itemize}
 \item Perform a Sidelnikov Shestakov attack on $M$ to generate all possible permutations $(\pi_i)$.
 \item \textbf{For each } permutation $\pi$ \textbf{ do }
@@ -615,19 +651,19 @@ $$ r \geq \frac{\log p}{\log \log p}$$
 \subsection{A simple test for $g_{p^r}$}
 
 \begin{theorem}
-If there exists $w \geq 1$ and a factor $r$ of $h$ such that $u_w > wh/r + 1$, if we let $g_{p^r}$ denote $g^{\frac{p^h-1}{p^r-1}}$, then all the $g_{p^r}^{uc_j}$ (with $0 \leq j\leq p$ and $w_p(u) \leq w$) stands on the same $(1+wh/r)$-dimensional affine space when considering $\GF{p^r}$ as an $r$-dimensional $\GF{p}$-affine space.
+If there exists $w \geq 1$ and a factor $r$ of $h$ such that $u_w > wh/r + 1$, if $g_{p^r}$ denote $g^{\frac{p^h-1}{p^r-1}}$, then all the $g_{p^r}^{uc_j}$ (with $0 \leq j\leq p$ and $w_p(u) \leq w$) stand on the same $(1+wh/r)$-dimensional affine space when considering $\GF{p^r}$ as an $r$-dimensional $\GF{p}$-affine space.
 \end{theorem}
-Thus there is an algorithm which can check if a candidate for $g_{p^r}$ is good: the algorithm simply check that all $g_{p^r}^{uc_j}$ are affine-dependent. The algorithm has an average complexity of $O(p^2)$ operations in $\GF{p}$. Since there are $\phi(p^r-1)/r$ candidates, we can exhaustively search for $g_{p^r}$ within a complexity of $O(p^{r+2} /r)$.
+Thus there is an algorithm which can check if a candidate for $g_{p^r}$ is good: the algorithm simply checks whether all $g_{p^r}^{uc_j}$ are affine-dependent. The algorithm has an average complexity of $O(p^2)$ operations in $\GF{p}$. Since there are $\phi(p^r-1)/r$ candidates, we can exhaustively look for $g_{p^r}$ within a complexity of $O(p^{r+2} /r)$.
 
-This gives us an "early abort" and allow us not to perform a Sidelnikov Shestakov attack on all the $M$ generated by all the possible $g_{p^r}$.
+This gives us an "early abort" and allows us not to perform a Sidelnikov-Shestakov attack on all the $M$ generated by all the possible $g_{p^r}$.
 
 \subsection{Time complexity}
 
-For a big enough instance of a Chor-Rivest cryptosystem, the exhaustive research of a generator $g_{p^r}$ that can be used to perform a polynomial "known $g_{p^r}$ attack" on this cryptosystem is bounded above by $p^r$ with $r$ the smallest divisor of $h$ such that $r \geq \frac{\log p}{\log p - \log h}$\\
+For a big enough instance of a Chor-Rivest cryptosystem, the exhaustive research of a generator $g_{p^r}$ that can be used to perform a polynomial "known $g_{p^r}$ attack" on this cryptosystem is bounded above by $p^r$ with $r$ the smallest divisor of $h$ such that $r \geq \frac{\log p}{\log p - \log h}$.\\
 
-The cost of the initial computations, the Sidelnikov-Shestakov and the "known $g_{p^r}$ and $\pi$" attacks are polynomial in $p$ and can be thus neglected.
+The cost of the initial computations, the Sidelnikov-Shestakov attack and the "known $g_{p^r}$ and $\pi$" attacks are polynomial in $p$ and can be thus neglected.
 
-If we suppose that the density of the finite field chosen close to 1 (i.e. $h \sim \frac{p}{\log p}$), and that $h$ has a lot of small divisors, then the complexity of the full attack on the Chor-Rivest cryptosystem is $O\left( p^{\frac{\log p}{\log \log p} + C} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.\\
+If we suppose that the density of the finite field chosen is close to 1 (i.e. $h \sim \frac{p}{\log p}$), and that $h$ has a lot of small divisors, then the complexity of the full attack on the Chor-Rivest cryptosystem is $O\left( p^{\frac{\log p}{\log \log p} + C} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.\\
 
 The size of the public key is $N = hp\log p \sim p^2$. The complexity found is bounded above by $N^{\log N}$ which is almost polynomial.
 
@@ -637,13 +673,15 @@ The size of the public key is $N = hp\log p \sim p^2$. The complexity found is b
 
 \section{Conclusions}
 
-Sidelnikov and Shestakov ... \\
+Sidelnikov and Shestakov shew that the McEliece cryptosystem using GRS codes can be quite easily broken, in polynomial time.
+Vaudenay simplified the explanation of the attack but it remained in his article that we had to guess the value of some coefficients to run the attack, introducing a loop on the possible values of these coefficients.
+In our article, we show that such guesses are not necessary, since we can find an equivalent code fixing some coefficients, which leads to a very simple and efficient attack on the cryptosystem.\\
 
 
 
 This attack works even when not all the permutation $\pi$ is revealed.
 
-We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in this fields might allow this cryptosystem to resist most of the current known attacks.
+We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in these fields might allow this cryptosystem to resist most of the current known attacks.
 
 
 
