@@ -672,13 +672,13 @@ The size of the public key is $N = hp\log p \sim p^2$. The complexity found is b
 
 \section{Conclusions}
 
-Sidelnikov and Shestakov shew that the McEliece cryptosystem using GRS codes can be quite easily broken, in polynomial time.
-Vaudenay simplified the explanation of the attack but it remained in his article that we had to guess the value of some coefficients to run the attack, introducing a loop on the possible values of these coefficients.
+Sidelnikov and Shestakov showed that the McEliece cryptosystem using GRS codes can be quite easily broken, in polynomial time.
+Wieschebrink simplified the explanation of the attack but it remained in his article that we had to guess the value of some coefficients to run the attack, introducing a loop on the possible values of these coefficients.
 In our article, we show that such guesses are not necessary, since we can find an equivalent code fixing some coefficients, which leads to a very simple and efficient attack on the cryptosystem.\\
 
 
 
-This attack works even when not all the permutation $\pi$ is revealed.
+This attack works even when the permutation $\pi$ is not fully revealed. Indeed, it remains efficient as long as there are $\Omega(p)$ coefficients $c_j$ known.
 
 We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in these fields might allow this cryptosystem to resist most of the current known attacks.
 
@@ -781,8 +781,7 @@ Rank & 46 \\ \hline
 \section{Simulation results}
 \label{Sim:res}
 
-We perform the simulations for $p = 251$ but several\\
-values of $p$ large enough yield the same results.
+We perform the simulations for $p = 251$ but several values of $p$ large enough yield the same results.
 \begin{minipage}[H]{30cm}
 \includepdf{include/SimResults2.pdf}
 \end{minipage}
@@ -791,6 +790,25 @@ values of $p$ large enough yield the same results.
 \newpage
 \section{Time tables}
 \label{Sim:time}
+
+\subsection{The Sidelnikov Shestakov attack}
+\label{time:SS}
+
+\begin{minipage}[H]{30cm}
+\includepdf{include/TimeTable.pdf}
+\end{minipage}
+
+
+
+\newpage
+\subsection{Our attack}
+\label{time:our}
+
+We present here the results from the execution of our attack.
+
+\begin{minipage}[H]{30cm}
+\includepdf{include/TimeTableCR.pdf}
+\end{minipage}
 
 
 
