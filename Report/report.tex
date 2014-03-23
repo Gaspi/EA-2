@@ -39,8 +39,9 @@ In this article, we discuss about the Sidelnikov-Shestakov attack on cryptosyste
 \label{sec:intro}
 
 The McEliece cryptosystem \cite{NiederH86} was one of the first to use randomization in the encryption process. Indeed, in such a scheme, the encrypter uses a random error to prevent attacks on the codeword. This codeword is then decrypted using an error-correcting code. 
-First, Goppa codes were used but the keys were too much large. Then, the idea was to use Generalized Reed-Solomon (GRS) codes instead.
-This algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
+In \cite{NiederH86}, Niederreiter study discusses the best choices of error-correcting codes which can be used in the cryptosystem. He highlights two families of codes : alternant codes
+(including for example Goppa codes, which were used first in the McEliece cryptosystem) and GRS (Generalized Reed-Solomon) codes.
+Note that this algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
 
 In 1992, Sidelnikov and Shestakov suggest an attack \cite{SidelShes92} on the public key of this cryptosystem (based on GRS codes) using equivalences between private keys.
 
@@ -51,7 +52,7 @@ The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system wh
 The first efficient attack for the proposed range of parameters (i.e., $p \simeq 256$, $h \simeq 24$) has been obtained by Vaudenay in 2001, assuming there exists a small factor $r$ of $h$ with $r > \sqrt{h}$.
 
 
-\subsection{Our Work}
+\subsubsection*{Our Work}
 In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack \cite{SidelShes92}, which is also explained more clearly by Wieschebrink \cite{Wiesch}.
 We try to make a mix between the simplicity of the arguments given by Wieshbrink, which lead to a better understanding of the attack, and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
 not introduced by Wieshbrink, and which leads to get a better complexity.
@@ -62,7 +63,7 @@ These similarities allow us to describe a more efficient algorithm for a "known 
 
 
 
-\newpage
+
 \section{Preliminaries}
 \label{sec:Prel}
 
@@ -515,7 +516,7 @@ Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differ by a rotation.
 
 
-\newpage
+
 \section{Simulations and expected complexity}
 \label{sec:Simul}
 
@@ -620,7 +621,7 @@ Depending on the asymptotic behavior of $n$ chosen, the previous lower bound can
 
 
 
-\newpage
+
 \section{Complexity}
 
 \subsection{The algorithm}
@@ -671,7 +672,7 @@ The size of the public key is $N = hp\log p \sim p^2$. The complexity found is b
 
 
 
-\newpage
+
 \section{Conclusions}
 
 Sidelnikov and Shestakov showed that the McEliece cryptosystem using GRS codes can be quite easily broken, in polynomial time.
