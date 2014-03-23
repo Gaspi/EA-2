@@ -14,7 +14,7 @@
 
 
 % More definitions
-\usepackage{showkeys}
+%\usepackage{showkeys}
 \usepackage{mathtools}
 %\usepackage{multirow}
 %\usepackage{appendix}
@@ -54,8 +54,8 @@ The first efficient attack for the proposed range of parameters (i.e., $p \simeq
 
 \subsubsection*{Our Work}
 In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack \cite{SidelShes92}, which is also explained more clearly by Wieschebrink \cite{Wiesch}.
-We try to make a mix between the simplicity of the arguments given by Wieshbrink, which lead to a better understanding of the attack, and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
-not introduced by Wieshbrink, and which leads to get a better complexity.
+We try to make a mix between the simplicity of the arguments given by Wieshebrink, which lead to a better understanding of the attack, and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
+not introduced by Wieschebrink, and which leads to get a better complexity.
 
 On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. Indeed, $\F_{p^r}$ can be seen as a $\F_p$-vector space and the knowledge of the particular generator $g_{p^r}$ of $\F_{p^r}$ yield the values of $r$ small degree polynomials in the private key $\alpha_{\pi(j)}$. This was how Vaudenay was able to suggest a "known $g_{p^r}$" attack working for any factor $r$ of $h$ bigger than $\sqrt{h}$.
 
@@ -290,11 +290,11 @@ order the elements of $\F_q$, we have a $O(n^{2})$ factor instead of $O(n \cdot 
 the cost of the attack is mainly due to the computation of the echelon form, the other steps having a smaller complexity.
 
 Note that the complexity is expressed in terms of the number of simple operations on the field $\F_q$. Then, since the elements of the field can be seen as polynomials of degree at most
-$h-1$, such an operation is not done in constant time if we consider an algebraic expression as the time unit. For example, an addition requires $h$ operations, a multiplication $h^{2}$, a comparison
-$h$,... So, in terms of algebraic expressions, we would have to multiply our complexity by $O(h^{\varTheta(1)}) = O(\log(q)^{\varTheta(1)}) = O(\log(n)^{\varTheta(1)})$ if $n=q$, which is often the choice made to
+$h-1$, such an operation is not done in constant time if we consider an algebraic operation as the time unit. For example, an addition requires $h$ operations, a multiplication $h^{2}$, a comparison
+$h$,... So, in terms of algebraic operations, we would have to multiply our complexity by $O(h^{\varTheta(1)}) = O(\log(q)^{\varTheta(1)}) = O(\log(n)^{\varTheta(1)})$ if $n=q$, which is often the choice made to
 create the cryptosystem.
 
-Finally, we could be interested by knowing when the attack fails. Then, we don't really have any condition available before runing completely the algorithm.
+Finally, we could be interested in knowing when the attack fails. Then, we don't really have any condition available before runing completely the algorithm.
 However, since we compute the matrix $H$ from only $k$ columns (and not $n$), there must be redundant information in the remaining columns. So, when computing $H^{-1} \cdot M$, we must find $G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$.
 If it is not true, it means that the matrix $M$ can not be obtained from a GRS code. But we have to execute the whole attack to determine it.
 
