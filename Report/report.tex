@@ -48,7 +48,7 @@ Nowadays, all the versions of the McEliece cryptosystem had been broken.
 
 The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it took longer to break than most, and is a very elegant use of finite fields.
 
-The first efficient attack for the proposed parameters (i.e., $p \simeq 200$, $h \simeq 24$) has been obtained by Vaudenay in 2001, assuming $h$ has a small factor.
+The first efficient attack for the proposed range of parameters (i.e., $p \simeq 256$, $h \simeq 24$) has been obtained by Vaudenay in 2001, assuming there exists a small factor $r$ of $h$ with $r > \sqrt{h}$.
 
 
 \subsection{Our Work}
@@ -515,7 +515,7 @@ Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differ by a rotation.
 
 
-
+\newpage
 \section{Simulations and expected complexity}
 \label{sec:Simul}
 
@@ -596,13 +596,6 @@ $$ \binom{w+r}{r} \geq \frac{w^r}{r!} \ \ \text{ and } \ \ p \geq w\frac{h}{r}+1
 a sufficient condition would be
 
 
-%\begin{eqnarray*}
-%\frac{w^r}{r!} &\geq& p \\
-%\Leftarrow \ \ \ \ \ \ \ \ C r^r (\log p)^r &\geq& p \cdot r! \\
-%\Leftarrow (e \log p)^r &\geq& \frac{p}{C \sqrt{2\pi r}} \geq C' p \\
-%\Leftarrow r &\geq& \frac{\log p + C''}{\log \log p + 1} \sim \frac{\log p}{\log \log p}
-%\end{eqnarray*}
-
 
 \begin{eqnarray*}
 \frac{w^r}{r!} &\geq& p \\
@@ -618,7 +611,16 @@ If we suppose $h \sim \frac{p}{\log p}$, then we have $w \sim r \log p$ and the 
 $$ r \geq \frac{\log p}{\log \log p}$$
 
 
+\subsubsection{Partial public key}
+We can study the case when not all the coefficients $c_j$ are disclosed. The previous estimation becomes then
+$$ r \geq \frac{\log n}{\log n - \log h + C} $$
+where $n$ is the number of public coefficients. We have the following conditions on $n$
+$$ p \geq n \geq h+3 = \Omega\left(\frac{p}{\log p}\right)$$ 
+Depending on the asymptotic behavior of $n$ chosen, the previous lower bound can be anything between $\Omega\left(\frac{\log p}{\log \log p}\right)$ and $\Omega(\log p)$.
 
+
+
+\newpage
 \section{Complexity}
 
 \subsection{The algorithm}
@@ -669,7 +671,7 @@ The size of the public key is $N = hp\log p \sim p^2$. The complexity found is b
 
 
 
-
+\newpage
 \section{Conclusions}
 
 Sidelnikov and Shestakov showed that the McEliece cryptosystem using GRS codes can be quite easily broken, in polynomial time.
@@ -677,13 +679,13 @@ Wieschebrink simplified the explanation of the attack but it remained in his art
 In our article, we show that such guesses are not necessary, since we can find an equivalent code fixing some coefficients, which leads to a very simple and efficient attack on the cryptosystem.\\
 
 
+We've seen that in the Chor-Rivest cryptosystem, the knowledge of the values $c_j$ from the public key and the guess of $g_{p^r} = g^{\frac{p^h-1}{p^r-1}} \in \F_{p^r}$ allow us to compute the coordinates of $g_{p^r}^{c_j}$ as elements of $\F_{p^r}$ seen as a $\F_p$-vector space. We know that these coordinates are the evaluations of $r$ polynomials of degree $h/r$ in the $\alpha_{\pi(j)}$. Besides, the Siedelnikov-Shestakov attack teaches us that when we have the evaluation of $k$ polynomials of degree smaller than $k$, we can recover the permutation $\pi$. Considering some powers of $g_{p^r}$, we manage to generate enough polynomials to allow $r$ to be chosen very small, around $\frac{\log p}{\log \log p}$. Then we describe how this can be used to attack efficiently the Chor-Rivest cryptosystem
 
 This attack works even when the permutation $\pi$ is not fully revealed. Indeed, it remains efficient as long as there are $\Omega(p)$ coefficients $c_j$ known.
 
-We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in these fields might allow this cryptosystem to resist most of the current known attacks.
+Because of the equivalence between Reed-Solomon codes, this attack only return a set of possible permutations $\pi$. The size of this set is $p^2$ ($O(p^3)$ when only $\Omega(p)$ coefficients are known). This means that to complete the attack, one should be able either to quickly recognize a permutation inconsistent with the public key and the guess of $g_{p^r}$, or to process and find the original message among $O(p^3)$ possible deciphered messages.
 
-
-
+We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in this field might allow this cryptosystem to evolve into a version resistant to most of the current attacks.
 
 
 
