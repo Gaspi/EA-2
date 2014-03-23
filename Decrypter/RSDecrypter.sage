@@ -4,17 +4,20 @@ load "RSCryptosystem.sage"
 load "RandomFunc.sage"
 
 
-def GetSolution( publicKey ):
+def QuickDecrypt( publicKey ):
+    
     M = publicKey.get("M")
-    t = publicKey.get("t")
     
     Field = M.base_ring()
     (k,n) = M.dimensions()
     q = Field.order()
     p = Field.characteristic() # probably 2
     e = log_b(q,p)   # q = p ^ e 
+    
     b = M.echelon_form()
+    
     c = [ b[i,k] for i in range(k) ]
+    
     ratio = c[0] / c[1]
     alphak = -ratio / ( (b[0,k+1] / b[1,k+1]) - ratio)
     alpha = [ Field(0), Field(1)] \
@@ -22,12 +25,11 @@ def GetSolution( publicKey ):
           + [Field(0)] \
           + [ -ratio / ( (b[0,j] / b[1,j]) - ratio) for j in range(k+1,n) ]
     
+    # astuce pour trouver un élément différent des autres ? dans un corps
     tab = [ True for i in range(q) ]
     for el in alpha:
-        if e == 1:
-            tab[el] = False
-        else:
-            tab[ int(el.int_repr()) ] = False
+        if e == 1:  tab[el] = False
+        else:       tab[ int(el.int_repr()) ] = False
     
     i = 0
     while not tab[i]: i+=1
@@ -35,22 +37,32 @@ def GetSolution( publicKey ):
     
     alpha = [ 1/ (ar -  el) for el in alpha]
     alpha[k] = 0
+    
     def L(i, j):
         res = 1
         for l in range(k):
             if (l != i):
                 res *= (alpha[j] - alpha[l])
         return res
+    
     x =   [ L(j, k) / L(j,j) / b[j,k] for j in range(k) ]
     x +=  [ b[0,j] / b[0,k] * L(0, k) / L(0, j)  for j in range(k,n)]
     
-    return { 'alpha' : alpha, 'x' : x, 'k':k }
+    
+    Gpp = MatrixSpace(Field, k, k)()
+    for i in range(k):
+        for j in range(k):
+            Gpp[i,j] = x[j] * alpha[j] ^ i
+    
+    H = M[0:k,0:k] * Gpp^(-1)
+    
+    rsd = RSCryptosystem(p, e, n, k)
+    rsd.init_param(alpha, x, H)
+    
+    return rsd
 
 
-def GetPermutation(perm, k, a, b):
-    alpha = perm
-    alpha = [ a + b * el for el in alpha]
-    return alpha
+
 
 
 def Decrypt( publicKey ):

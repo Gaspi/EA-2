@@ -10,8 +10,9 @@ except: size_case = 4
 
 
 # Main parameters
-p = 2
-askMsg = False
+if size_case > 0:
+    p = 2
+    askMsg = False
 if size_case == 1:
     e=5
     n=10

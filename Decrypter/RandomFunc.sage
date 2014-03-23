@@ -1,4 +1,6 @@
 
+import sys, time
+
 from sage.misc.randstate import current_randstate
 
 randrange = current_randstate().python_random().randrange
@@ -11,6 +13,21 @@ except: verbose = True
 def Verb(msg):
     if verbose:
         print msg
+
+
+
+# Clock function
+clock_t0 = [0]
+clock_times = []
+def Clock():
+    clock_times.append(time.time() - clock_t0[0] )
+def ClockGet():
+    return time.time() - clock_t0[0]
+def ClockGo():
+    clock_t0[0] = time.time()
+def PrintClocks():
+    while len(clock_times) > 0:
+        print " -> " + str(clock_times.pop())
 
 
 def random_distinct_int(start, end, number):
