@@ -516,7 +516,7 @@ Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differ by a rotation.
 
 
-
+\newpage
 \section{Simulations and expected complexity}
 \label{sec:Simul}
 
@@ -621,7 +621,7 @@ Depending on the asymptotic behavior of $n$ chosen, the previous lower bound can
 
 
 
-
+\newpage
 \section{Complexity}
 
 \subsection{The algorithm}
@@ -672,7 +672,7 @@ The size of the public key is $N = hp\log p \sim p^2$. The complexity found is b
 
 
 
-
+\newpage
 \section{Conclusions}
 
 Sidelnikov and Shestakov showed that the McEliece cryptosystem using GRS codes can be quite easily broken, in polynomial time.
@@ -807,7 +807,10 @@ We perform the simulations for $p = 251$ but several values of $p$ large enough 
 \subsection{Our attack}
 \label{time:our}
 
-We present here the results from the execution of our attack.
+We present here the results from the execution of our attack. We consider here that $g_{p^r}$ is found and we are only interested in the generation of all the possible permutations $\pi$. Each time we check that the initial permutation is indeed among the permutations generated.
+
+The Sidelnikov-Shestakov attack itself is quite fast but the number of different possible permutations generated make this attack hard to perform on a real cryptosystem.
+
 
 \begin{minipage}[H]{30cm}
 \includepdf{include/TimeTableCR.pdf}
