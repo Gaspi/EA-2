@@ -6,7 +6,7 @@ import sys, time
 
 
 # Should be used as in the following example
-# p = 53; r = 4; hsr = 13; w = 4; load("CRClock.sage")
+# p = 53; r = 4; hsr = 10; w = 4; load("CRClock.sage")
 
 
 try: p

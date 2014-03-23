@@ -14,7 +14,9 @@
 
 
 % More definitions
+
 %\usepackage{showkeys}
+
 \usepackage{mathtools}
 %\usepackage{multirow}
 %\usepackage{appendix}
@@ -30,36 +32,35 @@
 \maketitle
 
 \begin{abstract}
-
-In this article, we discuss about the Sidelnikov-Shestakov attack on cryptosystems based on Reed-Solomon codes. Then we describe how this algorithm can be used to improve the attack to the Chor-Rivest Cryptosystem proposed by Vaudenay \cite{Vau01}.
-
+In this article, we discuss about the Sidelnikov-Shestakov attack \cite{SidelShes92} on cryptosystems based on generalized Reed-Solomon codes. Then we describe how this algorithm can be used to improve the attack to the Chor-Rivest cryptosystem introduced by Vaudenay \cite{Vau01}.
 \end{abstract}
 
 \section{Introduction}
 \label{sec:intro}
 
 The McEliece cryptosystem \cite{NiederH86} was one of the first to use randomization in the encryption process. Indeed, in such a scheme, the encrypter uses a random error to prevent attacks on the codeword. This codeword is then decrypted using an error-correcting code. 
-In \cite{NiederH86}, Niederreiter study discusses the best choices of error-correcting codes which can be used in the cryptosystem. He highlights two families of codes : alternant codes
-(including for example Goppa codes, which were used first in the McEliece cryptosystem) and GRS (Generalized Reed-Solomon) codes.
+In his study \cite{NiederH86}, Niederreiter discusses the best choices of error-correcting codes which can be used in the cryptosystem. He highlights two families of codes : alternant codes
+ - including for example Goppa codes, which were used first in the McEliece cryptosystem - and generalized Reed-Solomon (GRS) codes.
 Note that this algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
 
 In 1992, Sidelnikov and Shestakov suggest an attack \cite{SidelShes92} on the public key of this cryptosystem (based on GRS codes) using equivalences between private keys.
-
 Nowadays, all the versions of the McEliece cryptosystem had been broken.
 
-The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it took longer to break than most, and is a very elegant use of finite fields.
+The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it took longer to break than most, and remains a very elegant use of finite fields.
 
 The first efficient attack for the proposed range of parameters (i.e., $p \simeq 256$, $h \simeq 24$) has been obtained by Vaudenay in 2001, assuming there exists a small factor $r$ of $h$ with $r > \sqrt{h}$.
 
 
 \subsubsection*{Our Work}
 In this article, we first describe the Niederreiter and McEliece cryptosystem and present the original Sidelnikov and Shestakov's attack \cite{SidelShes92}, which is also explained more clearly by Wieschebrink \cite{Wiesch}.
+
 We try to make a mix between the simplicity of the arguments given by Wieshebrink, which lead to a better understanding of the attack, and the generality of the article of Sidelnikov and Shestakov, who introduce a notion of infinity,
 not introduced by Wieschebrink, and which leads to get a better complexity.
 
+
 On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. Indeed, $\F_{p^r}$ can be seen as a $\F_p$-vector space and the knowledge of the particular generator $g_{p^r}$ of $\F_{p^r}$ yield the values of $r$ small degree polynomials in the private key $\alpha_{\pi(j)}$. This was how Vaudenay was able to suggest a "known $g_{p^r}$" attack working for any factor $r$ of $h$ bigger than $\sqrt{h}$.
 
-These similarities allow us to describe a more efficient algorithm for a "known $g_{p^r}$ attack" which require $r$ to be much smaller than in Vaudenay's article. Using the small powers of $g_{p^r}$, we manage to get the weaker condition $r > \log p$. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p}$ assuming we have $h \simeq \frac{p}{\log p}$  and $h$ has very small factors (around $\log p$). The first condition is suggested in Chor and Rivest's article because the density of the  finite field chosen should be close to 1 in order for the cryptosystem not be attacked using lattice reduction algorithms . That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
+These similarities allow us to describe a more efficient algorithm for a "known $g_{p^r}$ attack" which require $r$ to be much smaller than in Vaudenay's article. Using not only $g_{p^r}$ but its small powers, we manage to get the weaker condition $r > \log p$ and even $r > \frac{\log p}{\log \log p}$ assuming we have $h \simeq \frac{p}{\log p}$. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p / \log \log p}$ assuming $h$ has small enough factors. The first condition is suggested in Chor and Rivest's article because the density of the  finite field chosen should be close to 1 in order for the cryptosystem not be attacked using lattice reduction algorithms . That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
 
 
 
@@ -142,7 +143,7 @@ there exists a nonsingular matrix $H_{\phi}$ and a vector $(z'_1,... ,z'_n) \in 
 
 So, when $M$ is given, it is impossible to compute the original matrices $G(\alpha_1, \ ... \ , \alpha_n, z_1, \ ... \ , z_n)$ and $H$ since many pairs of such matrices lead to the same public matrix $M$.
 However, computing an equivalent pair is sufficient since it will allow to decrypt the messages as well as the original secret pair of matrices.
-It is the main idea of the attack.
+This is the main idea of the attack.
 
 
 
@@ -161,8 +162,8 @@ $$ E(M) =
 \left(
 \begin{array}{ccccccc}
 1 & 0 & \cdots & 0 & b_{1,k+1} & \cdots & b_{1,n} \\
-0 & 1 & \cdots & 0 & b_{2,k+1} & \cdots & b_{2,n} \\
-  &   & \ddots &   & \vdots &   & \vdots \\
+0 & 1 & \ddots & \vdots & b_{2,k+1} & \cdots & b_{2,n} \\
+\vdots  &  \ddots & \ddots & 0  & \vdots &   & \vdots \\
 0 & \cdots & 0 & 1 & b_{k,k+1} & \cdots & b_{k,n}
 \end{array}
 \right)
@@ -335,7 +336,7 @@ whose factorization leads to the original message $m$.
 To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. This weakness will allow us to consider later subfields $\F_{p^r}$ of $\F_q$. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms.This allow us to suppose that
 $$ h = \Theta\left( \frac{p}{\log_2 p} \right) $$
 
-Vaudenay show that when some parts of the secret key is disclosed, for example $g$, $t$ or $\pi$, there exists polynomials attack on this cryptosystem. For instance, he introduces the "known $t$", "known $g$" and "known $\pi$" attacks that we will consider but not describe here.
+Vaudenay shows that when some parts of the secret key is disclosed, for example $g$, $t$ or $\pi$, there exists polynomial attacks on this cryptosystem. For instance, he introduces \cite{Vau01} the "known $t$", "known $g$" and "known $\pi$" attacks that we will consider without describing here.
 
 
 \subsubsection{Link with Reed-Solomon codes}
@@ -516,7 +517,7 @@ Unfortunately, these polynomials are strongly linearly dependent.
 For example, the coordinates of $g_{p^r}^{p c_j}$ are linearly dependent on the coordinates of $g_{p^r}^{c_j}$. Indeed, when decomposed in a normal basis of $\F_{p^r}$, these two sets of vectors of coordinates only differ by a rotation.
 
 
-
+\newpage
 \section{Simulations and expected complexity}
 \label{sec:Simul}
 
@@ -621,7 +622,7 @@ Depending on the asymptotic behavior of $n$ chosen, the previous lower bound can
 
 
 
-
+\newpage
 \section{Complexity}
 
 \subsection{The algorithm}
@@ -655,9 +656,11 @@ Depending on the asymptotic behavior of $n$ chosen, the previous lower bound can
 \begin{theorem}
 If there exists $w \geq 1$ and a factor $r$ of $h$ such that $u_w > wh/r + 1$, if $g_{p^r}$ denote $g^{\frac{p^h-1}{p^r-1}}$, then all the $g_{p^r}^{uc_j}$ (with $0 \leq j\leq p$ and $w_p(u) \leq w$) stand on the same $(1+wh/r)$-dimensional affine space when considering $\GF{p^r}$ as an $r$-dimensional $\GF{p}$-affine space.
 \end{theorem}
-Thus there is an algorithm which can check if a candidate for $g_{p^r}$ is good: the algorithm simply checks whether all $g_{p^r}^{uc_j}$ are affine-dependent. The algorithm has an average complexity of $O(p^2)$ operations in $\GF{p}$. Since there are $\phi(p^r-1)/r$ candidates, we can exhaustively look for $g_{p^r}$ within a complexity of $O(p^{r+2} /r)$.
-
+Thus there is an algorithm which can check if a candidate for $g_{p^r}$ is good: the algorithm simply checks whether all $g_{p^r}^{uc_j}$ are affine-dependent. The algorithm has a complexity of $O(p^3)$ operations in $\GF{p}$.
 This gives us an "early abort" and allows us not to perform a Sidelnikov-Shestakov attack on all the $M$ generated by all the possible $g_{p^r}$.
+
+Since there are $\phi(p^r-1)/r$ candidates, we can exhaustively look for $g_{p^r}$ within a complexity of $O(p^{r+3} / r)$.
+
 
 \subsection{Time complexity}
 
@@ -667,20 +670,20 @@ The cost of the initial computations, the Sidelnikov-Shestakov attack and the "k
 
 If we suppose that the density of the finite field chosen is close to 1 (i.e. $h \sim \frac{p}{\log p}$), and that $h$ has a lot of small divisors, then the complexity of the full attack on the Chor-Rivest cryptosystem is $O\left( p^{\frac{\log p}{\log \log p} + C} \right)$, far faster than $O\left(p^{\sqrt{\frac{p}{\log p}}}\right)$.\\
 
-The size of the public key is $N = hp\log p \sim p^2$. The complexity found is bounded above by $N^{\log N}$ which is almost polynomial.
+The size of the public key is $N = hp\log p \sim p^2$. The complexity found is bounded above by $O\left(N^{\log N}\right)$ which is a little worse than polynomial time.
 
 
 
 
-
+\newpage
 \section{Conclusions}
 
-Sidelnikov and Shestakov showed that the McEliece cryptosystem using GRS codes can be quite easily broken, in polynomial time.
-Wieschebrink simplified the explanation of the attack but it remained in his article that we had to guess the value of some coefficients to run the attack, introducing a loop on the possible values of these coefficients.
-In our article, we show that such guesses are not necessary, since we can find an equivalent code fixing some coefficients, which leads to a very simple and efficient attack on the cryptosystem.\\
+Sidelnikov and Shestakov showed that the McEliece cryptosystem using GRS codes can be quite easily broken in polynomial time. Wieschebrink simplified the explanation of the attack but it remained in his article that we had to guess the value of some coefficients to run the attack, introducing a loop on the possible values of these coefficients.
+
+In this article, we show that such guesses are not necessary, since we can find an equivalent code fixing some coefficients, which leads to a very simple and efficient attack on the cryptosystem.\\
 
 
-We've seen that in the Chor-Rivest cryptosystem, the knowledge of the values $c_j$ from the public key and the guess of $g_{p^r} = g^{\frac{p^h-1}{p^r-1}} \in \F_{p^r}$ allow us to compute the coordinates of $g_{p^r}^{c_j}$ as elements of $\F_{p^r}$ seen as a $\F_p$-vector space. We know that these coordinates are the evaluations of $r$ polynomials of degree $h/r$ in the $\alpha_{\pi(j)}$. Besides, the Siedelnikov-Shestakov attack teaches us that when we have the evaluation of $k$ polynomials of degree smaller than $k$, we can recover the permutation $\pi$. Considering some powers of $g_{p^r}$, we manage to generate enough polynomials to allow $r$ to be chosen very small, around $\frac{\log p}{\log \log p}$. Then we describe how this can be used to attack efficiently the Chor-Rivest cryptosystem
+We've seen that in the Chor-Rivest cryptosystem, the knowledge of the values $c_j$ from the public key and the guess of $g_{p^r} = g^{\frac{p^h-1}{p^r-1}} \in \F_{p^r}$ allow to compute the coordinates of $g_{p^r}^{c_j}$ as elements of $\F_{p^r}$ seen as a $\F_p$-vector space. We know that these coordinates are the evaluations of $r$ polynomials of degree $h/r$ in the $\alpha_{\pi(j)}$. Besides, the Siedelnikov-Shestakov attack teaches us that when we have the evaluation of $k$ polynomials of degree smaller than $k$, we can recover the initial permutation $\pi$. Considering some powers of $g_{p^r}$, we manage to generate enough polynomials to allow $r$ to be chosen very small, around $\frac{\log p}{\log \log p}$. Then we describe how this can be used to attack efficiently the Chor-Rivest cryptosystem
 
 This attack works even when the permutation $\pi$ is not fully revealed. Indeed, it remains efficient as long as there are $\Omega(p)$ coefficients $c_j$ known.
 
@@ -741,10 +744,12 @@ g_{p^r} &=& g^{\frac{p^h-1}{p^r-1}} \\
 \end{eqnarray*}
 \item We choose different values for $d$, $t$ and $\pi$, the results remain the same.
 \item We choose the basis $\left(g_{p^r}, g_{p^r}^p, g_{p^r}^{p^2} \right)$ for the $\F_p$-vector space $\F_{p^r}$ (this is however of no influence on the results).
-\item We choose $(u_i)_{1\leq  i \leq 11} = (1,2,p+1,3,2p+1,p+2,4,p+3,3p+1,2p+2,2p^2+p+1)$\\
-We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomials of degree smaller than $4 h/r+1 = 33$ in the $\alpha_{\pi(j)}$.
+\item We choose $(u_i)_{1\leq  i \leq 11} = (1,2,p+1,3,2p+1,p+2,4,p+3,3p+1,2p+2,2p^2+p+1)$
 \end{itemize}
 
+We have $w_p(u_i) \leq 4$ so the coordinates of $g_{p^r}^{u_i c_j}$ are polynomials of degree smaller than $4 h/r+1 = 33$ in the $\alpha_{\pi(j)}$. As a result, we compute these coordinates and get 33 linearly independent rows.
+
+This is enough to allow an attack on the cryptosystem.
 
 \newpage
 \subsection{Example 2}
@@ -775,10 +780,10 @@ $g_{p^r}$ &  \begin{eqnarray*}
 \end{eqnarray*} \\ \hline
 $(u_i)_{1 \leq i \leq 16}$ & $$\{ 0,1,2,p+1,3,p+2,2p+1,4,p+3,3p+1,2p+2,2p^2+p+1,5,4p+1,3p+2,p^2+p+3 \} $$ \\ \hline
 $t, d, \pi$ & Several values chosen at random \\ \hline
-Rank & 46 \\ \hline
 \end{tabularx}
 \end{center}
 
+Rank found : 46
 
 \newpage
 \section{Simulation results}
@@ -807,7 +812,10 @@ We perform the simulations for $p = 251$ but several values of $p$ large enough 
 \subsection{Our attack}
 \label{time:our}
 
-We present here the results from the execution of our attack.
+We present here the results from the execution of our attack. We consider here that $g_{p^r}$ is found and we are only interested in the generation of all the possible permutations $\pi$. Each time we check that the initial permutation is indeed among the permutations generated.
+
+The Sidelnikov-Shestakov attack itself is quite fast but the number of different possible permutations generated make this attack hard to perform on a real cryptosystem.
+
 
 \begin{minipage}[H]{30cm}
 \includepdf{include/TimeTableCR.pdf}
