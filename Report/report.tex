@@ -43,10 +43,10 @@ In his study \cite{NiederH86}, Niederreiter discusses the best choices of error-
  - including for example Goppa codes, which were used first in the McEliece cryptosystem - and generalized Reed-Solomon (GRS) codes.
 Note that this algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
 
-In 1992, Sidelnikov and Shestakov suggest an attack \cite{SidelShes92} on the public key of this cryptosystem (based on GRS codes) using equivalences between private keys.
+In 1992, Sidelnikov and Shestakov suggested an attack \cite{SidelShes92} on the public key of this cryptosystem (based on GRS codes) using equivalences between private keys.
 Nowadays, all the versions of the McEliece cryptosystem had been broken.
 
-The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it took longer to break than most, and remains a very elegant use of finite fields.
+The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it takes longer to break than most of the cryptosystems, and remains a very elegant use of finite fields.
 
 The first efficient attack for the proposed range of parameters (i.e., $p \simeq 256$, $h \simeq 24$) has been obtained by Vaudenay in 2001, assuming there exists a small factor $r$ of $h$ with $r > \sqrt{h}$.
 
@@ -58,9 +58,9 @@ We try to make a mix between the simplicity of the arguments given by Wieshebrin
 not introduced by Wieschebrink, and which leads to get a better complexity.
 
 
-On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. Indeed, $\F_{p^r}$ can be seen as a $\F_p$-vector space and the knowledge of the particular generator $g_{p^r}$ of $\F_{p^r}$ yield the values of $r$ small degree polynomials in the private key $\alpha_{\pi(j)}$. This was how Vaudenay was able to suggest a "known $g_{p^r}$" attack working for any factor $r$ of $h$ bigger than $\sqrt{h}$.
+On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. Indeed, $\F_{p^r}$ can be seen as a $\F_p$-vector space and the knowledge of the particular generator $g_{p^r}$ of $\F_{p^r}$ yields the values of $r$ small degree polynomials in the private key $\alpha_{\pi(j)}$. This was how Vaudenay was able to suggest a "known $g_{p^r}$" attack working for any factor $r$ of $h$ bigger than $\sqrt{h}$.
 
-These similarities allow us to describe a more efficient algorithm for a "known $g_{p^r}$ attack" which require $r$ to be much smaller than in Vaudenay's article. Using not only $g_{p^r}$ but its small powers, we manage to get the weaker condition $r > \log p$ and even $r > \frac{\log p}{\log \log p}$ assuming we have $h \simeq \frac{p}{\log p}$. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p / \log \log p}$ assuming $h$ has small enough factors. The first condition is suggested in Chor and Rivest's article because the density of the  finite field chosen should be close to 1 in order for the cryptosystem not be attacked using lattice reduction algorithms . That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
+These similarities allow us to describe a more efficient algorithm for a "known $g_{p^r}$ attack" which requires $r$ to be much smaller than in Vaudenay's article. Using not only $g_{p^r}$ but its small powers, we manage to get the weaker condition $r > \log p$ and even $r > \frac{\log p}{\log \log p}$ assuming we have $h \simeq \frac{p}{\log p}$. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p / \log \log p}$ assuming $h$ has small enough factors. The first condition is suggested in Chor and Rivest's article because the density of the  finite field chosen should be close to 1 in order for the cryptosystem not to be attacked using lattice reduction algorithms . That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
 
 
 
@@ -687,9 +687,9 @@ We've seen that in the Chor-Rivest cryptosystem, the knowledge of the values $c_
 
 This attack works even when the permutation $\pi$ is not fully revealed. Indeed, it remains efficient as long as there are $\Omega(p)$ coefficients $c_j$ known.
 
-Because of the equivalence between Reed-Solomon codes, this attack only return a set of possible permutations $\pi$. The size of this set is $p^2$ ($O(p^3)$ when only $\Omega(p)$ coefficients are known). This means that to complete the attack, one should be able either to quickly recognize a permutation inconsistent with the public key and the guess of $g_{p^r}$, or to process and find the original message among $O(p^3)$ possible deciphered messages.
+Because of the equivalence between Reed-Solomon codes, this attack only returns a set of possible permutations $\pi$. The size of this set is $p^2$ ($O(p^3)$ when only $\Omega(p)$ coefficients are known). This means that to complete the attack, one should be able either to quickly recognize a permutation inconsistent with the public key and the guess of $g_{p^r}$, or to process and find the original message among $O(p^3)$ possible deciphered messages.
 
-We can notice that this attack on Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in this field might allow this cryptosystem to evolve into a version resistant to most of the current attacks.
+We can notice that this attack on the Chor-Rivest cryptosystem is only effective when $h$ possesses a small factor. For example, L. Hernandez Encinas \textit{et alii} \cite{Enc04} suggest to use $h$ prime. Such a cryptosystem remains useless nowadays essentially because of the complexity of the discrete logarithm problem, however, recent results in this field might allow this cryptosystem to evolve into a version resistant to most of the current attacks.
 
 
 
