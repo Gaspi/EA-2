@@ -28,7 +28,9 @@ def ClockGo():
 def PrintClocks():
     while len(clock_times) > 0:
         print " -> " + str(clock_times.pop())
-
+def ReinitClock():
+    while len(clock_times) > 0:
+        clock_times.pop()
 
 def random_distinct_int(start, end, number):
     size = end - start

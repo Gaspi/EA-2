@@ -1,25 +1,22 @@
 # import main classes
-#load "GRSCode.sage"
-#load "RSCryptosystem.sage"
 load "RSDecrypter.sage"
 load "RandomFunc.sage"
 import sys, time
 
-# Clock function
-t0 = 0
-times = []
-def Clock():
-    times.append(time.time() - t0)
 
 
+# Should be used as in the following example
+# p = 53; r = 4; hsr = 13; w = 4; load("CRClock.sage")
+
+
+try: p
+except: p = 251
 try: r
 except: r = 3
 try: hsr
 except: hsr = 8
-h = hsr * r
 
-try: p
-except: p = 53
+h = hsr * r
 
 q = p ^ h
 bF = GF(p)
@@ -97,14 +94,15 @@ def LightWords(u):
     return res
 
 
+print "Init. done."
+print "r : " + str(r) + "  -  hsr : " + str(hsr) + "  -  p : " + str(p) + "  -  w : " + str(w)
+
 
 # init clock
-t0 = time.time()
+ClockGo()
 
 
 gprc = [ gci^( (q-1)/(p^r-1) ) for gci in gc ]
-
-
 
 baseInv = Mat(bF, h, h)()
 for i in range(r):
@@ -117,18 +115,14 @@ for i in range(r, h):
 
 basis = (baseInv^(-1))[:,0:r]
 
-print "Init. done. r : " + str(r) + "  -  hsr : " + str(hsr)
 
-
-
-
+LW = LightWords(w)
 
 
 Clock()
 
 # M = LCoeff2([1,2,p+1,3,2*p+1,p+2,4,3*p+1,2*p+2,p^2+p+2,5,4*p+1,3*p+2,p^2+p+3,p^2+2*p+2,0] , 46)
-w = 5
-M = LCoeff2( LightWords(w) , w * hsr + 1)
+M = LCoeff2( LW , w * hsr + 1)
 
 Clock()
 
@@ -146,21 +140,29 @@ alpha = [ bF(0), bF(1)] \
 Clock()
 
 
-nbPossibilities = 0
+missing = bF(0)
 for c1 in bF:
     if not c1 in alpha:
-        for a1 in bF:
-            for b1 in bF:
-                nbPossibilities += 1
-                aux = [ a1 + b1 / (el - c1) for el in alpha]
-                aux[k] = a1
-                if aux == pi:
-                    Verb("Jackpot !")
+        missing = c1
+        break;
 
-Verb("Number of possible permutations : " + str(nbPossibilities) )
+nbPossibilities = 0
+for a1 in bF:
+    for b1 in bF:
+        nbPossibilities += 1
+        aux = [ a1 + b1 / (el - missing) for el in alpha]
+        aux[k] = a1
+        if aux == pi:
+            Verb("Jackpot !")
 
 Clock()
 
-print "Time1 : " + str(times)
+print "Number of possible permutations : " + str(nbPossibilities)
 
+print "Precom. : " + str(1000*clock_times[0])
+print "M comp. : " + str(1000*(clock_times[1] - clock_times[0]))
+print "SS Atk. : " + str(1000*(clock_times[2] - clock_times[1]))
+print "Permut. : " + str(1000*(clock_times[3] - clock_times[2]))
+print "Total : " + str(1000*clock_times[3])
 
+ReinitClock()
