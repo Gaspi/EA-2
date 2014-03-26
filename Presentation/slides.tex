@@ -225,7 +225,7 @@ $$ r \sim \frac{\log p}{\log \log p} $$
 \begin{itemize}
 \item Calculer le plus petit diviseur $r$ de $h$ qui permette une attaque.
 
-\item Calculer l'ensemble $U_w$.
+\item Calculer le plus grand $w$ possible et l'ensemble $U_w$.
 \item Choisir une base $(e_i)_{1 \leq i \leq r}$ de $\F_{p^r}$ et générer la matrice projetant les éléments de $\F_q$ dans cette base.
 
 \item \textbf{Pour} tout générateur $g_{p^r}$ possible de $\F_{p^r}$ \textbf{faire}
@@ -246,7 +246,14 @@ $$ r \sim \frac{\log p}{\log \log p} $$
 
 
 \begin{frame}{Complexité en temps}
+\begin{itemize}
+\item Calculs préparatoires: $O\left(p^3\right)$
+\item Boucle principale:
 $$ (\text{Recherche exhaustive}) \times (\text{"Early abort"}) = O\left( p^{\frac{\log p}{\log \log p} + C} \right) $$
+\item Sidelnikov-Shestakov: $O\left(p^3 (\log p)^{O(1)} \right)$
+\item Fin de l'attaque: $O\left(p^{O(1)}\right)$
+\end{itemize}
+
 \end{frame}
 
 
