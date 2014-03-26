@@ -61,19 +61,80 @@ Du texte
 
 \subsection{Le cryptosystème de Chor-Rivest}
 \begin{frame}{Le cryptosystème de Chor-Rivest}
-
+Clef privée:
+\begin{itemize}
+\item $t \in \F_q$ dont le polynôme minimal est de degré $h$.
+\item $g$ générateur $\F_q^*$.
+\item $0 \leq d < q$.
+\item $\pi$ permutation de $\{ 0, ... , p-1 \}$.
+\end{itemize}
+Clef publique:
+$$ c_i := d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
+Message $m = [m_0...m_{p-1}]$ avec $\sum_i m_i = h$.
+Message chiffré:
+$$ E(M) := \sum_{i=0}^{p-1} m_i c_i \mod q-1 $$
+On déchiffre en calculant
+$$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{\pi(i)}\right)^{m_i} $$
 \end{frame}
 
 
-\subsection{Attaque de Vaudenay améliorée}
-\begin{frame}{Attaque de Vaudenay améliorée}
 
+
+\subsection{Notre attaque}
+
+\begin{frame}{Lien avec Reed-Solomon}
+\begin{theorem}
+\label{thm:link}
+Pour $2 \leq k \leq p-2$, supposons qu'il existe $k$ polynômes $(Q_i)_{0 \leq i \leq k-1}$ de $\F_p[X]$ de degré inférieur à $k-1$ linéairement indépendants. Supposons connues les évaluations de ces polynômes en les $\alpha_{\pi(j)}$, $m_{i,j} := Q_i(\alpha_{\pi(j)})$.
+Alors la permutation $\pi$ peut être retrouvée en temps polynomial en utilisant une attaque de Sidelnikov-Shestakov sur la matrice $ M = (m_{i,j})_{i,j} \in \mathcal{M}_{k,p}(\F_p)$.
+\end{theorem}
 \end{frame}
 
+
+\begin{frame}{Attaque de Vaudenay}
+\begin{theorem}
+Quelque soit  $r$ divisant $h$, il existe un générateur $g_{p^r}$ du groupe multiplicatif $\F_{p^r}^*$ (où $F_{p^r}$ sous-corps de $\F_q$) et $Q \in \F_{p^r}[X]$ de degré $h/r$ admettant $-t$ pour racine et tel que pour tout $j$, $Q(\alpha_{\pi(j)}) = g_{p^r}^{c_j}$.
+\end{theorem}
+\begin{proof}
+On a $g_{p^r} = g^{\frac{q-1}{p^r-1}}$ et
+$$ Q(X) = g_{p^r}^d \prod_{i=0}^{h/r-1} \left( X + t^{p^{ri}} \right) $$
+\end{proof}
+\end{frame}
+
+
+\begin{frame}{Attaque de Vaudenay}
+\begin{theorem}
+Si $r > \sqrt{h}$, et $g_{p^r}$ connu, il existe une attaque du cryptosystème de Chor-Rivest en temps polynomial.
+\end{theorem}
+\begin{proof}
+Les $r$ coordonnées de $g_{p^r}^{c_j}$ sont des polynômes de degré $h/r > r$ en les $\alpha_{\pi(j)}$.
+On utilise une attaque de Sidelnikov-Shestakov sur la matrice de ces coordonnées.
+\end{proof}
+\end{frame}
+
+
+\begin{frame}{Utilisation des puissances de $g_{p^r}$}
+Soit $r$ diviseur de $h$ et $(e_i)_{1 \leq i \leq r}$ une base de $\F_{p^r}$. On note
+\begin{itemize}
+\item $ U_w := \{ u \in [0,p^r-1] | w_p(u) \leq w \} $
+\item $h[i]$ la $i$ème coordonnée de $h \in \F_{p^r}$ dans la base $(e_i)$.
+\item $$ M^{(w)} := \left(g_{p^r}^{uc_j}[i] \right)_{(u,i) \in [1,r] \times U_w , 1 \leq j \leq r}$$
+\item $u_w := \text{rank} \left( M^{(w)} \right)$
+\end{itemize}
+On a
+$$ u_w \leq r \cdot |U_w| = O\left( \frac{w^{r+1}}{r!} \right) $$
+
+
+\end{frame}
 
 
 \subsection{Simulations et complexité espérée}
-\begin{frame}{Simulations et complexité espérée}
+\begin{frame}{Postulat}
+
+\begin{postulate}
+Pour tout $r > 2$,
+$$ u_w = \min \left( \binom{w+r}{r}, w\frac{h}{r} + 1 , p \right).$$
+\end{postulate}
 
 \end{frame}
 
