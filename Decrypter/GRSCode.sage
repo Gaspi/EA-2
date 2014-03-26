@@ -15,7 +15,7 @@ class GRSCode:
         if k >= n-2:
             raise BaseException("k is too big : " + str(k) + " >= " + str(n-2) )
         self.k = k
-        self.t = (n-k) / 2
+        self.t = (n-k-1) // 2
         Field.<a> = GF(self.q, modulus='minimal_weight')
         self.F = Field
         self.knMatSpace = MatrixSpace(self.F, self.k, self.n)
@@ -83,18 +83,14 @@ class GRSCode:
     
     
     def decode(self, codeword):
-        
-        c = [codeword[0,i] / self.y[i] for i in range(self.n)]
-        
+        c = [codeword[0,i] / self.F(self.y[i]) for i in range(self.n)]
         S = Mat( self.F, self.n, 2*self.t + self.k)()
-        
         for j in range(self.t):
             for i in range(self.n):
                 S[i,j] = -c[i] * self.alpha[i]^j
         for j in range(self.t + self.k):
             for i in range(self.n):
                 S[i, self.t + j] = self.alpha[i]^j
-        
         v = Mat( self.F, self.n, 1)( [ c[i] * self.alpha[i] ^ self.t for i in range(self.n) ] )
         
         res = S.solve_right(v)
@@ -118,6 +114,7 @@ class GRSCode:
         
     
     def decode_int(self, codeword):
+        print self.decode(codeword)
         return self.integers_from_vect( self.decode(codeword))
     
 

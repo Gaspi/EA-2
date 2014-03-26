@@ -10,6 +10,12 @@ except: size_case = 4
 
 
 # Main parameters
+p=2
+e=8
+n=50
+k=40
+
+
 if size_case > 0:
     p = 2
     askMsg = False
@@ -26,7 +32,7 @@ elif size_case == 3:
     n=1000
     k=700
 elif size_case == 4:
-    p=53
+    p=251
     e=1
     n=50
     k=40

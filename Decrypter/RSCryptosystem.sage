@@ -73,7 +73,7 @@ class RSCryptosystem(GRSCode):
     
     def cipher_int(self, message, errors = -1):
         if len(message) != self.k:
-            raise "word is not the right size"
+            raise BaseException("word is not the right size")
         return self.cipher_vect( self.vect_from_integers(message), errors)
     
     
