@@ -12,9 +12,11 @@ import sys, time
 try: p
 except: p = 251
 try: r
-except: r = 3
+except: r = 4
 try: hsr
-except: hsr = 8
+except: hsr = 10
+try: w
+except: w = 4
 
 h = hsr * r
 
