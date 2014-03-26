@@ -47,7 +47,6 @@ Clef privée
 \end{itemize}
 Clef publique
 \begin{itemize}
- \item La représentation de $\F_q$.
  \item La matrice $M=H\cdot G$.
  \item L'entier $t=\lfloor\frac{n-k}{2}\rfloor$.
 \end{itemize}
@@ -260,7 +259,13 @@ $$ (\text{Recherche exhaustive}) \times (\text{"Early abort"}) = O\left( p^{\fra
 \section{Conclusion}
 
 \begin{frame}{Conclusion}
-Notre algorithme
+Attaque de Sidelnikov-Shestakov
+\begin{itemize}
+\item Réécrite avec les simplifications de Wieshebrink
+\item Utilisation de l'infini pour éliminer une recherche de coefficient
+\end{itemize}
+
+Notre attaque de Chor-Rivest
 \begin{itemize}
 \item a une bien meilleure complexité que celle de Vaudenay
 \item marche dès que $\Omega(p)$ coefficients $\alpha_{\pi(j)}$ sont connus
@@ -270,6 +275,15 @@ Notre algorithme
 \end{itemize}
 \end{frame}
 
+\begin{frame}
+\begin{center}
+\huge{\textbf{Démonstration de Sidelnikov-Shestakov en sage}}
+\end{center}
+\begin{figure}
+   \centering
+   \includegraphics[width=8cm]{pictures/simul.jpg}
+\end{figure}
+\end{frame}
 
 \begin{frame}
 \begin{center}
