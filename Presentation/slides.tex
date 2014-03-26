@@ -40,25 +40,9 @@
 
 \begin{frame}{Cryptosystème de McEliece utilisant les codes de Reed-Solomon}
 
-Clé privée
+Du texte
 \begin{itemize}
-\item Une matrice $G = G(\alpha_1, \ ... \  , \alpha_n , z_1 , \ ... \ z_n) = (z_i\alpha_i^{j})_{i=1...n, j=0...k-1}$
-\item Une matrice inversible  $H$ de taille $k\times k$ dans $\F_q$.
-\end{itemize}
-Clé publique
-\begin{itemize}
- \item La représentation de $\F_q$.
- \item La matrice $M=H\cdot G$.
- \item L'entier $t=\lfloor\frac{n-k}{2}\rfloor$.
-\end{itemize}
-Messages originaux : vecteurs de $b\in \F_q^{k}$.
-
-Message chiffré : $b\cdot M + e$ avec $e$ de poids de Hamming inférieur à t et $b\cdot M=(z_if_b(\alpha_i))_{1\leq i\leq n}$ ($f_b$ de degré au plus $k-1$).
-
-Déchiffrement :
-\begin{itemize}
- \item On calcule $b\cdot H$ par un algorithme de déchiffrement de code GRS.
- \item On calcule $b$ par multiplication par $H^{-1}$
+\item un point
 \end{itemize}
 
 \end{frame}
@@ -67,31 +51,7 @@ Déchiffrement :
 \subsection{Attaque de Sidelnikov et Shestakov}
 
 \begin{frame}{Attaque de Sidelnikov et Shestakov}
-\begin{itemize}
- \item Basée sur l'équivalence entre codes GRS : $\exists H',(\alpha'_3, \ ... \ \alpha'_{k-1}, \alpha'_{k+1},\ ... \ , \alpha'_n)$ et $(z'_1, \ ... \ z'_{k-1},z'_{k+1}, \ ... \ z'_n)$ tels que
- $$H\cdot G=H'\cdot G(0,1,\alpha'_3, \ ... \ ,\infty ,\alpha'_{k+1},\ ... \ , \alpha'_n,z'_1, \ ... \ ,1,z'_{k+1}, \ ... \ z'_n)$$
- \item On calcule la forme échelon de M :
- $$$$
- \item On remarque que :
- $$f_{b_i}(X) = c_{b_i}\cdot \prod_{1\leq j\leq k, i\neq j} (X-\alpha_j)$$ avec $c_{b_i}=b_{i,k+1}$.
-\end{itemize}
 
-\end{frame}
-
-\begin{frame}{Attaque de Sidelnikov et Shestakov}
-Calcul des $\alpha_i$ :
-\begin{itemize}
- \item $\forall k+2\leq j\leq n, \alpha_j = \frac{b_{2,j}\cdot c_{b_1}}{b_{2,j}\cdot c_{b_1} - b_{1,j}\cdot c_{b_2}}$
- \item $\forall 3\leq i\leq k, \alpha_i = \alpha_{k+2} - \frac{b_{i,k+2}}{b_{1,k+2}}\cdot \frac{c_{b_1}}{c_{b_2}}\cdot (\alpha_{k+2}-1)$
- \item On calcule un ensemble de $\alpha'_i$ équivalent et tous finis en trouvant un élément $\alpha$ différent de tous les $\alpha_i$ et en appliquant la transformation birationnelle $ \phi : x \mapsto \frac{1}{x - \alpha}$
-\end{itemize}
-Calcul des $z_i$ :
-\begin{itemize}
- \item On note $L_i(X) = \prod_{1\leq j\leq k, i\neq j} (X-\alpha_j) = \frac{1}{c_{b_i}}\cdot f_{b_i}(X)$
- \item $\forall 1\leq i\leq k, z_i = \frac{L_i(\alpha_{k+1})}{b_{i,k+1}\cdot L_i(\alpha_i)}$
- \item $\forall k+2\leq j\leq n, z_j = \frac{b_{1,j}}{b_{1,k+1}} \cdot \frac{L_1(\alpha_{k+1})}{L_1(\alpha_j)}$
-\end{itemize}
-Calcul de $H$ : $H = M_{k}\cdot G_{k}^{-1}$
 \end{frame}
 
 
