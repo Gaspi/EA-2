@@ -128,17 +128,92 @@ $$ u_w \leq r \cdot |U_w| = O\left( \frac{w^{r+1}}{r!} \right) $$
 \end{frame}
 
 
-\subsection{Simulations et complexité espérée}
+\subsection{Simulations et condition sur $r$}
 \begin{frame}{Postulat}
 
 \begin{postulate}
 Pour tout $r > 2$,
 $$ u_w = \min \left( \binom{w+r}{r}, w\frac{h}{r} + 1 , p \right).$$
 \end{postulate}
-
+Vérifié sur
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+$r$ & $w$ 	& $h/r$ \\
+\hline
+2	& [1,17]	& \{1,2\}	\\
+\hline
+3	& [1,17]	& [1,30] \\
+\hline
+4	& [1,17]	& [1,30] \\
+\hline
+5	& [1,17]	& [1,30] \\
+\hline
+\end{tabular}
+\end{center}
 \end{frame}
 
 
+\begin{frame}{Condition sur $r$}
+On suppose
+\begin{itemize}
+\item $u_w = \min \left( \binom{w+r}{r}, w\frac{h}{r} + 1 , p \right)$  \ \ \ \ \ \ (pour tout $w$)
+\item $h \sim p / \log p$
+\item $h$ a de petits diviseurs
+\item Il existe $w$ tel que
+\begin{eqnarray*}
+wh/r+1 &\leq & p-2 \\
+wh/r+1 &\leq & u_w 
+\end{eqnarray*}
+\end{itemize} 
+On obtient
+$$ r \sim \frac{\log p}{\log \log p} $$
+\end{frame}
 
+
+\subsection{Algorithme et complexité espérée}
+
+\begin{frame}{Algorithme}
+\textbf{Input : } Description de $\F_{p^h}$ et la clef publique: $(c_j)_{1 \leq j \leq p}$
+\begin{itemize}
+\item Calculer le plus petit diviseur $r$ de $h$ qui permette une attaque.
+
+\item Calculer l'ensemble $U_w$.
+\item Choisir une base $(e_i)_{1 \leq i \leq r}$ de $\F_{p^r}$ et générer la matrice projetant les éléments de $\F_q$ dans cette base.
+
+\item \textbf{Pour} tout générateur $g_{p^r}$ possible de $\F_{p^r}$ \textbf{faire}
+\begin{itemize}
+\item Générer $M$ à partir de $wh/r+1$ lignes indépendantes à partir des lignes de $M^{(w)}$
+
+\item \textbf{Si } on peut trouver une ligne de $M^{(w)}$ indépendantes de celles de $M$\\
+\textbf{Alors } Passer au générateur suivant. \\
+\textbf{Sinon } Sortir de la boucle, retenir $M$ et $g_{p^r}$.
+\end{itemize}
+\item Effectuer une attaque de Sidelnikov Shestakov attack sur $M$ pour générer toute les permutations possibles $(\pi_i)$.
+\item \textbf{Pour chaque } permutation $\pi$ \textbf{ faire }
+\begin{itemize}
+\item Déchiffrer en utilisant une attaque "à $g_{p^r}$ et $\pi$ connus".
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Complexité en temps}
+$$ (\text{Recherche exhaustive}) \times (\text{"Early abort"}) = O\left( p^{\frac{\log p}{\log \log p} + C} \right) $$
+\end{frame}
+
+
+\section{Conclusion}
+
+\begin{frame}{Conclusion}
+On obtient une complexité bien meilleure que l'attaque de Vaudenay. Mais
+\begin{itemize}
+\item Génère $O(p^2)$ permutations possibles
+\begin{itemize}
+\item $O(p^3)$ si tout les $\alpha_{\pi(j)}$ ne sont pas dévoilés)
+\end{itemize}
+\item Nécessite certaines conditions (raisonnables) sur $p$ et $h$
+\end{itemize}
+\end{frame}
 
 \end{document}
