@@ -158,6 +158,7 @@ On utilise une attaque de Sidelnikov-Shestakov sur la matrice de ces coordonnée
 \begin{frame}{Utilisation des puissances de $g_{p^r}$}
 Soit $r$ diviseur de $h$ et $(e_i)_{1 \leq i \leq r}$ une base de $\F_{p^r}$. On note
 \begin{itemize}
+\item $w_p : \sum u_i p^i \mapsto \sum u_i$
 \item $ U_w := \{ u \in [0,p^r-1] | w_p(u) \leq w \} $
 \item $h[i]$ la $i$ème coordonnée de $h \in \F_{p^r}$ dans la base $(e_i)$.
 \item On définit $M^{(w)} \in \mathcal{M}_{r \cdot |U_w|, p}$
@@ -168,7 +169,7 @@ On a
 $$ u_w \leq r \cdot |U_w| = O\left( \frac{w^{r+1}}{r!} \right) $$
 
 \begin{theorem}
-Si $u_w = wh/r+1 \leq p-2$, Sidelnikov Shestakov fournit une attaque en temps polynomial.
+Si $u_w = wh/r+1 \leq p-2$ et $g_{p^r}$ connu, Sidelnikov-Shestakov fournit une attaque en temps polynomial.
 \end{theorem}
 
 \end{frame}
@@ -220,7 +221,7 @@ $$ r \sim \frac{\log p}{\log \log p} $$
 \subsection{Algorithme et complexité espérée}
 
 \begin{frame}{Algorithme}
-\textbf{Input : } Description de $\F_{p^h}$ et la clef publique: $(c_j)_{1 \leq j \leq p}$
+\textbf{Input : } La clef publique: $(c_j)_{1 \leq j \leq p}$
 \begin{itemize}
 \item Calculer le plus petit diviseur $r$ de $h$ qui permette une attaque.
 
