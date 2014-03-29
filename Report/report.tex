@@ -44,7 +44,7 @@ In his study \cite{NiederH86}, Niederreiter discusses the best choices of error-
 Note that this algorithm has never gained much acceptance in the cryptographic community, but is a candidate for "post-quantum cryptography".
 
 In 1992, Sidelnikov and Shestakov suggested an attack \cite{SidelShes92} on the public key of this cryptosystem (based on GRS codes) using equivalences between private keys.
-Nowadays, all the versions of the McEliece cryptosystem had been broken.
+Nowadays, most of the versions of the McEliece cryptosystem have been broken.
 
 The Chor-Rivest cryptosystem \cite{ChorRiv88} is a public key knapsack system which has been broken.  However, it takes longer to break than most of the cryptosystems, and remains a very elegant use of finite fields.
 
@@ -58,9 +58,9 @@ We try to make a mix between the simplicity of the arguments given by Wieshebrin
 not introduced by Wieschebrink, and which leads to get a better complexity.
 
 
-On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the "known $g_{p^r}$ attack" introduced by Vaudenay and the Sidelnikov-Shestakov attack. Indeed, $\F_{p^r}$ can be seen as a $\F_p$-vector space and the knowledge of the particular generator $g_{p^r}$ of $\F_{p^r}$ yields the values of $r$ small degree polynomials in the private key $\alpha_{\pi(j)}$. This was how Vaudenay was able to suggest a "known $g_{p^r}$" attack working for any factor $r$ of $h$ bigger than $\sqrt{h}$.
+On a second part, we focus on the Chor-Rivest cryptosystem and show some similarities between the Sidelnikov-Shestakov attack and attacks using a guess on a generator of a subfield of the field considered. Indeed, $\F_{p^r}$ can be seen as a $\F_p$-vector space and the knowledge of the particular generator $g_{p^r}$ of $\F_{p^r}$ yields the values of $r$ small degree polynomials in the private key $\alpha_{\pi(j)}$. This was how Vaudenay was able to suggest a "known $g_{p^r}$" attack working for any factor $r$ of $h$ bigger than $\sqrt{h}$.
 
-These similarities allow us to describe a more efficient algorithm for a "known $g_{p^r}$ attack" which requires $r$ to be much smaller than in Vaudenay's article. Using not only $g_{p^r}$ but its small powers, we manage to get the weaker condition $r > \log p$ and even $r > \frac{\log p}{\log \log p}$ assuming we have $h \simeq \frac{p}{\log p}$. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p / \log \log p}$ assuming $h$ has small enough factors. The first condition is suggested in Chor and Rivest's article because the density of the  finite field chosen should be close to 1 in order for the cryptosystem not to be attacked using lattice reduction algorithms . That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
+These similarities allow us to describe a more efficient algorithm for a "known $g_{p^r}$ attack" which requires $r$ to be much smaller than in Vaudenay's article. Using not only $g_{p^r}$ but its small powers, we manage to get the weaker condition $r > \log p$ and even $r > \frac{\log p}{\log \log p}$ assuming we have $h \simeq \frac{p}{\log p}$. In particular the term $p^{\sqrt{h}}$ in Vaudenay's complexity corresponding to an exhaustive research can be reduced to $p^{\log p / \log \log p}$ assuming $h$ has small enough factors. The first condition is suggested in Chor and Rivest's article in order for the cryptosystem not to be vulnerable to attacks using lattice reduction algorithms . That last point should be verified since the scheme can only be used efficiently when $h$ has a lot of divisors in order to be able to compute discrete logarithms for the public key.
 
 
 
@@ -325,16 +325,18 @@ To construct the knapsack, the cryptographer construct the field $\F_q$ and gene
 The description of the field $\F_q$ does not matter for the public key. It can then be considered public (the concealed information being the generator $g$ chosen).
 
 The public key consist of all the integers
-$$ c_i := d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 $$
+$$ c_i := d + \log_g(t + \alpha_{\pi(i)}) \mod q-1 \ .$$
 
 To be encrypted, a message should first be encoded into a bitstring $m = [m_0...m_{p-1}]$ of length $p$ and weight $h$ : $\sum_i m_i = h$. The ciphertext is
-$$ E(M) := \sum_{i=0}^{p-1} m_i c_i \mod q-1 $$
-To decipher this codeword, we compute
+$$ E(M) := \sum_{i=0}^{p-1} m_i c_i \mod q-1 \ .$$
+To decipher this codeword, we compute the quantity
 $$ g^{E(M) - hd} =  \prod_i \left( t + \alpha_{\pi(i)}\right)^{m_i} $$
-whose factorization leads to the original message $m$.
+which allow to recover the original message $m$.
 
-To be able to compute efficiently the discrete logarithm, $h$ should have a lot of small factors. This weakness will allow us to consider later subfields $\F_{p^r}$ of $\F_q$. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1, otherwise the problem could be attacked using lattice reduction algorithms.This allow us to suppose that
-$$ h = \Theta\left( \frac{p}{\log_2 p} \right) $$
+To be able to compute efficiently the discrete logarithm using for example the Pohlig–Hellman algorithm~\cite{Pohl78}, $h$ should have a lot of small factors. This weakness will allow us to consider later subfields $\F_{p^r}$ of $\F_q$. Besides the density $d := p / \log_2 q$ which characterize subset-sum problems should stay close to 1. Otherwise the problem could be attacked using lattice reduction algorithms.
+
+This allow us to suppose that
+$$ h = \Theta\left( \frac{p}{\log_2 p} \right) \ .$$
 
 Vaudenay shows that when some parts of the secret key is disclosed, for example $g$, $t$ or $\pi$, there exists polynomial attacks on this cryptosystem. For instance, he introduces \cite{Vau01} the "known $t$", "known $g$" and "known $\pi$" attacks that we will consider without describing here.
 
@@ -505,11 +507,10 @@ When we find $g_{p^r}$ such that $g_{p^r}^{c_j} = Q(\alpha_{\pi(j)})$ with $\deg
 
 We could consider now the coordinates in the equation $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for $u \in [1,p^r-1]$. This yields again $r$ polynomials of degree smaller than $u h/r$. Actually, since $P \mapsto P^p$ lets the degree invariant, we know that the degree of $Q^u$ is actually at most $w_p(u) h / r$.
 
-To generate more polynomials, we could then decide to consider all the equations $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for all $u \in U_w^{(r)} := \{ u \in [0,p^r-1] | w_p(u) \leq w \}$
-This yields $r \cdot |U_w^{(r)}|$ polynomials of degree at most $wh/r$.
+To generate more polynomials, we could then decide to consider all the equations $Q^u(\alpha_{\pi(j)}) = g_{p^r}^{u c_j}$ for all $u \in U_w^{(r)} := \{ u \in [0,p^r-1] | w_p(u) \leq w \}$ for some $w$. This yields $r \cdot |U_w^{(r)}|$ polynomials of degree at most $wh/r$.
 
 Besides, assuming $w \gg r$, the number of such polynomials can be up to
-$$ | U_w^{(r)} | = \left( \binom{r+1}{w} \right) = \binom{r+w+1}{w} = \binom{r+w+1}{r+1} = \Theta\left(\frac{w^{r+1}}{(r+1)!}\right) .$$
+$$ | U_w^{(r)} | = \left( \binom{r+1}{w} \right) = \binom{r+w+1}{w} = \binom{r+w+1}{r+1} = \Theta\left(\frac{w^{r+1}}{(r+1)!}\right) \ \ \text{ when } w \gg r \ .$$
 This means that we can choose $r$ far smaller than $\sqrt{h}$. Indeed, even if we consider polynomials of higher degree ($wh/r$), the number of such polynomials is far greater than $r$ and we can hope that if we choose $w$ high enough, we can get enough linearly independent polynomials to use a Sidelnikov-Shestakov attack.
 
 
